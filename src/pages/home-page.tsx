@@ -2,22 +2,15 @@ import React, { Props } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, RoutePropsHelper } from '../router';
+import { Center } from '../components/center';
 
 export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
     return (
-        <View style={styles.container}>
+        <Center>
             <Text>TakeCare</Text>
             <Button title='To playground' onPress={() => {
                 navigation.navigate('Playground');
             }}/>
-        </View>
+        </Center>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

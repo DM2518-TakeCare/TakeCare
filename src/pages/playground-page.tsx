@@ -2,19 +2,12 @@ import React, { Props } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, RoutePropsHelper } from '../router';
+import { Center } from '../components/center';
 
 export default function PlaygroundPage({navigation, route}:RoutePropsHelper<'Playground'>) {
     return (
-        <View style={styles.container}>
+        <Center>
             <Text>Test</Text>
-        </View>
+        </Center>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
