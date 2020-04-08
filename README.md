@@ -11,6 +11,9 @@ Clone the repository and run `npm install` and then `npm run web` to start devel
 ### Navigation system
 The official react page recommend React Navigation. Instruction for it can be found here: https://reactnative.dev/docs/navigation. The following tutorial was used to implement a basic navigation system: https://www.youtube.com/watch?v=Hln37dE19bs
 
+### Theme
+Material design is used as the apps "design system". Documentation can be found here: https://callstack.github.io/react-native-paper/
+The theme should be edited in `paper-theme.tsx`;
+
 ### Components
-#### Center
-Used to center content both vertical and horizontal.
+* **Center**: Used to center content both vertical and horizontal.
