@@ -5,6 +5,6 @@ export const paperTheme = {
     colors: {
         ...DefaultTheme.colors,
         primary: 'tomato',
-        accent: 'yellow',
+        accent: '#2274a5',
     },
 };
