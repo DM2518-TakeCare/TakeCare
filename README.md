@@ -16,4 +16,5 @@ Material design is used as the apps "design system". Documentation can be found 
 The theme should be edited in `paper-theme.tsx`;
 
 ### Components
-* **Center**: Used to center content both vertical and horizontal.
+* **Center**: Used to center content both vertical and horizontal.  
+* **Divided View**: Used to display items in a stylized view with upper and lower children. Reversable.
