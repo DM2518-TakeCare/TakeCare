@@ -17,4 +17,6 @@ The theme should be edited in `paper-theme.tsx`;
 
 ### Components
 * **Center**: Used to center content both vertical and horizontal.  
+* **Content Padding**: Used to create padding around its children.  
+* **Divided View**: Used to display items in a stylized view with upper and lower children. Reversable.  
 * **User info**: Used to display user information (name, address or phone) with an icon.
