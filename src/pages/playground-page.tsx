@@ -7,7 +7,7 @@ import { Center } from '../components/center';
 export default function PlaygroundPage({navigation, route}:RoutePropsHelper<'Playground'>) {
     return (
         <Center>
-            <Text>Test</Text>
+            <Text>Hello</Text>
         </Center>
     );
 }
