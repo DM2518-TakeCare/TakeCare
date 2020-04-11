@@ -7,21 +7,19 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'stretch',
+    },
+    background: {
+        position: 'absolute',
         height: '100%',
         width: '100%',
     },
-    background: {
-        flex: 1,
-        alignItems: 'center'
-    },
     childrenCont: {
-        height: '50%',
-        padding: '5%',
+        flex: 1,
+        padding: 25
     },
-    upper: {
-        position: 'absolute',
-    }
 });
 
 type DividedViewProps = {
@@ -40,16 +38,16 @@ const  DividedView: FC<DividedViewProps> = (props) => {
                     fill={props.reverse? paperTheme.colors.primary : paperTheme.colors.background}
                 />
             </Svg>
-            <View style={{...styles.childrenCont, ...styles.upper}}>
-                <Center>
-                    {props.upper}
-                </Center>
-            </View>
-            <View style={styles.childrenCont}>
-                <Center>
-                    {props.lower}
-                </Center>
-            </View>
+        </View>
+        <View style={styles.childrenCont}>
+            <Center>
+                {props.upper}
+            </Center>
+        </View>
+        <View style={styles.childrenCont}>
+            <Center>
+                {props.lower}
+            </Center>
         </View>
     </View>
   )
