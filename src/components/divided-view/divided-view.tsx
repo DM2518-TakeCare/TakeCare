@@ -39,14 +39,10 @@ const  DividedView: FC<DividedViewProps> = (props) => {
             </Svg>
         </View>
         <View style={styles.childrenCont}>
-            <Center>
-                {props.upper}
-            </Center>
+            {props.upper}
         </View>
         <View style={styles.childrenCont}>
-            <Center>
-                {props.lower}
-            </Center>
+            {props.lower}
         </View>
     </View>
   )
