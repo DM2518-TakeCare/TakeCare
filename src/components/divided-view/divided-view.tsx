@@ -1,9 +1,8 @@
 import React, { FC, ReactNode } from 'react'
-import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { paperTheme } from '../../theme/paper-theme'
-import { Center } from '../center';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Center } from '../center'
 
 const styles = StyleSheet.create({
     container: {
