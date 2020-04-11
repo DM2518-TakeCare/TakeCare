@@ -1,31 +1,26 @@
 import React, { FC } from 'react'
 import { View, Text } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
 import { paperTheme } from '../../theme/paper-theme'
+import { Ionicons } from '@expo/vector-icons'
+
+type UserInfoTypes = 'name' | 'address' | 'phone';
 
 interface UserInfoProps {
     user: any, //TODO, create user interface
-    type: 'name' | 'address' | 'phone'
+    type: UserInfoTypes
 }
 
-const userIcons = {
-    'name': 'M11.5 3.833a3.832 3.832 0 00-3.833 3.834A3.832 3.832 0 0011.5 11.5a3.832 3.832 0 003.833-3.833A3.832 3.832 0 0011.5 3.833zm1.917 3.834A1.922 1.922 0 0011.5 5.75a1.922 1.922 0 00-1.917 1.917c0 1.054.863 1.916 1.917 1.916a1.922 1.922 0 001.917-1.916zm3.833 9.583c-.192-.68-3.162-1.917-5.75-1.917-2.578 0-5.53 1.227-5.75 1.917h11.5zm-13.417 0c0-2.55 5.108-3.833 7.667-3.833s7.667 1.284 7.667 3.833v1.917H3.833V17.25z',
-    'address': 'M10.5 1.75a6.12 6.12 0 00-6.125 6.125c0 4.594 6.125 11.375 6.125 11.375s6.125-6.781 6.125-11.375A6.12 6.12 0 0010.5 1.75zM6.125 7.875A4.377 4.377 0 0110.5 3.5a4.377 4.377 0 014.375 4.375c0 2.52-2.52 6.291-4.375 8.645-1.82-2.336-4.375-6.151-4.375-8.645zm2.188 0a2.188 2.188 0 114.375 0 2.188 2.188 0 01-4.376 0z',
-    'phone': 'M15.745 14.308c1.074.354 2.224.546 3.422.546.527 0 .958.431.958.959v3.354a.961.961 0 01-.958.958c-9 0-16.292-7.293-16.292-16.292 0-.527.431-.958.958-.958h3.354c.528 0 .959.431.959.958 0 1.198.191 2.348.546 3.422a.92.92 0 01-.24.958L6.345 10.33a14.418 14.418 0 006.316 6.315l2.108-2.108a.982.982 0 01.68-.278c.096 0 .202.02.297.048zm2.463-2.808h1.917A8.626 8.626 0 0011.5 2.875v1.917c3.709 0 6.708 3 6.708 6.708zm-3.833 0h1.917A4.793 4.793 0 0011.5 6.708v1.917a2.871 2.871 0 012.875 2.875zM6.258 4.792c.067.843.21 1.677.431 2.472l-1.15 1.16a14.708 14.708 0 01-.719-3.632h1.438zm8.309 12.66c1.15.392 2.376.641 3.641.728v-1.447a12.221 12.221 0 01-2.491-.432l-1.15 1.15z',
+const userIcons: {[key in UserInfoTypes]: string} = {
+    'name': 'md-person',
+    'address': 'md-pin',
+    'phone': 'md-call',
 }
 
 const UserInfo: FC<UserInfoProps> = (props) => {
     return (
-        <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Svg width={23} height={23} viewBox='0 0 23 23' fill='none' {...props}>
-                <Path
-                    fillRule='evenodd'
-                    clipRule='evenodd'
-                    d={userIcons[props.type]}
-                    fill={paperTheme.colors.accent}
-                />
-            </Svg>
-            <Text>
+        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicons name={userIcons[props.type]} size={25} color={paperTheme.colors.accent} />
+            <Text style={{marginLeft: 5}}>
                 {props.user[props.type]}
             </Text>
         </View>
