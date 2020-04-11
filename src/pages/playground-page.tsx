@@ -7,8 +7,8 @@ import { ContentPadding } from '../components/content-padding';
 
 export default function PlaygroundPage({navigation, route}:RoutePropsHelper<'Playground'>) {
     return (
-        <ContentPadding>
-            <Text>Test</Text>
-        </ContentPadding>
+        <Center>
+            <Text>Hello</Text>
+        </Center>
     );
 }
