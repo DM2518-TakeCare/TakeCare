@@ -3,9 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 const contentPaddingStyle = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
-        padding: '5%',
+        flex: 1,
+        padding: 25,
     },
 });
 
