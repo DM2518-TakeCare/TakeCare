@@ -5,7 +5,7 @@ export const paperTheme: Theme = {
     colors: {
         ...DefaultTheme.colors,
         primary: '#27ae60',
-        accent: 'yellow',
+        accent: '#2274a5',
     },
     roundness: 10
 };
