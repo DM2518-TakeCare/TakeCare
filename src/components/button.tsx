@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
@@ -31,7 +31,7 @@ const buttonStyle = StyleSheet.create({
     },
 });
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button: FC<ButtonProps> = ({
     children, 
     onPress, 
     expandHorizontal = false, 
@@ -54,7 +54,7 @@ export const Button: React.FC<ButtonProps> = ({
             color={color}
             disabled={disabled}
             onPress={() => onPress()} 
-            mode="contained">
+            mode='contained'>
             {children}
         </PaperButton>
     );
