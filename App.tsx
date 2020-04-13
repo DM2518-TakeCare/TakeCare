@@ -24,7 +24,15 @@ export default function App() {
           <RootStack.Screen
             name="Home" 
             component={HomePage} />
-          <RootStack.Screen name="Playground" component={PlaygroundPage} />
+          <RootStack.Screen 
+            name="Playground"
+            options={{
+              // Custom header with actionIcon
+              header: (headerProps) => (
+                <AppBar headerProps={headerProps} actionIcon={"hospital"}/>
+              ),
+            }}
+            component={PlaygroundPage} />
         </RootStack.Navigator>
       </NavigationContainer>
     </PaperProvider>
