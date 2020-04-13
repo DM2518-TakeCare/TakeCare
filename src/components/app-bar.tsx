@@ -5,7 +5,7 @@ import { paperTheme } from '../theme/paper-theme';
 import { StackHeaderProps } from '@react-navigation/stack';
 
 export const AppBar: FC<{headerProps: StackHeaderProps}> = (props) => {
-    const title =props.headerProps.scene.descriptor.options.headerTitle !== undefined
+    const title = props.headerProps.scene.descriptor.options.headerTitle !== undefined
       ? props.headerProps.scene.descriptor.options.headerTitle
       : props.headerProps.scene.descriptor.options.title !== undefined
       ? props.headerProps.scene.descriptor.options.title
