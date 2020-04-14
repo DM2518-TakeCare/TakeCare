@@ -32,10 +32,10 @@ export const AppBar: FC<AppBarProps> = (props) => {
                 title={title}
             />
             {
-                props.actionIcon === null
+                props.actionIcon === undefined
                 ? <></>
                 : <PaperAppbar.Action 
-                    icon={props.actionIcon ?? ''} 
+                    icon={props.actionIcon ?? {}} 
                     onPress={props.onActionClick}/>
             }
         </PaperAppbar.Header>
