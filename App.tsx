@@ -7,6 +7,7 @@ import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
+import CreateTask from './src/pages/create-task';
 
 export default function App() {
   return (
@@ -33,6 +34,15 @@ export default function App() {
               ),
             }}
             component={PlaygroundPage} />
+          <RootStack.Screen 
+            name="CreateTask"
+            options={{
+              title: "Recieve Help",
+              header: (headerProps) => (
+                <AppBar headerProps={headerProps} actionIcon={"send"} onActionClick={() => {} /*TODO*/}/>
+              ),
+            }}
+            component={CreateTask} />
         </RootStack.Navigator>
       </NavigationContainer>
     </PaperProvider>
