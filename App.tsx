@@ -7,6 +7,7 @@ import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
+import FindTaskPage from './src/pages/find-task-page';
 
 export default function App() {
   return (
@@ -24,6 +25,12 @@ export default function App() {
           <RootStack.Screen
             name="Home" 
             component={HomePage} />
+          <RootStack.Screen
+            name="FindTask" 
+            options={{
+              headerTitle: "Find task"
+            }}
+            component={FindTaskPage} />
           <RootStack.Screen 
             name="Playground"
             options={{
