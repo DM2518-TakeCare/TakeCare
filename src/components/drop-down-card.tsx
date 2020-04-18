@@ -2,7 +2,7 @@ import React, { ReactNode, ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, Button, Animated, Easing, LayoutChangeEvent } from 'react-native';
 import { Card, Divider } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { paperTheme, otherColors } from '../theme/paper-theme';
+import { paperTheme } from '../theme/paper-theme';
 
 const dropDownCardStyleSheet = StyleSheet.create({
     card: {
