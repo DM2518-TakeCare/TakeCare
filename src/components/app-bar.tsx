@@ -33,7 +33,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
             />
             {
                 props.actionIcon === undefined
-                ? <></>
+                ? null
                 : <PaperAppbar.Action 
                     icon={props.actionIcon ?? {}} 
                     onPress={props.onActionClick}/>
