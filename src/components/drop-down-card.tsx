@@ -109,7 +109,7 @@ export const DropDownCard: React.FC<DropDownCardProps> = (props) => {
                 <Animated.View style={{
                     transform: [{rotate: arrowRotateAnimation}]
                 }}>
-                    <MaterialCommunityIcons name="chevron-down" size={25} color={paperTheme.colors.accent} />
+                    <MaterialCommunityIcons name='chevron-down' size={25} color={paperTheme.colors.accent} />
                 </Animated.View>
             </View>
             <Animated.View 
