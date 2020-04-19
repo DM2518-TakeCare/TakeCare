@@ -19,6 +19,11 @@ export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
             }}>
                 Settings
             </Button>
+            <Button mode="contained" onPress={() => {
+                navigation.navigate('CreateTask');
+            }}>
+                To Create Task
+            </Button>
         </Center>
     );
 }
