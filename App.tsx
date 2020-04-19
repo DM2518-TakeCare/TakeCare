@@ -7,6 +7,8 @@ import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
+import Settings from './src/pages/settings';
+import TaskCreated from './src/pages/task-created';
 
 export default function App() {
   return (
@@ -33,6 +35,15 @@ export default function App() {
               ),
             }}
             component={PlaygroundPage} />
+          <RootStack.Screen 
+            name="Settings"
+            options={{
+              title: "Settings",
+              header: (headerProps) => (
+                <AppBar headerProps={headerProps} actionIcon={"settings"} onActionClick={() => {}}/>
+              ),
+            }}
+            component={Settings} />
         </RootStack.Navigator>
       </NavigationContainer>
     </PaperProvider>
