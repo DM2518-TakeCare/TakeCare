@@ -8,7 +8,9 @@ export default function PlaygroundPage({navigation, route}:RoutePropsHelper<'Pla
     return (
         <Center>
             <Text>Hello</Text>
-            <Spinner />
+            <Spinner isLoading={true}>
+                <Text>Loading is done</Text>
+            </Spinner>
         </Center>
     );
 }
