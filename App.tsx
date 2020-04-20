@@ -53,7 +53,7 @@ export default function App() {
               options={{
                 title: "Settings",
                 header: (headerProps) => (
-                  <AppBar headerProps={headerProps} actionIcon={"settings"} onActionClick={() => {}}/>
+                  <AppBar headerProps={headerProps}/>
                 ),
               }}
               component={Settings} />

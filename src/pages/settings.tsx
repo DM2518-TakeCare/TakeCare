@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Center } from '../components/center';
-import { Divider, Switch, Paragraph, Chip, Text } from 'react-native-paper';
-import { ThemeProvider } from '@react-navigation/native';
-import { paperTheme } from '../theme/paper-theme';
-import { Button, TextInput } from 'react-native-paper';
-import { initialWindowSafeAreaInsets } from 'react-native-safe-area-context';
+import { TextInput } from 'react-native-paper';
 import { ContentPadding } from '../components/content-padding';
+import { Button } from '../components/button';
 
 const styles = StyleSheet.create({
     input: {
@@ -24,10 +20,8 @@ const styles = StyleSheet.create({
 });
 
 export default function Settings({navigation, route}:RoutePropsHelper<'Settings'>) {
-    let initialTagState: Record<string, boolean> = {}
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [idNumber, setIdNumber] = useState('');
     const [address, setAddress] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [extraInfo, setExtraInfo] = useState('');
@@ -50,18 +44,12 @@ export default function Settings({navigation, route}:RoutePropsHelper<'Settings'
                 <TextInput
                     mode='outlined'
                     style={styles.inputField} 
-                    value={idNumber} 
-                    onChangeText={text => setIdNumber(text)}
-                    placeholder=''
-                    label="ID number"/>
-                <TextInput
-                    mode='outlined'
-                    style={styles.inputField} 
                     value={address} 
                     onChangeText={text => setAddress(text)}
                     placeholder='Address'/>
                 <TextInput
                     mode='outlined'
+                    disabled
                     style={styles.inputField} 
                     value={phoneNumber} 
                     onChangeText={text => setPhoneNumber(text)}
@@ -73,10 +61,10 @@ export default function Settings({navigation, route}:RoutePropsHelper<'Settings'
                     numberOfLines={5} 
                     value={extraInfo} 
                     onChangeText={text => setExtraInfo(text)}
-                    placeholder='Extra Information'/> 
+                    placeholder='Extra Information (Door code, disabilities, special instructions etc)'/> 
             </ScrollView>                                                      
         </View>
-        <Button mode="contained" onPress={() => {
+        <Button size="big" onPress={() => {
                
         }}>
             Save
