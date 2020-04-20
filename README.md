@@ -21,3 +21,4 @@ The theme should be edited in `paper-theme.tsx`;
 * **Divided View**: Used to display items in a stylized view with upper and lower children. Reversable.  
 * **User info**: Used to display user information (name, address or phone) with an icon.
 * **AppBar**: Used to create a navigation bar
+* **TaskDetails**: Displays a drop down with task details.

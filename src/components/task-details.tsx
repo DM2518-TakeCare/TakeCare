@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Paragraph, Chip, Divider, Subheading, Caption } from 'react-native-paper';
+import { Paragraph, Chip, Divider, Caption } from 'react-native-paper';
 import { DropDownCard } from './drop-down-card';
 import { paperTheme } from '../theme/paper-theme';
 import { Ionicons } from '@expo/vector-icons';

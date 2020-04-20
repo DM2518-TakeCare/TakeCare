@@ -17,7 +17,7 @@ export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
             <Button mode="contained" onPress={() => {
                 navigation.navigate('Tasks');
             }}>
-                To  Tasks
+                To Tasks
             </Button>
         </Center>
     );
