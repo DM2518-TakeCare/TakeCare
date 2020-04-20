@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function Tasks({navigation, route}:RoutePropsHelper<'Tasks'>) {
+export default function TasksPage({navigation, route}:RoutePropsHelper<'Tasks'>) {
 
     /*Placeholder tasks*/
     const acceptedTasks: any[] = [
