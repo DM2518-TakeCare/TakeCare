@@ -5,6 +5,7 @@ import { RouteProp } from "@react-navigation/native";
 export type RootStackParamList = {
   Home: undefined;
   Playground: undefined;
+  Settings: undefined;
   CreateTask: undefined;
 };
 export const RootStack = createStackNavigator<RootStackParamList>();
@@ -12,4 +13,4 @@ export const RootStack = createStackNavigator<RootStackParamList>();
 export type RoutePropsHelper<T extends keyof RootStackParamList> = {
     navigation: StackNavigationProp<RootStackParamList, T>;
     route: RouteProp<RootStackParamList, T>;
-} 
+}
