@@ -1,14 +1,16 @@
 import React, { FC } from 'react'
 import { View, Text} from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import SvgIcon from './svg-icons'
+import SvgIcon from './svg-icon'
+import { paperTheme } from '../theme/paper-theme'
 
-type StatusHeaderTypes = 'sent'|'accepted'|'completed'|'give-help'|'receive-help'
+type StatusHeaderTypes = 'sent' | 'accepted' | 'completed' | 'give-help' | 'receive-help'
 
 interface StatusHeaderProps {
     type: StatusHeaderTypes
-    color: string
-    hideStatusText?: boolean
+    color?: string
+    hideStatusText?: boolean,
+    iconSize?: number,
 }
 
 interface StatusHeaderParameters{
@@ -24,21 +26,21 @@ const statusHeaderInfo: {[key in StatusHeaderTypes]: StatusHeaderParameters} = {
     'receive-help':  {icon: '', statusText: ''}
 }
 
-const StatusHeader: FC<StatusHeaderProps> = (props) => {
+const StatusHeader: FC<StatusHeaderProps> = ({type, color=paperTheme.colors.primary, hideStatusText=false, iconSize=120}) => {
     const renderIcons = () => {
-        if(props.type === 'give-help' || props.type === 'receive-help'){
-            return  <SvgIcon name={props.type} color={props.color} height='120' width='120'/>
+        if(type === 'give-help' || type === 'receive-help'){
+            return <SvgIcon name={type} color={color} height={iconSize} width={iconSize}/>
         }     
         else {
             return <MaterialCommunityIcons
-                name={statusHeaderInfo[props.type].icon} 
-                size={120} color={props.color}/>
+                name={statusHeaderInfo[type].icon} 
+                size={iconSize} color={color}/>
         }
     }
     return (
         <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             {renderIcons()}
-            {props.hideStatusText ? <></> : <Text style={{textAlign: 'center'}}>{statusHeaderInfo[props.type].statusText}</Text>}
+            {hideStatusText ? <></> : <Text style={{textAlign: 'center'}}>{statusHeaderInfo[type].statusText}</Text>}
         </View>
     )
 }

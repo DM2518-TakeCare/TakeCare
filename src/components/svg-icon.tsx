@@ -1,13 +1,13 @@
 import React, { FC } from 'react'
-import Svg, { Path } from "react-native-svg"
+import Svg, { Path } from 'react-native-svg'
 
-type SvgTypes = 'receive-help'|'give-help'
+type SvgTypes = 'receive-help' | 'give-help'
 
 interface SvgIconProps {
     name: SvgTypes
     color: string
-    height: string
-    width: string
+    height: number
+    width: number
 }
 
 interface SvgParameters {
@@ -22,9 +22,9 @@ const svgTypesInfo: {[key in SvgTypes]: SvgParameters} = {
 const SvgIcon: FC<SvgIconProps> = (props) => {
   return (
     <Svg height={props.height} width={props.width} viewBox={svgTypesInfo[props.name].viewBox} {...props}>
-        {svgTypesInfo[props.name].d.map((path, index) => {
-            return <Path key={index} fill={props.color} d={path}/>
-        })}
+        {svgTypesInfo[props.name].d.map((path, i) =>
+            <Path key={i} fill={props.color} d={path}/>
+        )}
     </Svg>
   )
 }
