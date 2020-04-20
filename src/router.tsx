@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Home: undefined;
   Playground: undefined;
   CreateTask: undefined;
+  Tasks: undefined;
 };
 export const RootStack = createStackNavigator<RootStackParamList>();
 

@@ -8,6 +8,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
 import CreateTask from './src/pages/create-task';
+import Tasks from './src/pages/tasks';
 
 export default function App() {
   return (
@@ -47,6 +48,15 @@ export default function App() {
                 ),
               }}
               component={CreateTask} />
+            <RootStack.Screen 
+              name='Tasks'
+              options={{
+                title: 'Tasks',
+                header: (headerProps) => (
+                  <AppBar headerProps={headerProps}/>
+                ),
+              }}
+              component={Tasks} />
           </RootStack.Navigator>
         </KeyboardAvoidingView>
       </NavigationContainer>
