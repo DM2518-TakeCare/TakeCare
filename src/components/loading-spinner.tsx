@@ -1,12 +1,11 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { paperTheme } from '../theme/paper-theme';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     flexDirection: "row",
-    padding: 10
   }
 });
 
@@ -16,7 +15,7 @@ export const Spinner: React.FC<{isLoading: boolean}> = (props) => {
       props.isLoading
       ?
         <View style={styles.container}>
-          <ActivityIndicator size="large" color="#27ae60" />
+          <ActivityIndicator size="large" color={paperTheme.colors.primary} />
         </View>
       :
         props.children
