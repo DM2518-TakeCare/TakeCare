@@ -8,7 +8,8 @@ type StatusHeaderTypes = 'sent' | 'accepted' | 'completed' | 'give-help' | 'rece
 
 interface StatusHeaderProps {
     type: StatusHeaderTypes
-    color?: string
+    color?: string,
+    onPrimary?: boolean,
     hideStatusText?: boolean,
     iconSize?: number,
 }
@@ -26,7 +27,8 @@ const statusHeaderInfo: {[key in StatusHeaderTypes]: StatusHeaderParameters} = {
     'receive-help':  {icon: '', statusText: ''}
 }
 
-const StatusHeader: FC<StatusHeaderProps> = ({type, color=paperTheme.colors.primary, hideStatusText=false, iconSize=120}) => {
+const StatusHeader: FC<StatusHeaderProps> = ({type, color=paperTheme.colors.primary, onPrimary=false, hideStatusText=false, iconSize=120}) => {
+    color = onPrimary ? paperTheme.colors.onPrimary: color 
     const renderIcons = () => {
         if(type === 'give-help' || type === 'receive-help'){
             return <SvgIcon name={type} color={color} height={iconSize} width={iconSize}/>
@@ -40,7 +42,7 @@ const StatusHeader: FC<StatusHeaderProps> = ({type, color=paperTheme.colors.prim
     return (
         <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             {renderIcons()}
-            {hideStatusText ? <></> : <Text style={{textAlign: 'center'}}>{statusHeaderInfo[type].statusText}</Text>}
+            {hideStatusText ? <></> : <Text style={{textAlign: 'center', color: onPrimary ? color : paperTheme.colors.text}}>{statusHeaderInfo[type].statusText}</Text>}
         </View>
     )
 }
