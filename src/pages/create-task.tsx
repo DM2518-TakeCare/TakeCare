@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView } from 'react-native';
+import { StyleSheet, View, TextInput, SafeAreaView, Animated, LayoutChangeEvent } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Center } from '../components/center';
 import { Divider, Switch, Paragraph, Chip, Text } from 'react-native-paper';
-import { ThemeProvider } from '@react-navigation/native';
 import { paperTheme } from '../theme/paper-theme';
 
 const styles = StyleSheet.create({
@@ -28,6 +26,35 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
     const [useShoppingList, setUseShoppingList] = useState(false);
     const [input, setInput] = useState('');
 
+    const toggleShoppingList = () => {
+        startAnimations(!useShoppingList);
+        setUseShoppingList(!useShoppingList);
+    };
+
+    const [shoppingListHeightAnimation] = useState(new Animated.Value(0));
+    const [contentOpacityAnimation] = useState(new Animated.Value(0));
+    const [shoppingListHeight, setShoppingListHeight] = useState<number | null>(null);
+
+    const startAnimations = (open: boolean) => {
+        Animated.timing(
+            contentOpacityAnimation,
+            {
+                toValue: open ? 1 : 0,
+                duration: 200,
+                isInteraction: true,
+            }
+        ).start()
+
+        Animated.timing(
+            shoppingListHeightAnimation,
+            {
+                toValue: open ? (shoppingListHeight ?? 0) : 0,
+                duration: 400,
+                isInteraction: true,
+            }
+        ).start()
+    };
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.input}>
@@ -43,13 +70,23 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                 <Switch 
                     style={{paddingLeft: 5}}
                     value={useShoppingList} 
-                    onValueChange={() => setUseShoppingList(!useShoppingList)}/>
+                    onValueChange={toggleShoppingList}/>
             </View>
-            { useShoppingList ? 
+            <Animated.View 
+                style={{
+                    overflow: 'hidden',
+                    height: shoppingListHeight === null ? null : shoppingListHeightAnimation,
+                    opacity: contentOpacityAnimation,
+                }} 
+                onLayout={(event: LayoutChangeEvent) => {
+                    if(shoppingListHeight === null) {
+                        setShoppingListHeight(event.nativeEvent.layout.height);
+                    }
+                }}>
                 <View style={{...styles.row, }}>
                     <Text>placeholder for item list</Text>
-                </View> : <></> 
-            }
+                </View>
+                </Animated.View>
             <Divider/>
             <View style={styles.row}>
                 {tags.map((tag: string) =>
