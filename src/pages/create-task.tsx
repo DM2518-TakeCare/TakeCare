@@ -83,10 +83,10 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                         setShoppingListHeight(event.nativeEvent.layout.height);
                     }
                 }}>
-                <View style={{...styles.row, }}>
+                <View style={styles.row}>
                     <Text>placeholder for item list</Text>
                 </View>
-                </Animated.View>
+            </Animated.View>
             <Divider/>
             <View style={styles.row}>
                 {tags.map((tag: string) =>
