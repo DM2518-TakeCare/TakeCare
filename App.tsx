@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import { NavigationContainer,  } from '@react-navigation/native';
 import { RootStack } from './src/router';
 import HomePage from './src/pages/home-page';
@@ -9,6 +9,7 @@ import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
 import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
+import TaskCompleted from './src/pages/task-completed';
 
 export default function App() {
   return (
@@ -48,6 +49,15 @@ export default function App() {
                 ),
               }}
               component={CreateTask} />
+            <RootStack.Screen 
+              name="TaskCompleted"
+              options={{
+                title: '',
+                header: (headerProps) => (
+                  <AppBar blendIn disableBackAction headerProps={headerProps}  actionIcon={'window-close'} onActionClick={() => {} /*TODO*/}/>
+                ),
+              }}
+              component={TaskCompleted} />
             <RootStack.Screen 
               name="Settings"
               options={{
