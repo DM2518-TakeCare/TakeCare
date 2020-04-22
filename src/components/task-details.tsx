@@ -57,20 +57,35 @@ export const TaskDetails: FC<TaskDetailsProps> = ({
             )}
         </View>);
     
-    const dropDownContent = (<>
+        const dropDownContent = (<>
             {detailsContent.map((cont: any) => 
                 <View key={cont.key}>
-                    {cont.obj[cont.key] ? 
-                        <View style={styles.section}>
-                            <Caption>{cont.title}</Caption>
-                            {cont.key !== 'tags' ? <><Paragraph>{cont.obj[cont.key]}</Paragraph><Divider/></> : tagContent}
-                    </View>: <></> }
+                    {
+                        cont.obj[cont.key] 
+                        ? 
+                            <View style={styles.section}>
+                                <Caption>{cont.title}</Caption>
+                                {
+                                    cont.key !== 'tags' 
+                                    ? 
+                                        <Paragraph>{cont.obj[cont.key]}</Paragraph>
+                                    : 
+                                        tagContent
+                                }
+                            </View>
+                        : 
+                            <></> 
+                    }
                 </View>
             )}
-            { canComplete ? 
-                <ContentPadding> 
-                    <Button expandHorizontal onPress={onComplete}>Task completed</Button>
-                </ContentPadding> : <></>
+            { 
+                canComplete 
+                ? 
+                    <ContentPadding> 
+                        <Button expandHorizontal onPress={onComplete}>Task completed</Button>
+                    </ContentPadding> 
+                : 
+                    <></>
             }
         </>);
 
