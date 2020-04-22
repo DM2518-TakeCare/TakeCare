@@ -9,6 +9,7 @@ import { paperTheme } from './src/theme/paper-theme';
 import { AppBar } from './src/components/app-bar';
 import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
+import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
 
 export default function App() {
@@ -49,6 +50,15 @@ export default function App() {
                 ),
               }}
               component={CreateTask} />
+            <RootStack.Screen 
+              name='Tasks'
+              options={{
+                title: 'Tasks',
+                header: (headerProps) => (
+                  <AppBar headerProps={headerProps}/>
+                ),
+              }}
+              component={TasksPage} />
             <RootStack.Screen 
               name="TaskCompleted"
               options={{

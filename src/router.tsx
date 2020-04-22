@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Playground: undefined;
   Settings: undefined;
   CreateTask: undefined;
+  Tasks: undefined;
   TaskCompleted: undefined;
 };
 export const RootStack = createStackNavigator<RootStackParamList>();
