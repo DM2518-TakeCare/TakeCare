@@ -59,6 +59,7 @@ export default function App() {
                 ),
               }}
               component={TasksPage} />
+            <RootStack.Screen 
               name="TaskCompleted"
               options={{
                 title: '',
