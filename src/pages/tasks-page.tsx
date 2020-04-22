@@ -6,6 +6,7 @@ import { ContentPadding } from '../components/content-padding';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TaskDetails } from '../components/task-details';
 import { Center } from '../components/center';
+import StatusHeader from '../components/status-header';
 
 const styles = StyleSheet.create({
     tasksContainer: {
@@ -39,7 +40,7 @@ export default function TasksPage({navigation, route}:RoutePropsHelper<'Tasks'>)
             <ContentPadding>
                 <Center>
                     <ContentPadding>
-                        <Text>Status Header Placeholder</Text>
+                        <StatusHeader type='give-help'/>
                     </ContentPadding>
                 </Center>
                 <Subheading>Accepted Tasks</Subheading>
