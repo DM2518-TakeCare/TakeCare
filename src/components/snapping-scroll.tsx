@@ -1,5 +1,5 @@
-import React, { useState, useRef, ReactNode, Component, createRef, useEffect } from 'react';
-import {View, Text, Animated, NativeSyntheticEvent, NativeScrollEvent, ScrollView, TextInput } from 'react-native';
+import React, { useState, useRef, ReactNode, useEffect } from 'react';
+import { StyleSheet, View, Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
 interface SnappingScrollProps {
     scrollItems: ReactNode[],
@@ -7,6 +7,17 @@ interface SnappingScrollProps {
     activeScrollItem?: number | null,
     onScrollItemSnap: (index: number | null) => void,
 }
+
+const snappingScrollStyle = StyleSheet.create({
+    scrollViewContainer: {
+        paddingBottom: '50%',
+        paddingHorizontal: 10
+    },
+    itemContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+});
 
 export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
 
@@ -54,9 +65,8 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
                 snapToInterval={props.scrollItemsHeight}
                 snapToAlignment={"start"}
                 contentContainerStyle={{
-                    paddingBottom: '50%',
+                    ...snappingScrollStyle.scrollViewContainer,
                     paddingTop: props.scrollItemsHeight * 0.5,
-                    paddingHorizontal: 10
                 }}
                 scrollEventThrottle={16}
                 onScroll={
@@ -109,12 +119,11 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
 
                             return (
                                 <Animated.View key={index} style={{
+                                    ...snappingScrollStyle.itemContainer,
                                     transform: [
                                         {scale: scaleAnimation}
                                     ],
                                     opacity: opacityAnimation,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
                                     height: props.scrollItemsHeight, 
                                 }}>
                                     {item}

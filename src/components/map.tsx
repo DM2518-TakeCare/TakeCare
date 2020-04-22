@@ -1,10 +1,8 @@
-import React, { useRef, useState, createRef, useEffect, ReactElement, useImperativeHandle, RefForwardingComponent, forwardRef } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import React, { useRef, useState, useEffect, useImperativeHandle, RefForwardingComponent, forwardRef } from 'react';
+import { StyleSheet } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Circle, LatLng, EventUserLocation, Marker, Region } from 'react-native-maps';
 import MapTheme from '../theme/map-theme.json';
 import { paperTheme } from '../theme/paper-theme';
-import { Theme } from 'react-native-paper';
-import { CircleProps } from 'react-native-svg';
 
 const mapStyle = StyleSheet.create({
     container: {

@@ -1,11 +1,8 @@
-import React, { Props, useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList, RoutePropsHelper } from '../router';
-import { Center } from '../components/center';
-import MapView, { PROVIDER_GOOGLE, LatLng } from 'react-native-maps';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { RoutePropsHelper } from '../router';
+import { LatLng } from 'react-native-maps';
 import TakeCareMap, { TakeCareMapMarker, TakeCareMapHandles } from '../components/map';
-import { TouchableWithoutFeedback, PinchGestureHandler, PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import { ContentPadding } from '../components/content-padding';
 import { Button } from '../components/button';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,7 +13,7 @@ const findTaskStyle = StyleSheet.create({
     mapContainer: {
         position: 'relative'
     },
-    mapControlls: {
+    mapControls: {
         position: 'absolute',
         bottom: 0,
         right: 0,
@@ -135,7 +132,7 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                         setActiveTaskIndex(taskIndex);
                     }}
                 />
-                <View style={findTaskStyle.mapControlls}>
+                <View style={findTaskStyle.mapControls}>
                     <ContentPadding>
                         <Button expandHorizontal={false} toggleOff={!followUserLocation} onPress={() => setFollowUserLocation(!followUserLocation)}>
                             <MaterialIcons size={25} name="my-location"/>
