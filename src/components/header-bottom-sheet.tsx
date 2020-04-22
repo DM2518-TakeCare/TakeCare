@@ -1,28 +1,29 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View} from 'react-native';
+import { paperTheme } from '../theme/paper-theme';
 
 interface HeaderBottomSheetProps {
-    headerColor: string,
-    headerHeight?: number | string,
-    headerWidth?: number | string
+    color?: string,
+    height?: number | string,
+    width?: number | string
 }
-export const HeaderBottomSheet :React.FC<HeaderBottomSheetProps> = (props) => {
+export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
     const style = StyleSheet.create({
         headerContainer: {
             alignItems: 'center',
             paddingTop: 15,
-            width: props.headerWidth,
-            height: props.headerHeight,
-            backgroundColor: props.headerColor,
-            borderTopLeftRadius: 10,  
-            borderTopRightRadius: 10, 
+            width: props.width,
+            height: props.height,
+            backgroundColor: props.color ?? paperTheme.colors.surface,
+            borderTopLeftRadius: paperTheme.roundness,  
+            borderTopRightRadius: paperTheme.roundness, 
         },
         pullItem: {
             width: 60,
             height: 5,
             borderRadius: 20,
             opacity: 0.25,
-            backgroundColor: '#000'
+            backgroundColor: paperTheme.colors.text
         }
     });
     return (

@@ -1,8 +1,7 @@
-import React, { FC, ReactNode } from 'react'
-import { StyleSheet, View } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
-import { paperTheme } from '../../theme/paper-theme'
-import { Center } from '../center'
+import React, { FC, ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { paperTheme } from '../../theme/paper-theme';
 
 const styles = StyleSheet.create({
     container: {
