@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Settings: undefined;
   CreateTask: undefined;
   Tasks: undefined;
+  TaskCompleted: undefined;
 };
 export const RootStack = createStackNavigator<RootStackParamList>();
 
