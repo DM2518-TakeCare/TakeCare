@@ -13,7 +13,6 @@ import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
-import { addActiveTask } from './src/model/redux/giveHelpState';
 
 store.subscribe(() => {
   console.groupCollapsed("State change");

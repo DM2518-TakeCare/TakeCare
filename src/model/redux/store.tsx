@@ -18,4 +18,3 @@ const store = createStore(
 );
 
 export default store;
-export type Dispatch = typeof store.dispatch
