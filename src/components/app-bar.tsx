@@ -23,7 +23,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
       : props.headerProps.scene.route.name;
 
     return (
-        <PaperAppbar.Header style={props.blendIn ? {elevation: 0}: {}}>
+        <PaperAppbar.Header style={props.blendIn ? {elevation: 0, backgroundColor: 'transparent'}: {}}>
             { props.disableBackAction ? <></> : <PaperAppbar.BackAction
                 disabled={!props.headerProps.navigation.canGoBack()}
                 onPress={() => {

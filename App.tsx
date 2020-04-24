@@ -11,6 +11,7 @@ import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
 import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
+import Register from './src/pages/register-page';
 
 export default function App() {
   return (
@@ -77,6 +78,15 @@ export default function App() {
                 ),
               }}
               component={Settings} />
+            <RootStack.Screen 
+              name="Register"
+              options={{
+                title: "",
+                header: (headerProps) => (
+                  <AppBar blendIn headerProps={headerProps}/>
+                ),
+              }}
+              component={Register} />
           </RootStack.Navigator>
         </KeyboardAvoidingView>
       </NavigationContainer>
