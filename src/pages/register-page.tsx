@@ -70,8 +70,6 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
     )
 
     return (
-        <SafeAreaView style={{flex: 2}}>
             <DividedView upper={upper} lower={lower}/>
-        </SafeAreaView>
     );
 }

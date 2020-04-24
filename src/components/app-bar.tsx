@@ -13,6 +13,7 @@ interface AppBarProps {
     onActionClick?: () => void,
     blendIn?: boolean,
     disableBackAction?: boolean,
+    color?: string
 }
 
 export const AppBar: FC<AppBarProps> = (props) => {
@@ -21,9 +22,14 @@ export const AppBar: FC<AppBarProps> = (props) => {
       : props.headerProps.scene.descriptor.options.title !== undefined
       ? props.headerProps.scene.descriptor.options.title
       : props.headerProps.scene.route.name;
+    
+    const headerStyle = {
+        backgroundColor: props.color,
+        elevation: props.blendIn ? 0 : 1
+    }
 
     return (
-        <PaperAppbar.Header style={props.blendIn ? {elevation: 0, backgroundColor: 'transparent'}: {}}>
+        <PaperAppbar.Header style={headerStyle}>
             { props.disableBackAction ? <></> : <PaperAppbar.BackAction
                 disabled={!props.headerProps.navigation.canGoBack()}
                 onPress={() => {
