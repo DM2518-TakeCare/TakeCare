@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
     },
+    dividedCont: {
+       
+
+    },
     upperCont: {
         flex: 0.7,
         padding: 25,
@@ -35,13 +39,15 @@ const  DividedView: FC<DividedViewProps> = (props) => {
             <View style={{...styles.upperCont, backgroundColor: props.reverse? paperTheme.colors.primary : paperTheme.colors.background}}>
                 {props.upper}     
             </View>
-            <Svg width={'100%'} height={'133'} viewBox='0 0 359.57 122.05' fill='none' {...props}>
+            <View style={styles.dividedCont}>
+            <Svg width={'100%'} height={'122.05'} preserveAspectRatio="xMinYMin" viewBox='0 0 359.57 122.05' fill='none' {...props}>
                         <Path
-                            d='M359.79,234.67l-88.35,85.11a132,132,0,0,1-183.16,0L.21,234.94Z'
+                            d='M360,234.6l-88.42,85.18a132,132,0,0,1-183.16,0L.36,234.54Z'
                             fill={props.reverse? paperTheme.colors.primary : paperTheme.colors.background}
                             transform='translate(-0.21 -234.67)'
                         />
             </Svg>
+            </View>
             <View style={styles.lowerCont}>
                 {props.lower}
             </View>       
