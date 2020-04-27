@@ -81,7 +81,7 @@ export default function App() {
             <RootStack.Screen 
               name="TaskAccepted"
               options={{
-                title: "Your accepted task",
+                title: "Your task",
                 header: (headerProps) => (
                   <AppBar headerProps={headerProps}/>
                 ),
