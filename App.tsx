@@ -83,7 +83,7 @@ export default function App() {
               options={{
                 title: "",
                 header: (headerProps) => (
-                  <AppBar blendIn color={paperTheme.colors.background} headerProps={headerProps}/>
+                  <AppBar blendIn disableBackAction color={paperTheme.colors.background} headerProps={headerProps}/>
                 ),
               }}
               component={Register} />

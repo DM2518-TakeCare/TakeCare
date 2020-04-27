@@ -10,10 +10,6 @@ import { Button } from '../components/button';
 import { paperTheme } from '../theme/paper-theme'
 
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flex: 1,
-    },
     upperCont: {
         display: 'flex',
         justifyContent: 'space-around',
@@ -34,7 +30,7 @@ const styles = StyleSheet.create({
         height: 40,
         textAlign: 'center',
         backgroundColor: 'transparent',
-        fontSize: 20      
+        fontSize: 16      
     },
     styleErrorText: {
         color: paperTheme.colors.error
@@ -56,35 +52,32 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
     const upper = (
         <ContentPadding>    
             <View style={styles.upperCont}>
-                <SvgIcon name='take-care' height={250} width={250}></SvgIcon>
+                <SvgIcon name='take-care' height={250} width={250}/>
             </View>
-        </ContentPadding>
-        
+        </ContentPadding>    
     )
 
     const lower = (
         <SafeAreaView style={{flex: 1}}>
-                <View style={styles.container}>
-                    <View style={styles.bottomCont}>
-                        <View style={styles.textInputCont}>
-                            <TextInput
-                                theme={{colors: {text: paperTheme.colors.onPrimary, placeholder: paperTheme.colors.onPrimary, primary: paperTheme.colors.onPrimary}}}
-                                mode='outlined'
-                                placeholder='Enter Your Phone Number'
-                                maxLength={10}
-                                selectionColor={paperTheme.colors.onPrimary}
-                                keyboardType='phone-pad'
-                                value={numberInput}
-                                onChangeText={text => setNumber(text)}
-                                error={showError}
-                                style={styles.textInput}/>
-                            {showError ? <Text  style={styles.styleErrorText}>You need to enter 10 digits.</Text> : <></>}
-                            <View style={styles.buttonContainer}>
-                                <Button onPress={checkPhoneNumber} color={paperTheme.colors.onPrimary}>Send registration code</Button>
-                            </View>
-                        </View> 
+            <View style={styles.bottomCont}>
+                <View style={styles.textInputCont}>
+                    <TextInput
+                        theme={{colors: {text: paperTheme.colors.onPrimary, placeholder: paperTheme.colors.onPrimary, primary: paperTheme.colors.onPrimary}}}
+                        mode='outlined'
+                        placeholder='Enter Your Phone Number'
+                        maxLength={10}
+                        selectionColor={paperTheme.colors.onPrimary}
+                        keyboardType='phone-pad'
+                        value={numberInput}
+                        onChangeText={text => setNumber(text)}
+                        error={showError}
+                        style={styles.textInput}/>
+                    {showError ? <Text style={styles.styleErrorText}>You need to enter 10 digits.</Text> : <></>}
+                    <View style={styles.buttonContainer}>
+                        <Button onPress={checkPhoneNumber} color={paperTheme.colors.onPrimary}>Send registration code</Button>
                     </View>
                 </View> 
+            </View>
         </SafeAreaView>
     )
 
