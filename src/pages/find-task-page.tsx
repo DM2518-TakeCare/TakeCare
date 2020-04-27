@@ -108,7 +108,6 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                         latitudeDelta: 0.01,
                         longitudeDelta: 0.01,
                     }}
-                    // mapRef={mapRef}
                     activeMarkerIndex={activeTaskIndex}
                     markers={generateMarkers()}
                     followUser={followUserLocation}
@@ -133,7 +132,10 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 />
                 <View style={findTaskStyle.mapControls}>
                     <ContentPadding>
-                        <Button expandHorizontal={false} toggleOff={!followUserLocation} onPress={() => setFollowUserLocation(!followUserLocation)}>
+                        <Button 
+                            expandHorizontal={false} 
+                            toggleOff={!followUserLocation} 
+                            onPress={() => setFollowUserLocation(!followUserLocation)}>
                             <MaterialIcons size={25} name='my-location'/>
                         </Button>
                     </ContentPadding>
