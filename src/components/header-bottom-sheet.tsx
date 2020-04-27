@@ -11,7 +11,7 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
     const style = StyleSheet.create({
         headerContainer: {
             alignItems: 'center',
-            paddingTop: 15,
+            padding: 15,
             width: props.width,
             height: props.height,
             backgroundColor: props.color ?? paperTheme.colors.surface,
@@ -21,7 +21,7 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
         pullItem: {
             width: 60,
             height: 5,
-            borderRadius: 20,
+            borderRadius: paperTheme.roundness,
             opacity: 0.25,
             backgroundColor: paperTheme.colors.text
         }
@@ -29,7 +29,6 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
     return (
         <View style={style.headerContainer}>
             <View style={style.pullItem}></View>
-            {props.children}
         </View>
     );
 }
