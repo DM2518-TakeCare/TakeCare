@@ -10,7 +10,9 @@ interface AppBarProps {
     headerProps: StackHeaderProps
     /** See available icons here https://materialdesignicons.com/ */
     actionIcon?: string,
-    onActionClick?: () => void
+    onActionClick?: () => void,
+    blendIn?: boolean,
+    disableBackAction?: boolean,
 }
 
 export const AppBar: FC<AppBarProps> = (props) => {
@@ -21,13 +23,13 @@ export const AppBar: FC<AppBarProps> = (props) => {
       : props.headerProps.scene.route.name;
 
     return (
-        <PaperAppbar.Header>
-            <PaperAppbar.BackAction
+        <PaperAppbar.Header style={props.blendIn ? {elevation: 0}: {}}>
+            { props.disableBackAction ? <></> : <PaperAppbar.BackAction
                 disabled={!props.headerProps.navigation.canGoBack()}
                 onPress={() => {
                     props.headerProps.navigation.goBack();
                 }}
-            />
+            /> }
             <PaperAppbar.Content
                 title={title}
             />
