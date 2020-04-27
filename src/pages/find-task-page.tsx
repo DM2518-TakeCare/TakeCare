@@ -134,7 +134,7 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 <View style={findTaskStyle.mapControls}>
                     <ContentPadding>
                         <Button expandHorizontal={false} toggleOff={!followUserLocation} onPress={() => setFollowUserLocation(!followUserLocation)}>
-                            <MaterialIcons size={25} name="my-location"/>
+                            <MaterialIcons size={25} name='my-location'/>
                         </Button>
                     </ContentPadding>
                 </View>
