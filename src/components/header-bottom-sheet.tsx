@@ -21,7 +21,7 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
         pullItem: {
             width: 60,
             height: 5,
-            borderRadius: 20,
+            borderRadius: paperTheme.roundness,
             opacity: 0.25,
             backgroundColor: paperTheme.colors.text
         }
