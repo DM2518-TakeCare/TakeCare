@@ -67,7 +67,7 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
                 showsVerticalScrollIndicator={false}
                 decelerationRate={0}
                 snapToInterval={props.scrollItemsHeight}
-                snapToAlignment={"start"}
+                snapToAlignment={'start'}
                 contentContainerStyle={{
                     ...snappingScrollStyle.scrollViewContainer,
                     paddingTop: props.scrollItemsHeight * 0.5,
