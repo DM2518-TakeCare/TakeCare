@@ -43,12 +43,14 @@ const styles = StyleSheet.create({
 
 export default function Register({navigation, route}:RoutePropsHelper<'Register'>) {
     const [numberInput, setNumber] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('0000000000');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [showError, setError] = useState(false);
 
-    const tryPhoneNumber = () => {              //placeholder for actual function when using phone number to identify user
-        setPhoneNumber(numberInput)
-        numberInput.length !=10 ? setError(true) : setError(false)
+    const checkPhoneNumber = () => {              //placeholder for actual function when using phone number to identify user
+        if (numberInput.length === 10) {
+            setPhoneNumber(numberInput)
+        }
+        setError(numberInput.length !== 10)
     }
 
     const upper = (
@@ -66,19 +68,19 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
                     <View style={styles.bottomCont}>
                         <View style={styles.textInputCont}>
                             <TextInput
-                            theme={{colors: {text: paperTheme.colors.onPrimary, placeholder: paperTheme.colors.onPrimary, primary: paperTheme.colors.onPrimary}}}
-                            mode='outlined'
-                            label='Enter Your Phone Number'
-                            maxLength={10}
-                            selectionColor={paperTheme.colors.onPrimary}
-                            keyboardType='phone-pad'
-                            value={numberInput}
-                            onChangeText={text => setNumber(text)}
-                            error={phoneNumber.length != 10 ? true : false}
-                            style={styles.textInput}/>
+                                theme={{colors: {text: paperTheme.colors.onPrimary, placeholder: paperTheme.colors.onPrimary, primary: paperTheme.colors.onPrimary}}}
+                                mode='outlined'
+                                placeholder='Enter Your Phone Number'
+                                maxLength={10}
+                                selectionColor={paperTheme.colors.onPrimary}
+                                keyboardType='phone-pad'
+                                value={numberInput}
+                                onChangeText={text => setNumber(text)}
+                                error={showError}
+                                style={styles.textInput}/>
                             {showError ? <Text  style={styles.styleErrorText}>You need to enter 10 digits.</Text> : <></>}
                             <View style={styles.buttonContainer}>
-                                <Button onPress={() => {tryPhoneNumber()}} color={paperTheme.colors.onPrimary}>Send regristation code</Button>
+                                <Button onPress={checkPhoneNumber} color={paperTheme.colors.onPrimary}>Send registration code</Button>
                             </View>
                         </View> 
                     </View>
