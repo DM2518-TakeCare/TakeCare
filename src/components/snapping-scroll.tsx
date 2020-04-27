@@ -33,10 +33,7 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
     useEffect(() => {
         const activeScrollItem = props.activeScrollItem;
         if (activeScrollItem !== null && activeScrollItem !== undefined) {
-            setScrollByUser(false);
-            scrollRef.current?.getNode().scrollTo({
-                y: activeScrollItem * props.scrollItemsHeight
-            });
+            scrollToItem(activeScrollItem);
         }
     }, [props.activeScrollItem])
 
@@ -51,6 +48,13 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
             }
         }
         return null;
+    }
+
+    const scrollToItem = (itemIndex: number, scrollByUser = false) => {
+        setScrollByUser(scrollByUser);
+        scrollRef.current?.getNode().scrollTo({
+            y: itemIndex * props.scrollItemsHeight
+        });
     }
 
     return (
@@ -93,6 +97,12 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
                     if (scrollByUser) {
                         const itemIndex = getItemIndexFromScrollPos(currentScroll);
                         props.onScrollItemSnap(itemIndex);
+                    }
+                    
+                    // Scroll to last task if overflow
+                    const lastItemIndex = props.scrollItems.length - 1;
+                    if (currentScroll > getItemScrollPos(props.scrollItems.length - 1)) {
+                        scrollToItem(lastItemIndex, true);
                     }
                 }}
                 >
