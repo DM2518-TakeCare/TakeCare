@@ -11,7 +11,7 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
     const style = StyleSheet.create({
         headerContainer: {
             alignItems: 'center',
-            paddingTop: 15,
+            padding: 15,
             width: props.width,
             height: props.height,
             backgroundColor: props.color ?? paperTheme.colors.surface,
