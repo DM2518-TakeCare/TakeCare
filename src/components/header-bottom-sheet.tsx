@@ -29,7 +29,6 @@ export const HeaderBottomSheet: FC<HeaderBottomSheetProps> = (props) => {
     return (
         <View style={style.headerContainer}>
             <View style={style.pullItem}></View>
-            {props.children}
         </View>
     );
 }
