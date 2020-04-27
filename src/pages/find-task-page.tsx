@@ -123,7 +123,6 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                         if (followUserLocation) {
                             setFollowUserLocation(false);
                         }
-                        console.log('Map dragged');
                     }}
                     onUserLocationChange={(location) => {
                         setUserLocation(location);
