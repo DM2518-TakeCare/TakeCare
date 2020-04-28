@@ -8,6 +8,7 @@ import { Button } from '../components/button';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SnappingScroll } from '../components/snapping-scroll';
 import { Card } from 'react-native-paper';
+import * as Permissions from 'expo-permissions';
 
 const findTaskStyle = StyleSheet.create({
     mapContainer: {
@@ -35,6 +36,11 @@ interface Task {
     coordinates: LatLng 
 }
 
+const getLocationPermission = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    return (status === 'granted')
+}
+
 export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindTask'>) {
     const [radius, setRadius] = useState(100);
     const [followUserLocation, setFollowUserLocation] = useState(false);
@@ -43,9 +49,14 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
     const [activeTaskIndex, setActiveTaskIndex] = useState<number | null>(0);
 
     const mapRef = useRef<TakeCareMapHandles>(null);
-
+    
     useEffect(() => {
         setTasks(searchForNewTasks());
+        getLocationPermission().then(
+            permission=> {
+                setFollowUserLocation(permission)
+            }
+        );
     }, []);
 
     const searchForNewTasks = () => {
