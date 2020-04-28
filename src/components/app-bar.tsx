@@ -1,8 +1,10 @@
 import React, { FC, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Animated, StatusBar, StatusBarStyle, Easing } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Animated, StatusBar, StatusBarStyle, Platform, NativeModules } from 'react-native';
 import { Appbar as PaperAppbar} from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
 import { StackHeaderProps } from '@react-navigation/stack';
+
+const { StatusBarManager } = NativeModules;
 
 const AppBarStyle = StyleSheet.create({
     contentContainer: {
@@ -10,6 +12,7 @@ const AppBarStyle = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        paddingTop: Platform.OS === 'ios' ? 0 : ((StatusBarManager.HEIGHT > 24) ? StatusBarManager.HEIGHT : 0),
     },
     titleContainer: {
         flex: 1
