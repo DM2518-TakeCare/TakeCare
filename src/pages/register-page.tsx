@@ -83,7 +83,9 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <DividedView upper={upper} lower={lower}/>
+            <View style={{flex: 1}}>
+                <DividedView upper={upper} lower={lower}/>
+            </View>
         </TouchableWithoutFeedback>
     );
 }
