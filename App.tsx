@@ -11,6 +11,7 @@ import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
 import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
+import Register from './src/pages/register-page';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
@@ -39,6 +40,15 @@ export default function App() {
                   <AppBar headerProps={headerProps}/>
                 ),
               }}>
+            <RootStack.Screen 
+              name="Register"
+              options={{
+                title: "",
+                header: (headerProps) => (
+                  <AppBar blendIn disableBackAction color={paperTheme.colors.background} headerProps={headerProps}/>
+                ),
+              }}
+              component={Register} />
               <RootStack.Screen
                 name='Home' 
                 component={HomePage} />
