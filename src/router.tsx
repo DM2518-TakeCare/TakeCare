@@ -5,6 +5,7 @@ import { RouteProp } from "@react-navigation/native";
 export type RootStackParamList = {
   Home: undefined;
   Playground: undefined;
+  FindTask: undefined;
   Settings: undefined;
   CreateTask: undefined;
   Tasks: undefined;

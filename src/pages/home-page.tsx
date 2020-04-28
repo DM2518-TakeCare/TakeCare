@@ -4,7 +4,7 @@ import { RoutePropsHelper } from '../router';
 import { Center } from '../components/center';
 import { Button } from 'react-native-paper';
 
-export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
+export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>) {
     return (
         <Center>
             <Text>TakeCare</Text>
@@ -17,6 +17,11 @@ export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
                 navigation.navigate('TaskAccepted');
             }}>
                 To Accepted task
+            </Button>
+            <Button mode="contained" onPress={() => {
+                navigation.navigate('FindTask');
+            }}>
+                Find task
             </Button>
         </Center>
     );
