@@ -13,6 +13,7 @@ import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
+import TaskAccepted from './src/pages/task-accepted';
 
 store.subscribe(() => {
   console.groupCollapsed("State change");
@@ -86,6 +87,15 @@ export default function App() {
                   ),
                 }}
                 component={Settings} />
+              <RootStack.Screen 
+                name="TaskAccepted"
+                options={{
+                  title: "Your task",
+                  header: (headerProps) => (
+                    <AppBar headerProps={headerProps}/>
+                  ),
+                }}
+                component={TaskAccepted} />
             </RootStack.Navigator>
           </KeyboardAvoidingView>
         </NavigationContainer>
