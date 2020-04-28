@@ -18,11 +18,6 @@ export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
             }}>
                 To Tasks
             </Button>
-            <Button mode="contained" onPress={() => {
-                navigation.navigate('Register');
-            }}>
-                Register
-            </Button>
         </Center>
     );
 }
