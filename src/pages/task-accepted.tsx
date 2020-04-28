@@ -1,27 +1,21 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, Caption } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import StatusHeader from '../components/status-header';
 import { ContentPadding } from '../components/content-padding';
 import UserInfo from '../components/user-info/user-info';
 import { TaskDetails } from '../components/task-details';
 import { Button } from '../components/button';
-import { Center } from '../components/center';
 
 const styles = StyleSheet.create({
-    statusHeaderCont: {
-        flex: 1,
-        paddingBottom: 20
-    },
     textStyle: {
-        paddingLeft:10,
-        paddingBottom:10
+        paddingLeft: 10,
     },
     userCont: {
+        padding: 10,
         flexDirection: 'row', 
-        flex: 1,
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
     },
     taskCont: {
         flex: 1,
@@ -43,12 +37,10 @@ export default function TaskAccepted({navigation, route}:RoutePropsHelper<'TaskA
     return (    
         <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
             <ContentPadding>
-                <Center>
-                    <ContentPadding>
-                        <StatusHeader type='accepted'/>
-                    </ContentPadding>
-                </Center>
-                <Text style={styles.textStyle}>Helper</Text>
+                <ContentPadding>
+                    <StatusHeader type='accepted'/>
+                </ContentPadding>
+                <Caption style={styles.textStyle}>Helper</Caption>
                 <View style={styles.userCont}>
                     <UserInfo type='name' user={testHelper}/>
                     <UserInfo type='phone' user={testHelper}/>
