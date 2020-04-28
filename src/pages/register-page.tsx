@@ -74,7 +74,7 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
                         style={styles.textInput}/>
                     {showError ? <Text style={styles.styleErrorText}>You need to enter 10 digits.</Text> : <></>}
                     <View style={styles.buttonContainer}>
-                        <Button onPress={checkPhoneNumber} color={paperTheme.colors.onPrimary}>Send registration code</Button>
+                        <Button size='big' onPress={checkPhoneNumber} color={paperTheme.colors.onPrimary}>Send registration code</Button>
                     </View>
                 </View> 
             </View>
