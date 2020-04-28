@@ -14,9 +14,9 @@ export default function HomePage({navigation, route}:RoutePropsHelper<'Home'>) {
                 To Playground
             </Button>
             <Button mode="contained" onPress={() => {
-                navigation.navigate('Tasks');
+                navigation.navigate('HelpDetails');
             }}>
-                To Tasks
+                To Task Details
             </Button>
         </Center>
     );

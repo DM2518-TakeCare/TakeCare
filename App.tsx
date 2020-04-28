@@ -11,6 +11,7 @@ import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
 import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
+import HelpDetails from './src/pages/help-details-page';
 
 export default function App() {
   return (
@@ -77,6 +78,15 @@ export default function App() {
                 ),
               }}
               component={Settings} />
+              <RootStack.Screen 
+                name="HelpDetails"
+                options={{
+                  title: "Task Details",
+                  header: (headerProps) => (
+                    <AppBar headerProps={headerProps}/>
+                  ),
+                }}
+                component={HelpDetails} />
           </RootStack.Navigator>
         </KeyboardAvoidingView>
       </NavigationContainer>
