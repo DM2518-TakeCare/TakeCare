@@ -1,10 +1,12 @@
 import React, { ReactElement, ReactDOM } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { DataTable } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const tableStyle = StyleSheet.create({
-    container: {
-        flex: 1,
+    trailing: {
+        display: 'flex',
+        justifyContent: 'center',
     },
 });
 
@@ -23,7 +25,9 @@ interface TableProps {
      * [[a],[b],[c],[d]],
      * [[a],[b],[c],[d]],
      */
-    tableData: (ReactElement | string)[][]
+    tableData: (ReactElement | string)[][],
+    rowAction: (i: number) => void,
+    trailing?: ReactElement
 }
 
 export const Table: React.FC<TableProps> = (props) => {
@@ -42,17 +46,27 @@ export const Table: React.FC<TableProps> = (props) => {
 
                 {
                     props.tableData.map((row, index) => 
-                        <DataTable.Row  key={index}>
-                            {
-                                row.map((cell, index) =>
-                                    <DataTable.Cell key={index}>
-                                        {cell}
+                        row.length > 0 ? 
+                            <DataTable.Row key={index}>
+                                {
+                                    row.map((cell, index) =>
+                                        <DataTable.Cell key={index}>
+                                            {cell}
+                                        </DataTable.Cell>
+                                    )
+                                }
+                                { 
+                                    <DataTable.Cell style={{flexGrow: 1, justifyContent: 'center'}} onPress={() => props.rowAction(index)}>
+                                       <MaterialIcons name='close'/>
                                     </DataTable.Cell>
-                                )
-                            }
-                        </DataTable.Row>
+                                }
+                            </DataTable.Row> : null
                     )
                 }
+                { props.trailing ? 
+                    <DataTable.Row>
+                            {props.trailing}
+                    </DataTable.Row> : <></> }
             </DataTable>
         </View>
     );
