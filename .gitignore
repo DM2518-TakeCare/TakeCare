@@ -2,6 +2,9 @@
 #
 .DS_Store
 
+# Credentails
+credentials.json
+
 # Xcode
 #
 build/
