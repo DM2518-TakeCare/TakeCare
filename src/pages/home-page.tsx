@@ -14,20 +14,9 @@ export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>
                 To Playground
             </Button>
             <Button mode="contained" onPress={() => {
-<<<<<<< HEAD
                 navigation.navigate('HelpDetails');
             }}>
-                To Task Details
-=======
-                navigation.navigate('TaskAccepted');
-            }}>
-                To Accepted task
-            </Button>
-            <Button mode="contained" onPress={() => {
-                navigation.navigate('FindTask');
-            }}>
-                Find task
->>>>>>> master
+                To help details
             </Button>
         </Center>
     );
