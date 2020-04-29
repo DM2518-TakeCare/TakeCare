@@ -3,6 +3,7 @@ import { DefaultTheme, Theme as PaperTheme } from 'react-native-paper';
 type CustomThemeElements = {
     colors: {
          onPrimary: string,
+         important: string
     }
 }
 
@@ -15,6 +16,7 @@ export const paperTheme: Theme = {
         primary: '#27ae60',
         onPrimary: '#fff',
         accent: '#2274a5',
+        important: "#fc7753"
     },
     roundness: 10
 };
