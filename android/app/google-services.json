@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "259111521812",
+    "firebase_url": "https://takecare-2904e.firebaseio.com",
+    "project_id": "takecare-2904e",
+    "storage_bucket": "takecare-2904e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259111521812:android:becf42d4bf9a80d6c3e101",
+        "android_client_info": {
+          "package_name": "com.takecare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259111521812-kgpk1un2a21bv9et6f9ge960ca4d2orh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlPrjgjAqg6F_N6leY89_6KzbHg_BGgzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259111521812-kgpk1un2a21bv9et6f9ge960ca4d2orh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
