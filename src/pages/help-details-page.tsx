@@ -15,16 +15,6 @@ const styles = StyleSheet.create({
         backgroundColor: paperTheme.colors.background,
        
     },
-    hej: {
-        flex: 1,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        backgroundColor: paperTheme.colors.background,
-        opacity: 0.8,
-        height: '20%',
-        width: '100%'
-    },
     mapCont: {
         flex: 1,
         zIndex: -1
@@ -36,8 +26,6 @@ const styles = StyleSheet.create({
         paddingLeft: 25,
         paddingBottom: 25,
         width: '100%'
-        
-
     },
     tagCont: {
         flexDirection: 'row', 
@@ -67,7 +55,7 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
     const mapRef = useRef<TakeCareMapHandles>(null);
 
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1, flex: 1}}>
+        <ScrollView>
                 <View style={styles.container}>
                     <View style={styles.mapCont}>
                         <TakeCareMap
@@ -105,6 +93,11 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                                     <DataTable.Row>
                                         <DataTable.Cell>Milk</DataTable.Cell>
                                         <DataTable.Cell numeric>1</DataTable.Cell>
+                                    </DataTable.Row>
+
+                                    <DataTable.Row>
+                                        <DataTable.Cell>Pasta</DataTable.Cell>
+                                        <DataTable.Cell numeric>500g</DataTable.Cell>
                                     </DataTable.Row>
 
                                     <DataTable.Row>
