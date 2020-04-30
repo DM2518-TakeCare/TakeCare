@@ -1,30 +1,26 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Text, Headline, DataTable} from 'react-native-paper';
+import { Text, Headline} from 'react-native-paper';
 import UserInfo from '../components/user-info/user-info';
 import { ContentPadding } from '../components/content-padding';
 import { Button } from '../components/button';
-import TakeCareMap, { TakeCareMapMarker, TakeCareMapHandles } from '../components/map';
+import TakeCareMap, { TakeCareMapHandles } from '../components/map';
 import { LinearGradient } from 'expo-linear-gradient';
 import { paperTheme } from '../theme/paper-theme';
+import Table from '../components/table';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: paperTheme.colors.background,
-       
-    },
     mapCont: {
-        flex: 1,
+        flex: 2,
         zIndex: -1
     },
     mapContent: {
         position: 'absolute',
         bottom: -50,
         left: 0,
-        paddingLeft: 25,
-        paddingBottom: 25,
+        padding: 25,
         width: '100%'
     },
     tagCont: {
@@ -38,6 +34,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         zIndex: 1
     },
+    returnButtonCont: {
+        width: '10%',
+    },
     descStyle: {
         fontWeight: 'bold',
         fontSize: 16,
@@ -49,66 +48,71 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
 
     const taskDetails = {
         user: { name: 'Stefan Karlsson', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}},
-        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'] }
+        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'], ]}
     }
+    const tableTitles = [{data: 'Item'}, {data: 'Quantity'}]
 
     const mapRef = useRef<TakeCareMapHandles>(null);
 
+    const [goToTask, setGoToTask] = useState(true)
+
+    const goBacktoTask = () => {
+        mapRef.current?.goToChosenTask(taskDetails.user.coordinates)
+        setGoToTask(true)
+    }
+
     return (
-        <ScrollView>
-                <View style={styles.container}>
-                    <View style={styles.mapCont}>
-                        <TakeCareMap
-                            ref={mapRef}
-                            initialMapRegion={{
-                                latitude: taskDetails.user.coordinates.latitude,
-                                longitude: taskDetails.user.coordinates.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01,
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: paperTheme.colors.background, }}>
+            <View style={styles.mapCont}>
+                <View style={{height: 230}}>
+                    <TakeCareMap
+                        ref={mapRef}
+                        initialMapRegion={{
+                            latitude: taskDetails.user.coordinates.latitude,
+                            longitude:taskDetails.user.coordinates.longitude,
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        }}
+                        markers={[{coordinates: taskDetails.user.coordinates}]}
+                        onPanDrag={() => {
+                            setGoToTask(false);
                             }}
-                            markers={[{coordinates: taskDetails.user.coordinates}]}
-                            />
-                            <LinearGradient colors={[ 'rgba(255,255,255,0)', paperTheme.colors.background,paperTheme.colors.background, paperTheme.colors.background  ]} style={styles.mapContent}>
-                                <View style={styles.tagCont}>
-                                    {taskDetails.task.tags.map((tag, i) =>
-                                    taskDetails.task.tags.length - 1 === i ? <Headline key={tag + i} style={styles.tagStyle}>{tag}</Headline> : 
-                                    <Headline key={tag + i} style={styles.tagStyle}>{tag + ', '}</Headline> 
-                                    )}
-                                </View>
-                                <View style={styles.userCont}>
-                                    <UserInfo type='name' user={taskDetails.user}/>
-                                    <UserInfo type='address' user={taskDetails.user}/>
-                                </View>
-                            </LinearGradient>
-                        </View>
-                        <ContentPadding>    
-                            <Text style={styles.descStyle}>{taskDetails.task.desc}</Text>
-                                <Text>Placeholder for table</Text>
-                                <DataTable>
-                                    <DataTable.Header>
-                                        <DataTable.Title>Item</DataTable.Title>
-                                        <DataTable.Title numeric>Quantity</DataTable.Title>
-                                    </DataTable.Header>
-
-                                    <DataTable.Row>
-                                        <DataTable.Cell>Milk</DataTable.Cell>
-                                        <DataTable.Cell numeric>1</DataTable.Cell>
-                                    </DataTable.Row>
-
-                                    <DataTable.Row>
-                                        <DataTable.Cell>Pasta</DataTable.Cell>
-                                        <DataTable.Cell numeric>500g</DataTable.Cell>
-                                    </DataTable.Row>
-
-                                    <DataTable.Row>
-                                        <DataTable.Cell>Pasta</DataTable.Cell>
-                                        <DataTable.Cell numeric>500g</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>
-                            <Button size='big' onPress={() => {}}>Accept Task</Button>
-                        </ContentPadding>
+                        />
                 </View>
+                <LinearGradient colors={['rgba(255,255,255,0)', paperTheme.colors.background,paperTheme.colors.background, paperTheme.colors.background]} style={styles.mapContent}>
+                    <View style={styles.tagCont}>
+                        {taskDetails.task.tags.map((tag, i) =>
+                        taskDetails.task.tags.length - 1 === i ? <Headline key={tag + i} style={styles.tagStyle}>{tag}</Headline> : 
+                        <Headline key={tag + i} style={styles.tagStyle}>{tag + ', '}</Headline> 
+                        )}
+                        <View style={{alignItems: 'flex-end'}}>
+                            <View style={styles.returnButtonCont}>
+                                <Button 
+                                    expandHorizontal={false} 
+                                    toggleOff={goToTask} 
+                                    onPress={() => goBacktoTask()}>
+                                    <MaterialIcons size={25} name='location-on'/>
+                                </Button>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.userCont}>
+                        <UserInfo type='name' user={taskDetails.user}/>
+                        <UserInfo type='address' user={taskDetails.user}/>
+                    </View>
+                </LinearGradient>
+            </View>
+            <ContentPadding>    
+                <Text style={styles.descStyle}>{taskDetails.task.desc}</Text>
+                <View style={{paddingBottom: 10}}>
+                    <Table tableTitles={tableTitles} tableData={taskDetails.task.shoppingList}></Table>
+                </View>
+                <View style={{justifyContent: 'flex-end'}}>
+                    <Button size='big' onPress={() => {}}>Accept Task</Button>
+                </View>
+            </ContentPadding>
         </ScrollView>
+ 
     );
 
 }
