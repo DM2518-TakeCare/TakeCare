@@ -51,7 +51,6 @@ export default function App() {
                 ),
               }}
               component={CreateTask} />
-
             <RootStack.Screen 
               name='TaskCreated'
               options={{
