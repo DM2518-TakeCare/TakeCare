@@ -18,9 +18,9 @@ import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 
 store.subscribe(() => {
-  console.groupCollapsed("State change");
-  console.log(store.getState());
-  console.groupEnd();
+    console.groupCollapsed("State change");
+    console.log(store.getState());
+    console.groupEnd();
 });
 
 export default function App() {
@@ -40,15 +40,15 @@ export default function App() {
                                 <AppBar headerProps={headerProps} />
                             ),
                         }}>
-                        <RootStack.Screen 
-                          name="Register"
-                          options={{
-                            title: "",
-                            header: (headerProps) => (
-                              <AppBar disableBackAction color={paperTheme.colors.background} headerProps={headerProps}/>
-                            ),
-                          }}
-                          component={Register} />
+                        <RootStack.Screen
+                            name="Register"
+                            options={{
+                                title: "",
+                                header: (headerProps) => (
+                                    <AppBar disableBackAction color={paperTheme.colors.background} headerProps={headerProps} />
+                                ),
+                            }}
+                            component={Register} />
                         <RootStack.Screen
                             name='Home'
                             component={HomePage} />
