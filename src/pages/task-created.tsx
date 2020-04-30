@@ -65,7 +65,7 @@ export default function TaskCreated({navigation, route}:RoutePropsHelper<'TaskCr
 
                 <View>
                     <View>
-                        <Button size='small' forceForgroundStyle='light' color={paperTheme.colors.important} onPress={() => {}}>
+                        <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => {}}>
                             EDIT TASK
                         </Button>
                     </View>
