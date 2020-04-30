@@ -53,7 +53,7 @@ export const Button: FC<ButtonProps> = ({
             labelStyle={{
                 padding: size === 'big' ? 10 : 0,
                 color: 
-                    forceForgroundStyle 
+                    forceForegroundStyle 
                     ? (forceForegroundStyle === 'light' ? '#fff' : '#000')
                     : undefined
             }}
