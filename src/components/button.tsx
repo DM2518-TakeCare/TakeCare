@@ -38,7 +38,7 @@ export const Button: FC<ButtonProps> = ({
     onPress, 
     expandHorizontal = false, 
     disabled = false, 
-    forceForgroundStyle,
+    forceForegroundStyle,
     color = paperTheme.colors.primary,
     toggleOff: toggleOff = false,
     size = 'small'}) => {
