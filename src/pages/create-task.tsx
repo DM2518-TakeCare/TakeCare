@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView, Animated, LayoutChangeEvent, Text } from 'react-native';
+import { StyleSheet, View, TextInput, SafeAreaView } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Divider, Switch, Paragraph, Chip, DataTable } from 'react-native-paper';
+import { Divider, Switch, Paragraph, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
 import Table from '../components/table';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
     },
     shoppingInput: {
         flex: 1
+    },
+    addShopping: {
+        flexGrow: 1, 
+        justifyContent: 'center'
     }
 });
 
@@ -32,10 +36,9 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
     const [input, setInput] = useState('');
     const [shoppingInput, setShoppingInput] = useState('');
     const [shoppingQtyInput, setShoppingQtyInput] = useState('');
-    const [tableData, setTableData]: any = useState([[]]);
+    const [tableData, setTableData]: any = useState([]);
 
     const toggleShoppingList = () => {
-        startAnimations(!useShoppingList);
         setUseShoppingList(!useShoppingList);
     };
 
@@ -45,7 +48,6 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
             if(shoppingQtyInput !== '' && shoppingQtyInput.match(/^[0-9]*$/)) {
                 qty = parseInt(shoppingQtyInput)
             }
-            setShoppingInput('')
             for (let i in tableData) {
                 if((tableData[i].includes(shoppingInput))) {
                     tableData[i][1] += qty;
@@ -54,6 +56,8 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                 }
             }
             setTableData([...tableData, [shoppingInput, qty]])
+            setShoppingInput('')
+            setShoppingQtyInput('')
         }
     }
 
@@ -61,33 +65,9 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
         setTableData(tableData.filter((item: any, index: number) => index !== i))
     }
 
-    const [shoppingListHeightAnimation] = useState(new Animated.Value(0));
-    const [contentOpacityAnimation] = useState(new Animated.Value(0));
-    const [shoppingListHeight, setShoppingListHeight] = useState<number | null>(null);
-
-    const startAnimations = (open: boolean) => {
-        Animated.timing(
-            contentOpacityAnimation,
-            {
-                toValue: open ? 1 : 0,
-                duration: 200,
-                isInteraction: true,
-            }
-        ).start()
-
-        Animated.timing(
-            shoppingListHeightAnimation,
-            {
-                toValue: open ? (shoppingListHeight ?? 0) : 0,
-                duration: 400,
-                isInteraction: true,
-            }
-        ).start()
-    };
-
+    
     return (
         <SafeAreaView style={{flex: 1}}>
-            
             <View style={styles.input}>
                 <TextInput 
                     multiline={true} 
@@ -97,27 +77,18 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
             </View>
             <Divider/>
             <View style={styles.row}>
-                <Paragraph>Add shopping list</Paragraph>
+                <Caption>Add shopping list</Caption>
                 <Switch 
                     style={{paddingLeft: 5}}
                     value={useShoppingList} 
                     onValueChange={toggleShoppingList}/>
             </View>
-            <Animated.View 
-                style={{
-                    overflow: 'hidden',
-                    height: shoppingListHeight === null ? null : shoppingListHeightAnimation,
-                    opacity: contentOpacityAnimation,
-                }} 
-                /*onLayout={(event: LayoutChangeEvent) => {
-                    if(shoppingListHeight === null) {
-                        setShoppingListHeight(event.nativeEvent.layout.height);
-                    }
-                }}*/>
-                <Table 
+            <View>
+                {useShoppingList ? <Table 
                     tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Qty', alignment: 'left'}, {data: '', alignment: 'right'}]} 
                     tableData={tableData} 
-                    rowAction={removeShoppingItem}
+                    rowEnd={<MaterialIcons name='close'/>}
+                    rowEndAction={removeShoppingItem}
                     trailing={<>
                             <TextInput 
                                 style={styles.shoppingInput} 
@@ -131,13 +102,12 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                                 onChangeText={(text) => setShoppingQtyInput(text)}>
                                 {shoppingQtyInput}
                             </TextInput>
-                            <DataTable.Cell style={{flexGrow: 1, justifyContent: 'center'}} onPress={addShoppingItem}>
+                            <DataTable.Cell style={styles.addShopping} onPress={addShoppingItem}>
                                 <MaterialIcons name='add'/>
                             </DataTable.Cell>
                         </>}
-                    />
-                    
-            </Animated.View>
+                    /> : <></> }  
+            </View>
             <Divider/>
             <View style={styles.row}>
                 {tags.map((tag: string) =>

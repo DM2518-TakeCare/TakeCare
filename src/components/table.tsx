@@ -1,11 +1,10 @@
-import React, { ReactElement, ReactDOM } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { ReactElement } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { DataTable } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
 
-const tableStyle = StyleSheet.create({
-    trailing: {
-        display: 'flex',
+const styles = StyleSheet.create({
+    rowEnd: {
+        flexGrow: 1, 
         justifyContent: 'center',
     },
 });
@@ -26,17 +25,18 @@ interface TableProps {
      * [[a],[b],[c],[d]],
      */
     tableData: (ReactElement | string)[][],
-    rowAction: (i: number) => void,
-    trailing?: ReactElement
+    rowEnd?: ReactElement,
+    rowEndAction?: (i: number) => void,
+    trailing?: ReactElement,
 }
 
-export const Table: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableProps> = ({tableTitles, tableData, rowEnd, rowEndAction=()=>{}, trailing}) => {
     return (
         <View>
             <DataTable>
                 <DataTable.Header>
                     {
-                        props.tableTitles.map((title, key) => {
+                        tableTitles.map((title, key) => {
                             return <DataTable.Title numeric={title.alignment === 'right' ? true : false}  key={key}>
                                 {title.data}
                             </DataTable.Title>
@@ -45,7 +45,7 @@ export const Table: React.FC<TableProps> = (props) => {
                 </DataTable.Header>
 
                 {
-                    props.tableData.map((row, index) => 
+                    tableData.map((row, index) => 
                         row.length > 0 ? 
                             <DataTable.Row key={index}>
                                 {
@@ -56,17 +56,20 @@ export const Table: React.FC<TableProps> = (props) => {
                                     )
                                 }
                                 { 
-                                    <DataTable.Cell style={{flexGrow: 1, justifyContent: 'center'}} onPress={() => props.rowAction(index)}>
-                                       <MaterialIcons name='close'/>
-                                    </DataTable.Cell>
+                                    rowEnd ? 
+                                        <DataTable.Cell style={styles.rowEnd} onPress={() => rowEndAction(index)}>
+                                            {rowEnd}
+                                        </DataTable.Cell> 
+                                    : <></>
                                 }
                             </DataTable.Row> : null
                     )
                 }
-                { props.trailing ? 
+                { trailing ? 
                     <DataTable.Row>
-                            {props.trailing}
-                    </DataTable.Row> : <></> }
+                            {trailing}
+                    </DataTable.Row> : <></> 
+                }
             </DataTable>
         </View>
     );

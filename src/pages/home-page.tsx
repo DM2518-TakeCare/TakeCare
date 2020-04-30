@@ -19,9 +19,9 @@ export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>
                 To Accepted task
             </Button>
             <Button mode="contained" onPress={() => {
-                navigation.navigate('FindTask');
+                navigation.navigate('CreateTask');
             }}>
-                Find task
+                Create task
             </Button>
         </Center>
     );
