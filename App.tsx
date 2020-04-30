@@ -6,12 +6,22 @@ import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
-import { AppBar, AppBarBackgroundColor } from './src/components/app-bar';
+import { AppBar } from './src/components/app-bar';
+import FindTaskPage from './src/pages/find-task-page';
 import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
 import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
+import Register from './src/pages/register-page';
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
+
+store.subscribe(() => {
+  console.groupCollapsed("State change");
+  console.log(store.getState());
+  console.groupEnd();
+});
 
 export default function App() {
     return (
@@ -30,9 +40,21 @@ export default function App() {
                                 <AppBar headerProps={headerProps} />
                             ),
                         }}>
+                        <RootStack.Screen 
+                          name="Register"
+                          options={{
+                            title: "",
+                            header: (headerProps) => (
+                              <AppBar disableBackAction color={paperTheme.colors.background} headerProps={headerProps}/>
+                            ),
+                          }}
+                          component={Register} />
                         <RootStack.Screen
                             name='Home'
                             component={HomePage} />
+                        <RootStack.Screen
+                            name='FindTask'
+                            component={FindTaskPage} />
                         <RootStack.Screen
                             name='Playground'
                             options={{

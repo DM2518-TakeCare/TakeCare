@@ -42,6 +42,7 @@ interface AppBarProps {
     actionIcon?: string,
     onActionClick?: () => void,
     disableBackAction?: boolean,
+    color?: string
 }
 
 export const AppBar: FC<AppBarProps> = (props) => {
