@@ -17,7 +17,7 @@ interface ButtonProps {
     /** The color of the component */
     color?: string,
 
-    forceForgroundStyle?: 'light' | 'dark',
+    forceForegroundStyle?: 'light' | 'dark',
 
     /** If the button is toggled off */
     toggleOff?: boolean 
