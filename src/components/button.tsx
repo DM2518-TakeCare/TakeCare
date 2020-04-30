@@ -54,7 +54,7 @@ export const Button: FC<ButtonProps> = ({
                 padding: size === 'big' ? 10 : 0,
                 color: 
                     forceForgroundStyle 
-                    ? (forceForgroundStyle === 'light' ? '#fff' : '#000')
+                    ? (forceForegroundStyle === 'light' ? '#fff' : '#000')
                     : undefined
             }}
             uppercase={false}
