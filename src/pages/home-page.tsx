@@ -6,7 +6,7 @@ import DividedView from '../components/divided-view/divided-view';
 import StatusHeader from '../components/status-header';
 import { paperTheme } from '../theme/paper-theme';
 
-const HelpStyle = StyleSheet.create({
+const helpStyle = StyleSheet.create({
     title: {
         ...paperTheme.fonts.medium,
         fontSize: 20
@@ -28,7 +28,7 @@ export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>
                 <SafeAreaView style={{flex: 1}}>
                     <Center>
                         <StatusHeader type='receive-help' hideStatusText={false}/>
-                        <Text style={{...HelpStyle.title, ...HelpStyle.receiveHelpTitle}}>
+                        <Text style={{...helpStyle.title, ...helpStyle.receiveHelpTitle}}>
                             Receive Help
                         </Text>
                     </Center>
@@ -39,7 +39,7 @@ export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>
                 <SafeAreaView style={{flex: 1}}>
                     <Center>
                         <StatusHeader type='give-help' hideStatusText={false} onPrimary/>
-                        <Text style={{...HelpStyle.title, ...HelpStyle.giveHelpTitle}}>
+                        <Text style={{...helpStyle.title, ...helpStyle.giveHelpTitle}}>
                             Give Help
                         </Text>
                     </Center>
