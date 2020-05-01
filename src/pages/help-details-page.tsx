@@ -88,6 +88,7 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                         <View style={styles.returnButtonCont}>
                             <View>
                                 <Button 
+                                    forceForegroundStyle='light'
                                     expandHorizontal={false} 
                                     toggleOff={goToTask} 
                                     onPress={() => goBacktoTask()}>

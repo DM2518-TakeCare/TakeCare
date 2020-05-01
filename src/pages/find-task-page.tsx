@@ -143,7 +143,8 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 />
                 <View style={findTaskStyle.mapControls}>
                     <ContentPadding>
-                        <Button 
+                        <Button
+                            forceForegroundStyle='light'
                             expandHorizontal={false} 
                             toggleOff={!followUserLocation} 
                             onPress={() => setFollowUserLocation(!followUserLocation)}>
