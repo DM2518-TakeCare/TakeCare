@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
-import DividedView from '../components/divided-view/divided-view';
 import StatusHeader from '../components/status-header';
 import UserInfo from '../components/user-info/user-info';
 import { ContentPadding } from '../components/content-padding';
-import SvgIcon from '../components/svg-icon';
-import { Center } from '../components/center';
 import { Button } from '../components/button';
 import { paperTheme } from '../theme/paper-theme';
+import { Table } from '../components/table'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     cont: {
@@ -17,20 +16,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     taskCont: {
-        marginTop: 25,
+        marginTop: 15,
         flex: 1,
-        alignItems: 'center'
     },
     taskTitle: {
         fontSize: 30,
         fontWeight: 'bold'
     },
     taskDetails: {
-        flex: 1
+        flex: 1,
+        marginTop: 10
     },
     userCont: {
         flexDirection: 'column',
-        alignItems: 'center',
     },
     editButton: {
         color: 'white',
@@ -39,7 +37,10 @@ const styles = StyleSheet.create({
 
 export default function TaskCreated({navigation, route}:RoutePropsHelper<'TaskCreated'>) {
 
-    const testUser = {name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621', type: 'Groceries'}
+    const taskDetails = {
+    user : {name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621'},
+    task : { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'], ]}
+    }
 
     return <View style={styles.cont}>
         <ContentPadding>
@@ -47,33 +48,34 @@ export default function TaskCreated({navigation, route}:RoutePropsHelper<'TaskCr
 
             <View style={styles.taskCont}>
 
-                <Text style={styles.taskTitle}>
-                    {testUser.type}
+                <Text style={styles.taskTitle} >
+                    {
+                        taskDetails.task.tags.join(', ')
+                    }
                 </Text>
 
                 <View style={styles.userCont}>
-                    <UserInfo type='name' user={testUser}/>
-                    <UserInfo type='address' user={testUser}/>
-                    <UserInfo type='phone' user={testUser}/>
+                    <UserInfo type='name' user={taskDetails.user}/>
+                    <UserInfo type='address' user={taskDetails.user}/>
+                    <UserInfo type='phone' user={taskDetails.user}/>
                 </View>
 
                 <View style={styles.taskDetails}>
-                    <Center>
-                        <Text>Task details placeholder</Text>
-                    </Center>
+                    <Text>
+                        {taskDetails.task.desc}
+                    </Text>
+                    <View style={{flex: 1, marginVertical: 10, borderBottomWidth: 2, borderTopWidth: 2, borderColor: '#aaa'}}>
+                        <ScrollView>
+                            <Table tableTitles={[{data: 'Item'}, {data: 'Amount'}]} tableData={taskDetails.task.shoppingList} />
+                        </ScrollView>
+                    </View>
+
                 </View>
 
                 <View>
-                    <View>
-                        <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => {}}>
-                            EDIT TASK
-                        </Button>
-                    </View>
-                    <View>
-                        <Center>
-                            <SvgIcon name='take-care'/>
-                        </Center>
-                    </View>
+                    <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => {}}>
+                        EDIT TASK
+                    </Button>
                 </View>
             </View>
             
