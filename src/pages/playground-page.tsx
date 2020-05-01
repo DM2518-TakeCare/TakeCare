@@ -9,39 +9,45 @@ import { ScrollView } from 'react-native-gesture-handler';
 export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'Playground'>) {
     return (
         <ContentPadding>
-            <ScrollView style={{flex: 1}}>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('CreateTask');
-                }}>To Create Task</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('TaskAccepted');
-                }}> To Accepted task</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('FindTask');
-                }}>To Find task</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('Register');
-                }}>To Register</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('Home');
-                }}>To Home</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('Tasks');
-                }}>To Tasks</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('TaskCompleted');
-                }}>To Task completed</Button>
-                <Divider style={{margin: 10}}/>
-                <Button mode="contained" onPress={() => {
-                    navigation.navigate('HelpDetails');
-                }}>To Help Details</Button>
-            </ScrollView>
+            <Center>
+                <View>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('CreateTask');
+                    }}>To Create Task</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('TaskAccepted');
+                    }}> To Accepted task</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('FindTask');
+                    }}>To Find task</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('Register');
+                    }}>To Register</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('Home');
+                    }}>To Home</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('Tasks');
+                    }}>To Tasks</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('TaskCompleted');
+                    }}>To Task completed</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('TaskCreated');
+                    }}>To Task Created</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('HelpDetails');
+                    }}>To Help Details</Button>
+                </View>
+            </Center>
         </ContentPadding>
     );
 }

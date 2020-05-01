@@ -17,6 +17,7 @@ import Register from './src/pages/register-page';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
+import TaskCreated from './src/pages/task-created';
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
@@ -83,6 +84,15 @@ export default function App() {
                                 ),
                             }}
                             component={CreateTask} />
+                        <RootStack.Screen
+                            name='TaskCreated'
+                            options={{
+                                title: 'Task Created',
+                                header: (headerProps) => (
+                                    <AppBar headerProps={headerProps} />
+                                ),
+                            }}
+                            component={TaskCreated} />
                         <RootStack.Screen
                             name='Tasks'
                             options={{
