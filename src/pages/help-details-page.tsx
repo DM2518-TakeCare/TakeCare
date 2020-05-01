@@ -62,7 +62,7 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
     }
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: paperTheme.colors.background}}>
             <View style={{flex: 1}}>
                 <View style={{flexGrow: 1}}>
                     <TakeCareMap
