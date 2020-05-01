@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: -50,
         padding: 25,
+        width: '100%'
     },
     tagCont: {
         flexDirection: 'row', 
