@@ -13,15 +13,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
     mapCont: {
-        flex: 2,
+        flex: 1,
         zIndex: -1
     },
     mapContent: {
         position: 'absolute',
         bottom: -50,
-        left: 0,
         padding: 25,
-        width: '100%'
     },
     tagCont: {
         flexDirection: 'row', 
@@ -35,7 +33,8 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     returnButtonCont: {
-        width: '10%',
+        flex: 1,
+        alignItems: 'flex-end'
     },
     descStyle: {
         fontWeight: 'bold',
@@ -62,9 +61,9 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
     }
 
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: paperTheme.colors.background, }}>
-            <View style={styles.mapCont}>
-                <View style={{height: 230}}>
+        <View style={{flex: 1}}>
+            <View style={{flex: 1}}>
+                <View style={{flexGrow: 1}}>
                     <TakeCareMap
                         ref={mapRef}
                         initialMapRegion={{
@@ -85,8 +84,8 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                         taskDetails.task.tags.length - 1 === i ? <Headline key={tag + i} style={styles.tagStyle}>{tag}</Headline> : 
                         <Headline key={tag + i} style={styles.tagStyle}>{tag + ', '}</Headline> 
                         )}
-                        <View style={{alignItems: 'flex-end'}}>
-                            <View style={styles.returnButtonCont}>
+                        <View style={styles.returnButtonCont}>
+                            <View>
                                 <Button 
                                     expandHorizontal={false} 
                                     toggleOff={goToTask} 
@@ -100,18 +99,23 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                         <UserInfo type='name' user={taskDetails.user}/>
                         <UserInfo type='address' user={taskDetails.user}/>
                     </View>
+                    
+                    <Text style={styles.descStyle}>{taskDetails.task.desc}</Text>
                 </LinearGradient>
             </View>
-            <ContentPadding>    
-                <Text style={styles.descStyle}>{taskDetails.task.desc}</Text>
-                <View style={{paddingBottom: 10}}>
-                    <Table tableTitles={tableTitles} tableData={taskDetails.task.shoppingList}></Table>
-                </View>
-                <View style={{justifyContent: 'flex-end'}}>
-                    <Button size='big' onPress={() => {}}>Accept Task</Button>
-                </View>
-            </ContentPadding>
-        </ScrollView>
+            <View style={{flex: 1}}>
+                <ContentPadding>    
+                    <ScrollView>
+                            <View>
+                                <Table tableTitles={tableTitles} tableData={taskDetails.task.shoppingList}/>
+                            </View>
+                    </ScrollView>
+                    <View style={{ justifyContent: 'flex-end'}}>
+                        <Button size='big' onPress={() => {}}>Accept Task</Button>      
+                    </View>
+                </ContentPadding>
+            </View>
+        </View>
  
     );
 
