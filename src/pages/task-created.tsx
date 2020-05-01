@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 10
     },
+    shoppingListContainer: {
+        flex: 1, 
+        marginVertical: 10, 
+        borderBottomWidth: 2, 
+        borderTopWidth: 2, 
+        borderColor: "#aaa"
+    },
     userCont: {
         flexDirection: 'column',
     },
@@ -35,17 +42,17 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function TaskCreated({navigation, route}:RoutePropsHelper<'TaskCreated'>) {
+export default function TaskCreated({ navigation, route }: RoutePropsHelper<'TaskCreated'>) {
 
     const taskDetails = {
-    user : {name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621'},
-    task : { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'], ]}
+        user: { name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621' },
+        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }
     }
 
     return (
         <SafeAreaView style={styles.cont}>
             <ContentPadding>
-                <StatusHeader type='sent'/>
+                <StatusHeader type='sent' />
 
                 <View style={styles.taskCont}>
 
@@ -56,30 +63,30 @@ export default function TaskCreated({navigation, route}:RoutePropsHelper<'TaskCr
                     </Text>
 
                     <View style={styles.userCont}>
-                        <UserInfo type='name' user={taskDetails.user}/>
-                        <UserInfo type='address' user={taskDetails.user}/>
-                        <UserInfo type='phone' user={taskDetails.user}/>
+                        <UserInfo type='name' user={taskDetails.user} />
+                        <UserInfo type='address' user={taskDetails.user} />
+                        <UserInfo type='phone' user={taskDetails.user} />
                     </View>
 
                     <View style={styles.taskDetails}>
                         <Text>
                             {taskDetails.task.desc}
                         </Text>
-                        <View style={{flex: 1, marginVertical: 10, borderBottomWidth: 2, borderTopWidth: 2, borderColor: '#aaa'}}>
+                        <View style={styles.shoppingListContainer}>
                             <ScrollView>
-                                <Table tableTitles={[{data: 'Item'}, {data: 'Amount'}]} tableData={taskDetails.task.shoppingList} />
+                                <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={taskDetails.task.shoppingList} />
                             </ScrollView>
                         </View>
 
                     </View>
 
                     <View>
-                        <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => {}}>
+                        <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => { }}>
                             EDIT TASK
                         </Button>
                     </View>
                 </View>
-                
+
             </ContentPadding>
         </SafeAreaView>
     )
