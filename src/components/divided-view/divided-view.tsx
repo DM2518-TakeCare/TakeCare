@@ -1,50 +1,68 @@
 import React, { FC, ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle, TouchableWithoutFeedback } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { paperTheme } from '../../theme/paper-theme';
+import { transform } from '@babel/core';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignContent: 'stretch',
     },
-    background: {
-        position: 'absolute',
-        height: '100%',
+    dividedCont: {
         width: '100%',
+        zIndex: -1
     },
-    childrenCont: {
+    upperCont: {
         flex: 1,
-        padding: 25
+        padding: 25,
     },
+    lowerCont: {
+        flex: 1,
+        padding: 25,
+    }
 });
 
 type DividedViewProps = {
     upper: ReactNode,
+    onPressUpper?: () => void,
     lower: ReactNode,
+    onPressLower?: () => void,
     reverse?: Boolean
 }
 
-const  DividedView: FC<DividedViewProps> = (props) => {
-  return (
-    <View style={styles.container}>
-        <View style={{...styles.background, backgroundColor: props.reverse? paperTheme.colors.background : paperTheme.colors.primary}}>
-            <Svg width={'100%'} height={'50%'} viewBox='0 0 360 351' fill='none' {...props}>
-                <Path
-                    d='M271.58 313.777C220.458 363.025 139.542 363.025 88.4202 313.777L-38.9611 191.064C-124.512 108.648 -66.1723 -36 52.6188 -36L307.381 -36C426.172 -36 484.512 108.648 398.961 191.064L271.58 313.777Z'
-                    fill={props.reverse? paperTheme.colors.primary : paperTheme.colors.background}
-                />
-            </Svg>
+const DividedView: FC<DividedViewProps> = (props) => {
+    return (
+        <View style={{ 
+                ...styles.container, 
+                backgroundColor: props.reverse ? paperTheme.colors.background : paperTheme.colors.primary 
+            }}>
+
+            <TouchableWithoutFeedback onPress={() => props.onPressUpper ? props.onPressUpper() : {}}>
+                <View style={{ 
+                    ...styles.upperCont, 
+                    backgroundColor: props.reverse ? paperTheme.colors.primary : paperTheme.colors.background 
+                }}>
+                    {props.upper}
+                </View>
+            </TouchableWithoutFeedback>
+
+            <View style={styles.dividedCont}>
+                <Svg onPress={() => props.onPressUpper ? props.onPressUpper() : {}} preserveAspectRatio="none" width={'100%'} height={100} viewBox='0 0 359.57 122.05' fill='none'>
+                    <Path
+                        d='M360,234.6l-88.42,85.18a132,132,0,0,1-183.16,0L.36,234.54Z'
+                        fill={props.reverse ? paperTheme.colors.primary : paperTheme.colors.background}
+                        transform='translate(-0.21 -234.67)'
+                    />
+                </Svg>
+            </View>
+
+            <TouchableWithoutFeedback onPress={() => props.onPressLower ? props.onPressLower() : {}}>
+                <View style={styles.lowerCont}>
+                    {props.lower}
+                </View>
+            </TouchableWithoutFeedback>
         </View>
-        <View style={styles.childrenCont}>
-            {props.upper}
-        </View>
-        <View style={styles.childrenCont}>
-            {props.lower}
-        </View>
-    </View>
-  )
+    )
 }
 
 export default DividedView

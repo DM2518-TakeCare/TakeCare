@@ -9,8 +9,8 @@ const tableStyle = StyleSheet.create({
 });
 
 interface ColumnData {
-    data: (ReactElement | string)
-    alignment?: 'left' | 'right'
+    data: (ReactElement | string)
+    alignment?: 'left' | 'right'
 }
 
 interface TableProps {
@@ -23,7 +23,7 @@ interface TableProps {
      * [[a],[b],[c],[d]],
      * [[a],[b],[c],[d]],
      */
-    tableData: (ReactElement | string)[][]
+    tableData: (ReactElement | string)[][]
 }
 
 export const Table: React.FC<TableProps> = (props) => {
