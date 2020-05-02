@@ -1,9 +1,8 @@
 export interface Task {
     id: string
-    ownerID: string
-    helperID?: string
-    tags: Array<string>
+    ownerId: string
+    helperId?: string
+    tags: string[]
     desc: string
-    shoppingList: Array<Array<string>> 
-    extraInfo: string 
+    shoppingList?: string[][]
 }

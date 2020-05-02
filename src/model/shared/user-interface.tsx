@@ -6,4 +6,5 @@ export interface User {
     coordinates: LatLng
     address: string
     phone: string
+    extraInfo?: string
 }
