@@ -197,6 +197,7 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 onCloseEnd={() => setBottomSheetIsOpen(false)}
                 headerPosition={bottomBarPos.current} 
                 snapPoints={[bottomSheetMaxHeight, bottomSheetMinHeight]} 
+                enabledContentGestureInteraction={false}
                 renderHeader={() => <HeaderBottomSheet/>} 
                 renderContent={() =>
                     <View style={{backgroundColor: paperTheme.colors.surface}}>
