@@ -9,6 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { SnappingScroll } from '../components/snapping-scroll';
 import { Card } from 'react-native-paper';
 import * as Permissions from 'expo-permissions';
+import { Task } from '../model/shared/task-interface';
 
 const findTaskStyle = StyleSheet.create({
     mapContainer: {
@@ -30,11 +31,6 @@ const findTaskStyle = StyleSheet.create({
         justifyContent: 'center'
     }
 });
-
-interface Task {
-    name: string,
-    coordinates: LatLng 
-}
 
 const getLocationPermission = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -61,25 +57,45 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
 
     const searchForNewTasks = () => {
         return [
-            {
+            {   
+                id: '',
                 name: 'Task 1',
-                coordinates: {latitude: 59.347647, longitude: 18.072340}
+                coordinates: {latitude: 59.347647, longitude: 18.072340},
+                ownerId: '',
+                tags: ['mail, groceries'],
+                desc: '',
             },
             {
+                id: '',
                 name: 'Task 2',
-                coordinates: {latitude: 59.347747, longitude: 18.072640}
+                coordinates: {latitude: 59.347747, longitude: 18.072640},
+                ownerId: '',
+                tags: ['mail'],
+                desc: '',
             },
-            {
+            {   
+                id: '',
                 name: 'Task 3',
-                coordinates: {latitude: 59.347447, longitude: 18.072340}
+                coordinates: {latitude: 59.347447, longitude: 18.072340},
+                ownerId: '',
+                tags: ['mail'],
+                desc: '',
             },
-            {
+            {   
+                id: '',
                 name: 'Task 4',
-                coordinates: {latitude: 59.347847, longitude: 18.073640}
+                coordinates: {latitude: 59.347847, longitude: 18.073640},
+                ownerId: '',
+                tags: ['mail'],
+                desc: '',
             },
-            {
+            {   
+                id: '',
                 name: 'Task 5',
-                coordinates: {latitude: 59.347247, longitude: 18.076540}
+                coordinates: {latitude: 59.347247, longitude: 18.076540},
+                ownerId: '',
+                tags: ['mail'],
+                desc: '',
             },
         ]
     }
@@ -90,7 +106,7 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 <Card style={findTaskStyle.taskCard}>
                     <View style={findTaskStyle.taskCardContent}>
                         <Text>
-                            {task.name}
+                            {task.tags.join(', ')}
                         </Text>
                     </View>
                 </Card>

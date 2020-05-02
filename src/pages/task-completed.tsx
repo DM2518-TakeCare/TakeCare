@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 export default function TaskCompleted({navigation, route}:RoutePropsHelper<'CreateTask'>) {
 
-    const testUser = {id: '111', name: 'Annica Olofsson', phone: '0738189621', address: 'testgatan 1', coordinates: {latitude: 59.347647, longitude: 18.072340},  }
+    const testUser = {id: '111', name: 'Annica Olofsson', phone: '0738189621', address: 'testgatan 1' }
 
     const upper = (
         <ContentPadding>

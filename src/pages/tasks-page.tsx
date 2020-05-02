@@ -7,6 +7,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { TaskDetails } from '../components/task-details';
 import { Center } from '../components/center';
 import StatusHeader from '../components/status-header';
+import { User } from '../model/shared/user-interface';
+import { Task } from '../model/shared/task-interface';
 
 const styles = StyleSheet.create({
     tasksContainer: {
@@ -14,24 +16,29 @@ const styles = StyleSheet.create({
     },
 });
 
+interface TaskInfo {
+    user: User
+    task: Task
+}
+
 export default function TasksPage({navigation, route}:RoutePropsHelper<'Tasks'>) {
 
     /*Placeholder tasks*/
-    const acceptedTasks: any[] = [
+    const acceptedTasks: TaskInfo[] = [
         {
-            user: { name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'] }
+            user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
+            task: { id: '', ownerId: '', desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340} }
         },
         {
-            user: { name: 'Mia Berglund', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { desc: 'I need milk!', tags: ['Groceries'] }
+            user: { id: '', name: 'Mia Berglund', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
+            task: { id: '', ownerId: '', desc: 'I need milk!', tags: ['Groceries'],  coordinates: {latitude: 59.347647, longitude: 18.072340} }
         }
     ]
 
-    const completedTasks: any[] = [
+    const completedTasks: TaskInfo[] = [
         {
-            user: { name: 'Maja Andersson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { desc: 'I need some alvedon.', tags: ['Medicine'] }
+            user: { id: '', name: 'Maja Andersson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
+            task: { id: '', ownerId: '', desc: 'I need some alvedon.', tags: ['Medicine'], coordinates: {latitude: 59.347647, longitude: 18.072340}}
         }
     ]
 

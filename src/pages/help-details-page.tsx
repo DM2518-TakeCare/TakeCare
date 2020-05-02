@@ -47,8 +47,9 @@ const styles = StyleSheet.create({
 export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDetails'>) {
 
     const taskDetails = {
-        user: { id: 'sdjfhsjh', name: 'Stefan Karlsson', phone: '0733456172', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}},
-        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'], ]}
+        user: { id: 'sdjfhsjh', name: 'Stefan Karlsson', phone: '0733456172', address: 'Testgatan 3'},
+        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340}, shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1']]}
+    
     }
     const tableTitles = [{data: 'Item'}, {data: 'Quantity'}]
 
@@ -57,7 +58,7 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
     const [goToTask, setGoToTask] = useState(true)
 
     const goBacktoTask = () => {
-        mapRef.current?.goToChosenTask(taskDetails.user.coordinates)
+        mapRef.current?.goToChosenTask(taskDetails.task.coordinates)
         setGoToTask(true)
     }
 
@@ -68,12 +69,12 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                     <TakeCareMap
                         ref={mapRef}
                         initialMapRegion={{
-                            latitude: taskDetails.user.coordinates.latitude,
-                            longitude:taskDetails.user.coordinates.longitude,
+                            latitude: taskDetails.task.coordinates.latitude,
+                            longitude:taskDetails.task.coordinates.longitude,
                             latitudeDelta: 0.01,
                             longitudeDelta: 0.01,
                         }}
-                        markers={[{coordinates: taskDetails.user.coordinates}]}
+                        markers={[{coordinates: taskDetails.task.coordinates}]}
                         onPanDrag={() => {
                             setGoToTask(false);
                             }}
