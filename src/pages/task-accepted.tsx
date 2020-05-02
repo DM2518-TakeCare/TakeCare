@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
 });
 
 export default function TaskAccepted({navigation, route}:RoutePropsHelper<'TaskAccepted'>) {
-    const testHelper = {name: 'Annica Olofsson', phone: '0738189621'}
+    const testHelper = {id: '', name: 'Annica Olofsson', phone: '0738189621', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}}
 
-    const testUser = {user: { name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-    task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'] }}
+    const testUser = {user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}},
+    task: { id: '', ownerID: '', desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], extraInfo: 'Portkod',shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
 
     return (    
         <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>

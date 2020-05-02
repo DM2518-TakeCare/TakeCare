@@ -2,11 +2,12 @@ import React, { FC } from 'react'
 import { View, Text } from 'react-native'
 import { paperTheme } from '../../theme/paper-theme'
 import { Ionicons } from '@expo/vector-icons'
+import { User } from '../../model/shared/user-interface';
 
 type UserInfoTypes = 'name' | 'address' | 'phone';
 
 interface UserInfoProps {
-    user: any, //TODO, create user interface
+    user: User
     type: UserInfoTypes
 }
 

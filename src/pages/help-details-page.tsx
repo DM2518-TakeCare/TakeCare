@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDetails'>) {
 
     const taskDetails = {
-        user: { name: 'Stefan Karlsson', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}},
+        user: { id: 'sdjfhsjh', name: 'Stefan Karlsson', phone: '0733456172', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}},
         task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'], ]}
     }
     const tableTitles = [{data: 'Item'}, {data: 'Quantity'}]

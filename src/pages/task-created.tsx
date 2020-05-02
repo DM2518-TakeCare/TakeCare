@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 export default function TaskCreated({ navigation, route }: RoutePropsHelper<'TaskCreated'>) {
 
     const taskDetails = {
-        user: { name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621' },
+        user: { id: 'skdlfjlskdf', name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621', coordinates: {latitude: 59.347647, longitude: 18.072340} },
         task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }
     }
 
