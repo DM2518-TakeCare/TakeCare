@@ -113,7 +113,7 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                             </View>
                     </ScrollView>
                     <View style={{ justifyContent: 'flex-end'}}>
-                        <Button size='big' onPress={() => {}}>Accept Task</Button>      
+                        <Button size='big' onPress={() => navigation.navigate('Tasks')}>Accept Task</Button>      
                     </View>
                 </ContentPadding>
             </View>
