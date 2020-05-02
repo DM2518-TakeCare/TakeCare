@@ -2,7 +2,8 @@ import React, { FC, useEffect } from 'react';
 import { StyleSheet, View, SafeAreaView, Animated, StatusBar, StatusBarStyle, Platform, NativeModules } from 'react-native';
 import { Appbar as PaperAppbar} from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
-import { StackHeaderProps } from '@react-navigation/stack';
+import { StackHeaderProps, StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../router';
 
 const { StatusBarManager } = NativeModules;
 
@@ -40,7 +41,7 @@ interface AppBarProps {
     /** See available icons here https://materialdesignicons.com/ */
     backgroundColor?: AppBarBackgroundColor,
     actionIcon?: string,
-    onActionClick?: () => void,
+    onActionClick?: (navigation?: any) => void,
     disableBackAction?: boolean,
     color?: string
 }
@@ -55,6 +56,8 @@ export const AppBar: FC<AppBarProps> = (props) => {
     const appBarHeight = 100;
 
     const navigationProgress = props.headerProps.scene.progress;
+
+    const onActionClick = props.onActionClick ?? (() => {})
 
     useEffect(() => {
         props.headerProps.navigation.addListener('focus', () => {
@@ -153,7 +156,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
                                 <PaperAppbar.Action
                                     color={foregroundColor()}
                                     icon={props.actionIcon ?? {}} 
-                                    onPress={props.onActionClick}/>
+                                    onPress={() => onActionClick(props.headerProps.navigation)}/>
                         }
                     </View>
                 </View>
