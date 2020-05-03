@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView } from 'react-native';
+import { StyleSheet, View, TextInput, SafeAreaView, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Divider, Switch, Paragraph, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
@@ -67,61 +67,64 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
 
     
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <View style={styles.input}>
-                <TextInput 
-                    multiline={true} 
-                    value={input} 
-                    onChangeText={text => setInput(text)}
-                    placeholder='What do you need help with?'/>
-            </View>
-            <Divider/>
-            <View style={styles.row}>
-                <Caption>Add shopping list</Caption>
-                <Switch 
-                    style={{paddingLeft: 5}}
-                    value={useShoppingList} 
-                    onValueChange={toggleShoppingList}/>
-            </View>
-            <View>
-                {useShoppingList ? <Table 
-                    tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Qty', alignment: 'left'}, {data: '', alignment: 'right'}]} 
-                    tableData={tableData} 
-                    rowEnd={<MaterialIcons name='close'/>}
-                    rowEndAction={removeShoppingItem}
-                    trailing={<>
-                            <TextInput 
-                                style={styles.shoppingInput} 
-                                placeholder={'Item'} 
-                                onChangeText={(text) => setShoppingInput(text)}>
-                                {shoppingInput}
-                            </TextInput>
-                            <TextInput 
-                                style={styles.shoppingInput} 
-                                placeholder={'1'} 
-                                onChangeText={(text) => setShoppingQtyInput(text)}>
-                                {shoppingQtyInput}
-                            </TextInput>
-                            <DataTable.Cell style={styles.addShopping} onPress={addShoppingItem}>
-                                <MaterialIcons name='add'/>
-                            </DataTable.Cell>
-                        </>}
-                    /> : <></> }  
-            </View>
-            <Divider/>
-            <View style={styles.row}>
-                {tags.map((tag: string) =>
-                    <Chip 
-                        style={{marginRight: 5}}
-                        mode='outlined' 
-                        selected={tagSelect[tag]} 
-                        onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
-                        selectedColor={paperTheme.colors.primary}
-                        key={tag}>
-                        {tag}
-                    </Chip>
-                )}
-            </View>
-        </SafeAreaView>
+        <ScrollView style={{flex: 1}}>
+            <SafeAreaView style={{flex: 1}}>
+                <View style={styles.input}>
+                    <TextInput 
+                        autoFocus={true}
+                        multiline={true} 
+                        value={input} 
+                        onChangeText={text => setInput(text)}
+                        placeholder='What do you need help with?'/>
+                </View>
+                <Divider/>
+                <View style={styles.row}>
+                    <Caption>Add shopping list</Caption>
+                    <Switch 
+                        style={{paddingLeft: 5}}
+                        value={useShoppingList} 
+                        onValueChange={toggleShoppingList}/>
+                </View>
+                <View>
+                    {useShoppingList ? <Table 
+                        tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Qty', alignment: 'left'}, {data: '', alignment: 'right'}]} 
+                        tableData={tableData} 
+                        rowEnd={<MaterialIcons name='close'/>}
+                        rowEndAction={removeShoppingItem}
+                        trailing={<>
+                                <TextInput 
+                                    style={styles.shoppingInput} 
+                                    placeholder={'Item'} 
+                                    onChangeText={(text) => setShoppingInput(text)}>
+                                    {shoppingInput}
+                                </TextInput>
+                                <TextInput 
+                                    style={styles.shoppingInput} 
+                                    placeholder={'1'} 
+                                    onChangeText={(text) => setShoppingQtyInput(text)}>
+                                    {shoppingQtyInput}
+                                </TextInput>
+                                <DataTable.Cell style={styles.addShopping} onPress={addShoppingItem}>
+                                    <MaterialIcons name='add'/>
+                                </DataTable.Cell>
+                            </>}
+                        /> : <></> }  
+                </View>
+                <Divider/>
+                <View style={styles.row}>
+                    {tags.map((tag: string) =>
+                        <Chip 
+                            style={{marginRight: 5}}
+                            mode='outlined' 
+                            selected={tagSelect[tag]} 
+                            onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
+                            selectedColor={paperTheme.colors.primary}
+                            key={tag}>
+                            {tag}
+                        </Chip>
+                    )}
+                </View>
+            </SafeAreaView>
+        </ScrollView>
     );
 }
