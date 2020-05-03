@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle, TouchableWithoutFeedback } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { paperTheme } from '../../theme/paper-theme';
 import { transform } from '@babel/core';
@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
 
 type DividedViewProps = {
     upper: ReactNode,
+    onPressUpper?: () => void,
     lower: ReactNode,
+    onPressLower?: () => void,
     reverse?: Boolean
 }
 
@@ -34,14 +36,18 @@ const DividedView: FC<DividedViewProps> = (props) => {
                 ...styles.container, 
                 backgroundColor: props.reverse ? paperTheme.colors.background : paperTheme.colors.primary 
             }}>
-            <View style={{ 
+
+            <TouchableWithoutFeedback onPress={() => props.onPressUpper ? props.onPressUpper() : {}}>
+                <View style={{ 
                     ...styles.upperCont, 
                     backgroundColor: props.reverse ? paperTheme.colors.primary : paperTheme.colors.background 
                 }}>
-                {props.upper}
-            </View>
+                    {props.upper}
+                </View>
+            </TouchableWithoutFeedback>
+
             <View style={styles.dividedCont}>
-                <Svg preserveAspectRatio="none" width={'100%'} height={100} viewBox='0 0 359.57 122.05' fill='none'>
+                <Svg onPress={() => props.onPressUpper ? props.onPressUpper() : {}} preserveAspectRatio="none" width={'100%'} height={100} viewBox='0 0 359.57 122.05' fill='none'>
                     <Path
                         d='M360,234.6l-88.42,85.18a132,132,0,0,1-183.16,0L.36,234.54Z'
                         fill={props.reverse ? paperTheme.colors.primary : paperTheme.colors.background}
@@ -49,9 +55,12 @@ const DividedView: FC<DividedViewProps> = (props) => {
                     />
                 </Svg>
             </View>
-            <View style={styles.lowerCont}>
-                {props.lower}
-            </View>
+
+            <TouchableWithoutFeedback onPress={() => props.onPressLower ? props.onPressLower() : {}}>
+                <View style={styles.lowerCont}>
+                    {props.lower}
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
