@@ -49,7 +49,7 @@ interface TaskCardProps {
 
 const TaskCard: React.FC<TaskCardProps> = (props) => {
     return (
-        <Card onPress={() => props.onPress} style={TaskCardStyle.container}>
+        <Card onPress={() => props.onPress()} style={TaskCardStyle.container}>
             <View style={{flexDirection: 'row', flex: 1, borderRadius: paperTheme.roundness, overflow: 'hidden'}}>
                 <View style={TaskCardStyle.iconContainer}>
                     <MaterialCommunityIcons name={props.iconName} size={35} color={paperTheme.colors.primary} />

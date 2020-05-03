@@ -109,18 +109,6 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
         ]
     }
 
-    const generateTasksCards = () => {
-        return tasks.map(task => {
-            return <TaskCard
-                onPress={() => {/** TODO */}}
-                owner={task.owner}
-                iconName={task.icon}
-                tag={task.tag}
-                distance={calculateDistance(task.coordinates)}
-            />
-        });
-    }
-
     const generateMarkers = (): TakeCareMapMarker[] => {
         return tasks.map(task => {
             return {
@@ -212,7 +200,15 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                             }}
                             scrollItemsHeight={90}
                             scrollItems={
-                                generateTasksCards()
+                                tasks.map(task => {
+                                    return <TaskCard
+                                        onPress={() => {/** TODO */}}
+                                        owner={task.owner}
+                                        iconName={task.icon}
+                                        tag={task.tag}
+                                        distance={calculateDistance(task.coordinates)}
+                                    />
+                                })
                             }
                             />
                     </View>
