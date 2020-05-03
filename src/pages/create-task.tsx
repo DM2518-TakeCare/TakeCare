@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View, TextInput, SafeAreaView, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Divider, Switch, Paragraph, Chip, DataTable, Caption } from 'react-native-paper';
@@ -37,6 +37,7 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
     const [shoppingInput, setShoppingInput] = useState('');
     const [shoppingQtyInput, setShoppingQtyInput] = useState('');
     const [tableData, setTableData]: any = useState([]);
+    const shoppingListItemInputRef = useRef<TextInput>(null)
 
     const toggleShoppingList = () => {
         setUseShoppingList(!useShoppingList);
@@ -59,6 +60,7 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
             setShoppingInput('')
             setShoppingQtyInput('')
         }
+        shoppingListItemInputRef.current?.focus();
     }
 
     const removeShoppingItem = (i: number) => {
@@ -93,6 +95,8 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                         rowEndAction={removeShoppingItem}
                         trailing={<>
                                 <TextInput 
+                                    autoFocus={true}
+                                    ref={shoppingListItemInputRef}
                                     style={styles.shoppingInput} 
                                     placeholder={'Item'} 
                                     onChangeText={(text) => setShoppingInput(text)}>
