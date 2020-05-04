@@ -23,7 +23,7 @@ const helpStyle = StyleSheet.create({
 export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>) {
     return (
         <DividedView
-            onPressUpper={() => navigation.navigate('CreateTask')}
+            onPressUpper={() => navigation.navigate('CreateTask') /*TODO Navigate to taks-created, accepted or completed depending on state*/}
             upper={
                 <SafeAreaView style={{flex: 1}}>
                     <Center>

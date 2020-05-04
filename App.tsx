@@ -1,6 +1,6 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
-import { NavigationContainer, NavigationState, NavigationContainerRef, } from '@react-navigation/native';
+import { NavigationContainer, NavigationState, NavigationContainerRef, StackActions, } from '@react-navigation/native';
 import { RootStack } from './src/router';
 import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
@@ -91,7 +91,10 @@ export default function App() {
                                         headerProps={headerProps} 
                                         actionIcon={'send'} 
                                         onActionClick={
-                                        (navigation) => { navigation?.navigate('TaskCreated') }} />
+                                        (navigation) => { 
+                                            navigation?.dispatch(StackActions.pop(1))
+                                            navigation?.navigate('TaskCreated')
+                                        }} />
                                 ),
                             }}
                             component={CreateTask} />
@@ -118,7 +121,13 @@ export default function App() {
                             options={{
                                 title: '',
                                 header: (headerProps) => (
-                                    <AppBar disableBackAction headerProps={headerProps} actionIcon={'window-close'} onActionClick={() => { } /*TODO*/} />
+                                    <AppBar 
+                                        disableBackAction 
+                                        headerProps={headerProps} 
+                                        actionIcon={'window-close'} 
+                                        onActionClick={(navigation) => { 
+                                            navigation?.navigate('Home')
+                                        }} />
                                 ),
                             }}
                             component={TaskCompleted} />
