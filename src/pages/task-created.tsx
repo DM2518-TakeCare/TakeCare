@@ -46,7 +46,7 @@ export default function TaskCreated({ navigation, route }: RoutePropsHelper<'Tas
 
     const taskDetails = {
         user: { id: 'skdlfjlskdf', name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621'},
-        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'],coordinates: {latitude: 59.347647, longitude: 18.072340}, shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }
+        task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340}, shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }
     }
 
     return (

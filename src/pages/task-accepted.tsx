@@ -32,7 +32,7 @@ export default function TaskAccepted({navigation, route}:RoutePropsHelper<'TaskA
     const testHelper = {id: '', name: 'Annica Olofsson', phone: '0738189621', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}, extraInfo: 'Portkod'}
 
     const testUser = {user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
-    task: { id: '', ownerId: '', desc: 'I need help getting my mail and some groceries', coordinates: {latitude: 59.347647, longitude: 18.072340}, tags: ['Mail', 'Groceries'],shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
+    task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', coordinates: {latitude: 59.347647, longitude: 18.072340}, tags: ['Mail', 'Groceries'], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
 
     return (    
         <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>

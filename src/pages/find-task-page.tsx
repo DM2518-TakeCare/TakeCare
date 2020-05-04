@@ -55,46 +55,41 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
         );
     }, []);
 
-    const searchForNewTasks = () => {
+    const searchForNewTasks = () : Task[] => {
         return [
             {   
                 id: '',
-                name: 'Task 1',
                 coordinates: {latitude: 59.347647, longitude: 18.072340},
-                ownerId: '',
-                tags: ['mail, groceries'],
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail', 'Groceries'],
                 desc: '',
             },
             {
                 id: '',
-                name: 'Task 2',
                 coordinates: {latitude: 59.347747, longitude: 18.072640},
-                ownerId: '',
-                tags: ['mail'],
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
                 desc: '',
             },
             {   
                 id: '',
-                name: 'Task 3',
                 coordinates: {latitude: 59.347447, longitude: 18.072340},
-                ownerId: '',
-                tags: ['mail'],
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
                 desc: '',
             },
             {   
                 id: '',
-                name: 'Task 4',
                 coordinates: {latitude: 59.347847, longitude: 18.073640},
-                ownerId: '',
-                tags: ['mail'],
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
                 desc: '',
             },
             {   
                 id: '',
-                name: 'Task 5',
                 coordinates: {latitude: 59.347247, longitude: 18.076540},
-                ownerId: '',
-                tags: ['mail'],
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
                 desc: '',
             },
         ]

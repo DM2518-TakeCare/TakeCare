@@ -27,18 +27,18 @@ export default function TasksPage({navigation, route}:RoutePropsHelper<'Tasks'>)
     const acceptedTasks: TaskInfo[] = [
         {
             user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { id: '', ownerId: '', desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340} }
+            task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340} }
         },
         {
             user: { id: '', name: 'Mia Berglund', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { id: '', ownerId: '', desc: 'I need milk!', tags: ['Groceries'],  coordinates: {latitude: 59.347647, longitude: 18.072340} }
+            task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need milk!', tags: ['Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340} }
         }
     ]
 
     const completedTasks: TaskInfo[] = [
         {
             user: { id: '', name: 'Maja Andersson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-            task: { id: '', ownerId: '', desc: 'I need some alvedon.', tags: ['Medicine'], coordinates: {latitude: 59.347647, longitude: 18.072340}}
+            task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need some alvedon.', tags: ['Medicine'], coordinates: {latitude: 59.347647, longitude: 18.072340}}
         }
     ]
 
