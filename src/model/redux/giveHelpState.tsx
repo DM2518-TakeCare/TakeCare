@@ -1,10 +1,11 @@
 import { AppActions } from './store';
 import { Dispatch } from 'react';
+import { Task } from '../shared/task-interface'
 
 /*The interface for the state; how the state is supposed to look at all times.*/
 export interface GiveHelpState {
-    activeTasks: any[], //TODO define task interface, THIS SHOULD NOT BE any!
-    completedTasks: any[]
+    activeTasks: Task[],
+    completedTasks: Task[]
 }
 
 /*Available actions to for example change the state*/
@@ -16,7 +17,7 @@ export const GiveHelpActionTypes = {
 /*Different actions may require different payloads (parameters), the type, however, is always a string*/
 export interface AddTaskAction {
     type: string,
-    payload: any //TODO define task interface, THIS SHOULD NOT BE any!
+    payload: Task
 }
 export function addActiveTask(task: any) {
     return (dispatch: Dispatch<AppActions>) => {

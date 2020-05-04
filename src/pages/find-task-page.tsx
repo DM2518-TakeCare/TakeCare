@@ -10,6 +10,7 @@ import { SnappingScroll } from '../components/snapping-scroll';
 import { Card } from 'react-native-paper';
 import BottomSheet from 'reanimated-bottom-sheet'
 import * as Permissions from 'expo-permissions';
+import { Task } from '../model/shared/task-interface';
 import { paperTheme } from '../theme/paper-theme';
 import { HeaderBottomSheet } from '../components/header-bottom-sheet';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -27,13 +28,6 @@ const findTaskStyle = StyleSheet.create({
         right: 0,
     }
 });
-
-interface Task {
-    owner: string,
-    tag: string,
-    icon: string,
-    coordinates: LatLng 
-}
 
 const getLocationPermission = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -74,37 +68,42 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
         );
     }, []);
 
-    const searchForNewTasks = (): Task[] => {
+    const searchForNewTasks = () : Task[] => {
         return [
-            {
-                owner: 'Maja Holmström',
-                tag: 'Medicine',
-                icon: 'medical-bag',
-                coordinates: {latitude: 59.347647, longitude: 18.072340}
+            {   
+                id: '',
+                coordinates: {latitude: 59.347647, longitude: 18.072340},
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail', 'Groceries'],
+                desc: '',
             },
             {
-                owner: "Maja Andersson",
-                tag: 'Food',
-                icon: 'shopping',
-                coordinates: {latitude: 59.347747, longitude: 18.072640}
+                id: '',
+                coordinates: {latitude: 59.347747, longitude: 18.072640},
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
+                desc: '',
             },
-            {
-                owner: 'Gunnar Gunnarson',
-                tag: 'Mail',
-                icon: 'email',
-                coordinates: {latitude: 59.347447, longitude: 18.072340}
+            {   
+                id: '',
+                coordinates: {latitude: 59.347447, longitude: 18.072340},
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
+                desc: '',
             },
-            {
-                owner: 'Adam Jonsson',
-                tag: 'Medicine',
-                icon: 'medical-bag',
-                coordinates: {latitude: 59.347847, longitude: 18.073640}
+            {   
+                id: '',
+                coordinates: {latitude: 59.347847, longitude: 18.073640},
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
+                desc: '',
             },
-            {
-                owner: 'Markus Söderberg',
-                tag: 'Mail',
-                icon: 'email',
-                coordinates: {latitude: 59.347247, longitude: 18.076540}
+            {   
+                id: '',
+                coordinates: {latitude: 59.347247, longitude: 18.076540},
+                owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+                tags: ['Mail'],
+                desc: '',
             },
         ]
     }
@@ -204,9 +203,9 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                                 tasks.map(task => {
                                     return <TaskCard
                                         onPress={() => {/** TODO */}}
-                                        owner={task.owner}
-                                        iconName={task.icon}
-                                        tag={task.tag}
+                                        owner={task.owner.name}
+                                        iconName={'medical-bag'}
+                                        tag={task.tags[0]}
                                         distance={calculateDistance(task.coordinates)}
                                     />
                                 })
