@@ -6,6 +6,8 @@ import { paperTheme } from '../theme/paper-theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from './button';
 import { ContentPadding } from './content-padding';
+import { User } from '../model/shared/user-interface';
+import { Task } from '../model/shared/task-interface';
 
 const styles = StyleSheet.create({
     row: {
@@ -20,8 +22,8 @@ const styles = StyleSheet.create({
 });
 
 type TaskDetailsProps = {
-    user: any, //TODO create user and task interface
-    task: any,
+    user: User,
+    task: Task,
     canComplete?: boolean,
     onComplete?: (() => void),
     hideUserInfo?: boolean,
@@ -48,7 +50,7 @@ export const TaskDetails: FC<TaskDetailsProps> = ({
         { key: 'extraInfo', title: 'Extra information', obj: user },
     ]
 
-    const detailsContent = hideUserInfo ? taskContent : taskContent.concat(userContent)
+    const detailsContent = hideUserInfo ? taskContent : [...taskContent, ...userContent]
 
     const tagContent = (
         <View style={styles.row}>

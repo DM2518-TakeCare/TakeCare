@@ -9,6 +9,7 @@ import { ContentPadding } from '../components/content-padding';
 import SvgIcon from '../components/svg-icon';
 import { Center } from '../components/center';
 import { TaskDetails } from '../components/task-details';
+import { Tag } from '../model/shared/task-interface';
 
 const styles = StyleSheet.create({
     cont: {
@@ -30,11 +31,10 @@ const styles = StyleSheet.create({
 
 export default function TaskCompleted({navigation, route}:RoutePropsHelper<'CreateTask'>) {
 
-    const testHelper = {name: 'Annica Olofsson', phone: '0738189621'}
+    const testHelper = {id: '', name: 'Annica Olofsson', phone: '0738189621', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}, extraInfo: 'Portkod'}
 
-    const testUser = {user: { name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
-    task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'] }}
-
+    const testUser = {user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+    task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', coordinates: {latitude: 59.347647, longitude: 18.072340}, tags: ['Mail', 'Groceries'] as Tag[], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
 
     const upper = (
         <ContentPadding>
