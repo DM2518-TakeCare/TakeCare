@@ -4,7 +4,6 @@ import { RoutePropsHelper } from '../router';
 import { Center } from '../components/center';
 import { ContentPadding } from '../components/content-padding';
 import { Button, Divider } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'Playground'>) {
     return (

@@ -10,7 +10,7 @@ interface SnappingScrollProps {
 
 const snappingScrollStyle = StyleSheet.create({
     scrollViewContainer: {
-        paddingBottom: '50%',
+        paddingBottom: '100%',
         paddingHorizontal: 10
     },
     itemContainer: {
