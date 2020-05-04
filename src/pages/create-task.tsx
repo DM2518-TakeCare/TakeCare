@@ -1,14 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, TextInput, SafeAreaView, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Divider, Switch, Paragraph, Chip, DataTable, Caption } from 'react-native-paper';
+import { Divider, Switch, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
 import Table from '../components/table';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1, 
+        justifyContent: 'space-between'
+    },
     input: {
-        flex: 9,
+        flex: 1,
         padding: 10,
     },
     row: {
@@ -53,6 +57,8 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                 if((tableData[i].includes(shoppingInput))) {
                     tableData[i][1] += qty;
                     setTableData([...tableData])
+                    setShoppingInput('')
+                    setShoppingQtyInput('')
                     return
                 }
             }
@@ -69,8 +75,8 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
 
     
     return (
-        <ScrollView style={{flex: 1}}>
-            <SafeAreaView style={{flex: 1}}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <SafeAreaView style={{flex: 1}} >
                 <View style={styles.input}>
                     <TextInput 
                         autoFocus={true}
@@ -78,6 +84,20 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                         value={input} 
                         onChangeText={text => setInput(text)}
                         placeholder='What do you need help with?'/>
+                </View>
+                <Divider/>
+                <View style={styles.row}>
+                    {tags.map((tag: string) =>
+                        <Chip 
+                            style={{marginRight: 5}}
+                            mode='outlined' 
+                            selected={tagSelect[tag]} 
+                            onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
+                            selectedColor={paperTheme.colors.primary}
+                            key={tag}>
+                            {tag}
+                        </Chip>
+                    )}
                 </View>
                 <Divider/>
                 <View style={styles.row}>
@@ -113,20 +133,6 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                                 </DataTable.Cell>
                             </>}
                         /> : <></> }  
-                </View>
-                <Divider/>
-                <View style={styles.row}>
-                    {tags.map((tag: string) =>
-                        <Chip 
-                            style={{marginRight: 5}}
-                            mode='outlined' 
-                            selected={tagSelect[tag]} 
-                            onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
-                            selectedColor={paperTheme.colors.primary}
-                            key={tag}>
-                            {tag}
-                        </Chip>
-                    )}
                 </View>
             </SafeAreaView>
         </ScrollView>
