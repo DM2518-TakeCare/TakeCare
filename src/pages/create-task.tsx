@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView, Animated, LayoutChangeEvent } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, View, TextInput, SafeAreaView, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Divider, Switch, Paragraph, Chip, Text } from 'react-native-paper';
+import { Divider, Switch, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
+import Table from '../components/table';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1, 
+        justifyContent: 'space-between'
+    },
     input: {
-        flex: 9,
+        flex: 1,
         padding: 10,
     },
     row: {
         padding: 10,
         flexDirection: 'row',
     },
+    shoppingInput: {
+        flex: 1
+    },
+    addShopping: {
+        flexGrow: 1, 
+        justifyContent: 'center'
+    }
 });
 
 export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateTask'>) {
@@ -25,82 +38,103 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
     const [tagSelect, setTagSelect] = useState(initialTagState);
     const [useShoppingList, setUseShoppingList] = useState(false);
     const [input, setInput] = useState('');
+    const [shoppingInput, setShoppingInput] = useState('');
+    const [shoppingQtyInput, setShoppingQtyInput] = useState('');
+    const [tableData, setTableData]: any = useState([]);
+    const shoppingListItemInputRef = useRef<TextInput>(null)
 
     const toggleShoppingList = () => {
-        startAnimations(!useShoppingList);
         setUseShoppingList(!useShoppingList);
     };
 
-    const [shoppingListHeightAnimation] = useState(new Animated.Value(0));
-    const [contentOpacityAnimation] = useState(new Animated.Value(0));
-    const [shoppingListHeight, setShoppingListHeight] = useState<number | null>(null);
-
-    const startAnimations = (open: boolean) => {
-        Animated.timing(
-            contentOpacityAnimation,
-            {
-                toValue: open ? 1 : 0,
-                duration: 200,
-                isInteraction: true,
+    const addShoppingItem = () => {
+        if(shoppingInput !== '') {
+            let qty = 1;
+            if(shoppingQtyInput !== '' && shoppingQtyInput.match(/^[0-9]*$/)) {
+                qty = parseInt(shoppingQtyInput)
             }
-        ).start()
-
-        Animated.timing(
-            shoppingListHeightAnimation,
-            {
-                toValue: open ? (shoppingListHeight ?? 0) : 0,
-                duration: 400,
-                isInteraction: true,
+            for (let i in tableData) {
+                if((tableData[i].includes(shoppingInput))) {
+                    tableData[i][1] += qty;
+                    setTableData([...tableData])
+                    setShoppingInput('')
+                    setShoppingQtyInput('')
+                    return
+                }
             }
-        ).start()
-    };
+            setTableData([...tableData, [shoppingInput, qty]])
+            setShoppingInput('')
+            setShoppingQtyInput('')
+        }
+        shoppingListItemInputRef.current?.focus();
+    }
 
+    const removeShoppingItem = (i: number) => {
+        setTableData(tableData.filter((item: any, index: number) => index !== i))
+    }
+
+    
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <View style={styles.input}>
-                <TextInput 
-                    multiline={true} 
-                    value={input} 
-                    onChangeText={text => setInput(text)}
-                    placeholder='What do you need help with?'/>
-            </View>
-            <Divider/>
-            <View style={styles.row}>
-                <Paragraph>Add shopping list</Paragraph>
-                <Switch 
-                    style={{paddingLeft: 5}}
-                    value={useShoppingList} 
-                    onValueChange={toggleShoppingList}/>
-            </View>
-            <Animated.View 
-                style={{
-                    overflow: 'hidden',
-                    height: shoppingListHeight === null ? null : shoppingListHeightAnimation,
-                    opacity: contentOpacityAnimation,
-                }} 
-                onLayout={(event: LayoutChangeEvent) => {
-                    if(shoppingListHeight === null) {
-                        setShoppingListHeight(event.nativeEvent.layout.height);
-                    }
-                }}>
-                <View style={styles.row}>
-                    <Text>placeholder for item list</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <SafeAreaView style={{flex: 1}} >
+                <View style={styles.input}>
+                    <TextInput 
+                        autoFocus={true}
+                        multiline={true} 
+                        value={input} 
+                        onChangeText={text => setInput(text)}
+                        placeholder='What do you need help with?'/>
                 </View>
-            </Animated.View>
-            <Divider/>
-            <View style={styles.row}>
-                {tags.map((tag: string) =>
-                    <Chip 
-                        style={{marginRight: 5}}
-                        mode='outlined' 
-                        selected={tagSelect[tag]} 
-                        onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
-                        selectedColor={paperTheme.colors.primary}
-                        key={tag}>
-                        {tag}
-                    </Chip>
-                )}
-            </View>
-        </SafeAreaView>
+                <Divider/>
+                <View style={styles.row}>
+                    {tags.map((tag: string) =>
+                        <Chip 
+                            style={{marginRight: 5}}
+                            mode='outlined' 
+                            selected={tagSelect[tag]} 
+                            onPress={() => setTagSelect({...tagSelect, ...{[tag]: !tagSelect[tag]}})} 
+                            selectedColor={paperTheme.colors.primary}
+                            key={tag}>
+                            {tag}
+                        </Chip>
+                    )}
+                </View>
+                <Divider/>
+                <View style={styles.row}>
+                    <Caption>Add shopping list</Caption>
+                    <Switch 
+                        style={{paddingLeft: 5}}
+                        value={useShoppingList} 
+                        onValueChange={toggleShoppingList}/>
+                </View>
+                <View>
+                    {useShoppingList ? <Table 
+                        tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Qty', alignment: 'left'}, {data: '', alignment: 'right'}]} 
+                        tableData={tableData} 
+                        rowEnd={<MaterialIcons name='close'/>}
+                        rowEndAction={removeShoppingItem}
+                        trailing={<>
+                                <TextInput 
+                                    autoFocus={true}
+                                    ref={shoppingListItemInputRef}
+                                    style={styles.shoppingInput} 
+                                    placeholder={'Item'} 
+                                    onChangeText={(text) => setShoppingInput(text)}>
+                                    {shoppingInput}
+                                </TextInput>
+                                <TextInput 
+                                    style={styles.shoppingInput} 
+                                    placeholder={'1'} 
+                                    onChangeText={(text) => setShoppingQtyInput(text)}>
+                                    {shoppingQtyInput}
+                                </TextInput>
+                                <DataTable.Cell style={styles.addShopping} onPress={addShoppingItem}>
+                                    <MaterialIcons name='add'/>
+                                </DataTable.Cell>
+                            </>}
+                        /> : <></> }  
+                </View>
+            </SafeAreaView>
+        </ScrollView>
     );
 }
