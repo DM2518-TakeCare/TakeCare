@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Circle, LatLng, EventUserLocation, Marker, Region } from 'react-native-maps';
 import MapTheme from '../theme/map-theme.json';
 import { paperTheme } from '../theme/paper-theme';
+import { EdgeInsets } from 'react-native-safe-area-context';
 
 const mapStyle = StyleSheet.create({
     container: {
@@ -21,6 +22,7 @@ interface TakeCareMapProps {
     followUser?: boolean
     markers?: TakeCareMapMarker[],
     activeMarkerIndex?: number | null,
+    mapPadding?: EdgeInsets
     circle?: {
         radius: number,
         coordinates: LatLng
@@ -83,6 +85,7 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
             provider={PROVIDER_GOOGLE} 
             style={mapStyle.container}
             customMapStyle={MapTheme}
+            mapPadding={props.mapPadding}
             showsUserLocation={true}
             initialRegion={currentRegion}
             onRegionChangeComplete={(region) => setCurrentRegion(region)}
