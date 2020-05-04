@@ -203,7 +203,7 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                             scrollItems={
                                 tasks.map(task => {
                                     return <TaskCard
-                                        onPress={() => {/** TODO */}}
+                                        onPress={() => navigation.navigate('HelpDetails')}
                                         owner={task.owner}
                                         iconName={task.icon}
                                         tag={task.tag}

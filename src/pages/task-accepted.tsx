@@ -46,7 +46,7 @@ export default function TaskAccepted({navigation, route}:RoutePropsHelper<'TaskA
                     <UserInfo type='phone' user={testHelper}/>
                 </View>
                 <View style={styles.taskCont}>
-                    <TaskDetails detailsHeader user={testUser.user} task={testUser.task}></TaskDetails>
+                    <TaskDetails detailsHeader user={testUser.user} task={testUser.task}/>
                 </View>
                 <View style={styles.buttonCont}>
                     <Button onPress={() => {}} size='big'>Task Completed</Button>

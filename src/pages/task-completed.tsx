@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import DividedView from '../components/divided-view/divided-view';
@@ -8,6 +8,7 @@ import UserInfo from '../components/user-info/user-info';
 import { ContentPadding } from '../components/content-padding';
 import SvgIcon from '../components/svg-icon';
 import { Center } from '../components/center';
+import { TaskDetails } from '../components/task-details';
 
 const styles = StyleSheet.create({
     cont: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
     },
     taskCont: {
-        flexGrow: 8,
+        paddingTop: 20,
     },
     bottomCont: {
         flex: 1,
@@ -29,7 +30,11 @@ const styles = StyleSheet.create({
 
 export default function TaskCompleted({navigation, route}:RoutePropsHelper<'CreateTask'>) {
 
-    const testUser = {name: 'Annica Olofsson', phone: '0738189621'}
+    const testHelper = {name: 'Annica Olofsson', phone: '0738189621'}
+
+    const testUser = {user: { name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3', extraInfo: 'Portkod' },
+    task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'] }}
+
 
     const upper = (
         <ContentPadding>
@@ -38,16 +43,14 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
     )
 
     const lower = (
-        <View style={styles.cont}>
+        <ScrollView style={styles.cont}>
             <ContentPadding>
                 <View style={styles.userCont}>
-                    <UserInfo type='name' user={testUser}/>
-                    <UserInfo type='phone' user={testUser}/>
+                    <UserInfo type='name' user={testHelper}/>
+                    <UserInfo type='phone' user={testHelper}/>
                 </View>
                 <View style={styles.taskCont}>
-                    <Center>
-                        <Text>Task details placeholder</Text>
-                    </Center>
+                    <TaskDetails detailsHeader user={testUser.user} task={testUser.task}/>
                 </View>
                 <View style={styles.bottomCont}>
                     <Center>
@@ -55,10 +58,10 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
                     </Center>
                 </View>
             </ContentPadding>
-        </View>
+        </ScrollView>
     )
 
     return (
-        <DividedView reverse upper={upper} lower={lower}/>
+        <DividedView reverse noBottomPadding upper={upper} lower={lower}/>
     );
 }

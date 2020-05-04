@@ -10,6 +10,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { paperTheme } from '../theme/paper-theme';
 import Table from '../components/table';
 import { MaterialIcons } from '@expo/vector-icons';
+import { StackActions } from '@react-navigation/native';
+
 
 const styles = StyleSheet.create({
     mapCont: {
@@ -113,7 +115,12 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                             </View>
                     </ScrollView>
                     <View style={{ justifyContent: 'flex-end'}}>
-                        <Button size='big' onPress={() => navigation.navigate('Tasks')}>Accept Task</Button>      
+                        <Button 
+                            size='big' 
+                            onPress={() => {
+                                navigation.dispatch(StackActions.pop(1))
+                                navigation.navigate('Tasks')
+                            }}>Accept Task</Button>      
                     </View>
                 </ContentPadding>
             </View>
