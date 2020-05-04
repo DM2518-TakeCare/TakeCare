@@ -168,7 +168,8 @@ export default function FindTaskPage({navigation, route}:RoutePropsHelper<'FindT
                 />
                 <Animated.View  style={{...findTaskStyle.mapControls, transform: [{translateY: Animated.add(-bottomSheetMaxHeight, bottomBarPos.current)}]}}>
                     <ContentPadding>
-                        <Button 
+                        <Button
+                            forceForegroundStyle='light'
                             expandHorizontal={false} 
                             toggleOff={!followUserLocation} 
                             onPress={() => setFollowUserLocation(!followUserLocation)}>

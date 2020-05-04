@@ -34,6 +34,7 @@ interface TakeCareMapProps {
 
 export interface TakeCareMapHandles {
     goToMarker: (markerIndex: number) => void;
+    goToChosenTask: (coordinates: LatLng) => void;
 }
 
 const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> = (props, ref) => {
@@ -62,6 +63,14 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
                     duration: 250
                 });
             }
+        },
+        goToChosenTask: (coordinates: LatLng) => {
+            mapRef.current?.animateToRegion({
+                    latitude: coordinates.latitude,
+                    longitude: coordinates.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,   
+            }, 250);
         },
     }));
     

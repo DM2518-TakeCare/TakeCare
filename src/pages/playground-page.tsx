@@ -41,6 +41,10 @@ export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'
                     <Button mode="contained" onPress={() => {
                         navigation.navigate('TaskCreated');
                     }}>To Task Created</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={() => {
+                        navigation.navigate('HelpDetails');
+                    }}>To Help Details</Button>
                 </View>
             </Center>
         </ContentPadding>

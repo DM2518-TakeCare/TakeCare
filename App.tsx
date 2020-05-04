@@ -12,6 +12,7 @@ import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
 import TasksPage from './src/pages/tasks-page';
 import TaskCompleted from './src/pages/task-completed';
+import HelpDetails from './src/pages/help-details-page';
 import Register from './src/pages/register-page';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
@@ -110,6 +111,15 @@ export default function App() {
                                 ),
                             }}
                             component={TaskCompleted} />
+                        <RootStack.Screen
+                            name="HelpDetails"
+                            options={{
+                                title: "Task Details",
+                                header: (headerProps) => (
+                                    <AppBar headerProps={headerProps} />
+                                ),
+                            }}
+                            component={HelpDetails} />
                         <RootStack.Screen
                             name='Settings'
                             options={{

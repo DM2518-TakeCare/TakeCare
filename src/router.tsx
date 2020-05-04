@@ -10,6 +10,7 @@ export type RootStackParamList = {
   CreateTask: undefined;
   Tasks: undefined;
   TaskCompleted: undefined;
+  HelpDetails: undefined;
   TaskCreated: undefined;
   Register: undefined;
   TaskAccepted: undefined;
