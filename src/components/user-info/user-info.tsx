@@ -19,7 +19,9 @@ const userIcons: {[key in UserInfoTypes]: string} = {
 const UserInfo: FC<UserInfoProps> = (props) => {
     return (
         <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicons name={userIcons[props.type]} size={25} color={paperTheme.colors.accent} />
+            <View style={{width: 25}}>
+                <Ionicons name={userIcons[props.type]} size={25} color={paperTheme.colors.accent} />
+            </View>
             <Text style={{marginLeft: 5}}>
                 {props.user[props.type]}
             </Text>

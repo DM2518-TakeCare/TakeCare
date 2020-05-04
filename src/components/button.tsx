@@ -17,6 +17,8 @@ interface ButtonProps {
     /** The color of the component */
     color?: string,
 
+    forceForegroundStyle?: 'light' | 'dark',
+
     /** If the button is toggled off */
     toggleOff?: boolean 
 
@@ -36,6 +38,7 @@ export const Button: FC<ButtonProps> = ({
     onPress, 
     expandHorizontal = false, 
     disabled = false, 
+    forceForegroundStyle,
     color = paperTheme.colors.primary,
     toggleOff: toggleOff = false,
     size = 'small'}) => {
@@ -49,6 +52,10 @@ export const Button: FC<ButtonProps> = ({
             }}
             labelStyle={{
                 padding: size === 'big' ? 10 : 0,
+                color: 
+                    forceForegroundStyle 
+                    ? (forceForegroundStyle === 'light' ? '#fff' : '#000')
+                    : undefined
             }}
             uppercase={false}
             color={color}

@@ -1,28 +1,50 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, SafeAreaView, StyleSheet} from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Center } from '../components/center';
-import { Button } from 'react-native-paper';
+import DividedView from '../components/divided-view/divided-view';
+import StatusHeader from '../components/status-header';
+import { paperTheme } from '../theme/paper-theme';
+
+const helpStyle = StyleSheet.create({
+    title: {
+        ...paperTheme.fonts.medium,
+        fontSize: 20
+    },
+    giveHelpTitle: {
+        color: paperTheme.colors.onPrimary
+    },
+    receiveHelpTitle: {
+        color: paperTheme.colors.primary
+    }
+});
+
 
 export default function HomePage({ navigation, route }: RoutePropsHelper<'Home'>) {
     return (
-        <Center>
-            <Text>TakeCare</Text>
-            <Button mode="contained" onPress={() => {
-                navigation.navigate('Playground');
-            }}>
-                To Playground
-            </Button>
-            <Button mode="contained" onPress={() => {
-                navigation.navigate('TaskAccepted');
-            }}>
-                To Accepted task
-            </Button>
-            <Button mode="contained" onPress={() => {
-                navigation.navigate('FindTask');
-            }}>
-                Find task
-            </Button>
-        </Center>
+        <DividedView
+            onPressUpper={() => {/** TODO */}}
+            upper={
+                <SafeAreaView style={{flex: 1}}>
+                    <Center>
+                        <StatusHeader type='receive-help' hideStatusText={false}/>
+                        <Text style={{...helpStyle.title, ...helpStyle.receiveHelpTitle}}>
+                            Receive Help
+                        </Text>
+                    </Center>
+                </SafeAreaView>
+            }
+            onPressLower={() => {/** TODO */}}
+            lower={
+                <SafeAreaView style={{flex: 1}}>
+                    <Center>
+                        <StatusHeader type='give-help' hideStatusText={false} onPrimary/>
+                        <Text style={{...helpStyle.title, ...helpStyle.giveHelpTitle}}>
+                            Give Help
+                        </Text>
+                    </Center>
+                </SafeAreaView>
+            }
+        />
     );
 }

@@ -6,7 +6,7 @@ import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
-import { AppBar } from './src/components/app-bar';
+import { AppBar, AppBarBackgroundColor } from './src/components/app-bar';
 import FindTaskPage from './src/pages/find-task-page';
 import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
@@ -16,6 +16,7 @@ import Register from './src/pages/register-page';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
+import TaskCreated from './src/pages/task-created';
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
@@ -33,7 +34,7 @@ export default function App() {
                 >
                     {/* If you want to add a new page, you must first add the page name in router.tsx */}
                     <RootStack.Navigator
-                        initialRouteName='Home'
+                        initialRouteName='Playground'
                         headerMode='screen'
                         screenOptions={{
                             header: (headerProps) => (
@@ -51,6 +52,16 @@ export default function App() {
                             component={Register} />
                         <RootStack.Screen
                             name='Home'
+                            options={{
+                                headerTitle: '',
+                                header: (headerProps) => (
+                                    <AppBar
+                                        disableBackAction
+                                        backgroundColor={AppBarBackgroundColor.CANVAS}
+                                        headerProps={headerProps}
+                                        actionIcon={'settings'} />
+                                ),
+                            }}
                             component={HomePage} />
                         <RootStack.Screen
                             name='FindTask'
@@ -72,6 +83,15 @@ export default function App() {
                                 ),
                             }}
                             component={CreateTask} />
+                        <RootStack.Screen
+                            name='TaskCreated'
+                            options={{
+                                title: 'Task Created',
+                                header: (headerProps) => (
+                                    <AppBar headerProps={headerProps} />
+                                ),
+                            }}
+                            component={TaskCreated} />
                         <RootStack.Screen
                             name='Tasks'
                             options={{
