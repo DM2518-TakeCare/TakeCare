@@ -4,7 +4,8 @@ import firestore, { geoFirestore } from './firebase';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { User } from './shared/user-interface';
-import { GeoCollectionReference, GeoFirestore, GeoQuery, GeoQuerySnapshot } from 'geofirestore';
+import { GeoCollectionReference, GeoFirestore, GeoQuery } from 'geofirestore';
+import * as userModel from './user-model';
 
 export const taskCollections = {
     tasks: 'Tasks',
@@ -27,8 +28,10 @@ export async function addNewTask(
         coordinates: new firebase.firestore.GeoPoint(
             coordinates.latitude,
             coordinates.longitude),
-        shoppingList: shoppingList,
+        shoppingList: shoppingList ?? null,
         completed: false,
+        dateAdded: new Date(),
+        dateCompleted: null
     });
 }
 
@@ -69,11 +72,16 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
     const query: GeoQuery = geoCollection.near({ 
         center: new firebase.firestore.GeoPoint(coordinates.latitude, coordinates.longitude), 
         radius: radius 
-    }).where('helperID', '==', null);
+    });
 
     const queryResult = await query.get();
+
+    // Need to manually filter out task that already have an helper
+    const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null);
+
+    // Parse the result
     const tasks = await completeTaskQuery(
-        queryResult.docs.map(doc => ({
+        filteredDocs.map(doc => ({
             docID: doc.id, 
             docData: doc.data()
         }))
@@ -120,7 +128,8 @@ export async function removeHelper(taskID: string) {
 /** Complete a task */
 export async function completeTask(taskID: string) {
     await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
-        completed: true
+        completed: true,
+        dateCompleted: new Date()
     });
 }
 
@@ -134,34 +143,40 @@ async function completeTaskQuery(data: {docID: string, docData: any}[]): Promise
 
         // Getting the shopping list
         let shoppingList: ShoppingItem[] = [];
-        taskData['shoppingList'].forEach((shoppingItemData: any) => {
-            shoppingList.push({
-                productName: shoppingItemData['productName'],
-                amount: shoppingItemData['amount'],
-            })
-        });
-
-        // TODO: Getting the owner of the task
-        const ownerID = taskData['ownerID'];
-        const owner: User = {
-            id: ownerID,
-            name: 'TODO',
-            address: 'TODO',
-            phone: 'TODO'
+        const shoppingListDocData = taskData['shoppingList'];
+        if (shoppingListDocData) {
+            shoppingListDocData.forEach((shoppingItemData: any) => {
+                shoppingList.push({
+                    productName: shoppingItemData['productName'],
+                    amount: shoppingItemData['amount'],
+                })
+            });
         }
 
-        // TODO: Getting the helper of the task
+        // Getting the owner of the task
+        const ownerID = taskData['ownerID'];
+        const owner = await userModel.getUser(ownerID);
+
+        // Getting the helper of the task
+        const helperID = taskData['helperID'];
         let helper;
+        if (helperID) {
+            helper = await userModel.getUser(helperID); 
+        }
 
         tasks.push({
             id: taskDoc.docID,
             completed: taskData['completed'],
-            coordinates: {latitude: coordinates.latitude, longitude: coordinates.longitude},
+            coordinates: {
+                latitude: coordinates.latitude, 
+                longitude: coordinates.longitude
+            },
             desc: taskData['description'],
             tags: taskData['tags'],
             shoppingList: shoppingList,
             owner: owner,
             helper: helper,
+            dateAdded: taskData['dateAdded']
         });
     }
 

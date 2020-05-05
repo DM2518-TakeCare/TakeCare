@@ -19,5 +19,6 @@ export interface Task {
     coordinates: LatLng,
     tags: tags[]
     desc: string
-    shoppingList?: ShoppingItem[]
+    shoppingList?: ShoppingItem[],
+    dateAdded?: Date
 }
