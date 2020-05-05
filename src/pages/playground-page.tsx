@@ -4,6 +4,7 @@ import { RoutePropsHelper } from '../router';
 import { Center } from '../components/center';
 import { ContentPadding } from '../components/content-padding';
 import { Button, Divider } from 'react-native-paper';
+import * as TaskModel from '../model/task-model';
 
 export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'Playground'>) {
     return (
@@ -45,6 +46,19 @@ export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'
                     <Button mode="contained" onPress={() => {
                         navigation.navigate('HelpDetails');
                     }}>To Help Details</Button>
+                    <Divider style={{margin: 10}}/>
+                    <Button mode="contained" onPress={async () => {
+                        // await TaskModel.addNewTask(
+                        //     'ownerID2', 
+                        //     ['Mail'], 
+                        //     'This is an description', 
+                        //     {latitude: 59.219546, longitude: 17.873433},
+                        //     [{productName: 'Milk', amount: '2l'}, {productName: 'Pasta', amount: '1kg'}]
+                        // );
+                        console.log('New result');
+                        const result = await TaskModel.getNearbyTasks({latitude: 59.208335, longitude: 17.871182}, 2);
+                        console.log(result);
+                    }}>Firebase</Button>
                 </View>
             </Center>
         </ContentPadding>
