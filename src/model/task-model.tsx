@@ -10,6 +10,7 @@ export const taskCollections = {
     tasks: 'Tasks',
 }
 
+/** Add new task */
 export async function addNewTask(
     ownerID: string, 
     tags: tags[], 
@@ -18,17 +19,21 @@ export async function addNewTask(
     shoppingList?: ShoppingItem[]
 ) {
     const geoCollection: GeoCollectionReference = geoFirestore.collection(taskCollections.tasks);
-    await geoCollection.add({
+    return await geoCollection.add({
         ownerID: ownerID,
+        helperID: null,
         tags: tags,
         description: description,
         coordinates: new firebase.firestore.GeoPoint(
             coordinates.latitude,
             coordinates.longitude),
-        shoppingList: shoppingList
+        shoppingList: shoppingList,
+        completed: false,
     });
 }
 
+
+/** Get all tasks that is owned by a user */
 export async function getOwnedTasks(ownerID: string): Promise<Task[]> {
     const taskQuery = await firestore.collection(taskCollections.tasks).where('d.ownerID', '==', ownerID).get();
     const tasks = await completeTaskQuery(
@@ -40,6 +45,8 @@ export async function getOwnedTasks(ownerID: string): Promise<Task[]> {
     return tasks;
 }
 
+
+/** Get all task that were the user is a helper */
 export async function getHelperTasks(helperID: string): Promise<Task[]> {
     const taskQuery = await firestore.collection(taskCollections.tasks).where('helperID', '==', helperID).get();
     const tasks = await completeTaskQuery(
@@ -52,7 +59,7 @@ export async function getHelperTasks(helperID: string): Promise<Task[]> {
 }
 
 /**
- * 
+ * Get all nearby tasks that do not have an helper
  * @param coordinates The center of which the search should take place
  * @param radius The radius in kilometers
  */
@@ -62,7 +69,7 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
     const query: GeoQuery = geoCollection.near({ 
         center: new firebase.firestore.GeoPoint(coordinates.latitude, coordinates.longitude), 
         radius: radius 
-    });
+    }).where('helperID', '==', null);
 
     const queryResult = await query.get();
     const tasks = await completeTaskQuery(
@@ -74,6 +81,50 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
     return tasks;
 }
 
+
+/** Update task data */
+export async function updateTaskData(
+    taskID: string,
+    tags: tags[], 
+    description: string, 
+    coordinates: LatLng, 
+    shoppingList?: ShoppingItem[],
+) {
+    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
+        tags: tags,
+        description: description,
+        coordinates: new firebase.firestore.GeoPoint(
+            coordinates.latitude,
+            coordinates.longitude),
+        shoppingList: shoppingList
+    });
+}
+
+
+/** Add an helper to a task */
+export async function addHelper(taskID: string, helperID: string) {
+    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
+        helperID: helperID
+    });
+}
+
+
+/** Remove an helper from a task */
+export async function removeHelper(taskID: string) {
+    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
+        helperID: null
+    });
+}
+
+
+/** Complete a task */
+export async function completeTask(taskID: string) {
+    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
+        completed: true
+    });
+}
+
+/** A helper function that completes a task query by getting users data */
 async function completeTaskQuery(data: {docID: string, docData: any}[]): Promise<Task[]> {
     const tasks: Task[] = [];
     for (let docIndex = 0; docIndex < data.length; docIndex ++) {
@@ -104,12 +155,13 @@ async function completeTaskQuery(data: {docID: string, docData: any}[]): Promise
 
         tasks.push({
             id: taskDoc.docID,
+            completed: taskData['completed'],
             coordinates: {latitude: coordinates.latitude, longitude: coordinates.longitude},
             desc: taskData['description'],
             tags: taskData['tags'],
             shoppingList: shoppingList,
             owner: owner,
-            helper: helper
+            helper: helper,
         });
     }
 
