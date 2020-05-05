@@ -10,7 +10,9 @@ export interface ShoppingItem {
 }
 
 export interface Task {
-    id?: string // Is optional as when creating a new task do not have an id
+    // Is optional because when creating a new task 
+    // is should not have an ID
+    id?: string 
     owner: User
     helper?: User
     coordinates: LatLng,
