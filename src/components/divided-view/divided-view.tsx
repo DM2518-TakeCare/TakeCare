@@ -27,10 +27,12 @@ type DividedViewProps = {
     onPressUpper?: () => void,
     lower: ReactNode,
     onPressLower?: () => void,
-    reverse?: Boolean
+    reverse?: boolean,
+    noBottomPadding?: boolean,
 }
 
 const DividedView: FC<DividedViewProps> = (props) => {
+    const noBottomPadding = props.noBottomPadding ? { paddingBottom: 0 } : {}
     return (
         <View style={{ 
                 ...styles.container, 
@@ -40,7 +42,8 @@ const DividedView: FC<DividedViewProps> = (props) => {
             <TouchableWithoutFeedback onPress={() => props.onPressUpper ? props.onPressUpper() : {}}>
                 <View style={{ 
                     ...styles.upperCont, 
-                    backgroundColor: props.reverse ? paperTheme.colors.primary : paperTheme.colors.background 
+                    backgroundColor: props.reverse ? paperTheme.colors.primary : paperTheme.colors.background,
+                    ...noBottomPadding
                 }}>
                     {props.upper}
                 </View>
@@ -57,7 +60,7 @@ const DividedView: FC<DividedViewProps> = (props) => {
             </View>
 
             <TouchableWithoutFeedback onPress={() => props.onPressLower ? props.onPressLower() : {}}>
-                <View style={styles.lowerCont}>
+                <View style={{...styles.lowerCont, ...noBottomPadding}}>
                     {props.lower}
                 </View>
             </TouchableWithoutFeedback>

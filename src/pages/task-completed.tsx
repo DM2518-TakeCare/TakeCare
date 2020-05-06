@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import DividedView from '../components/divided-view/divided-view';
@@ -8,6 +8,8 @@ import UserInfo from '../components/user-info/user-info';
 import { ContentPadding } from '../components/content-padding';
 import SvgIcon from '../components/svg-icon';
 import { Center } from '../components/center';
+import { TaskDetails } from '../components/task-details';
+import { Tag } from '../model/shared/task-interface';
 
 const styles = StyleSheet.create({
     cont: {
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
     },
     taskCont: {
-        flexGrow: 8,
+        paddingTop: 20,
     },
     bottomCont: {
         flex: 1,
@@ -29,7 +31,10 @@ const styles = StyleSheet.create({
 
 export default function TaskCompleted({navigation, route}:RoutePropsHelper<'CreateTask'>) {
 
-    const testUser = {id: '111', name: 'Annica Olofsson', phone: '0738189621', address: 'testgatan 1' }
+    const testHelper = {id: '', name: 'Annica Olofsson', phone: '0738189621', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}, extraInfo: 'Portkod'}
+
+    const testUser = {user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
+    task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', coordinates: {latitude: 59.347647, longitude: 18.072340}, tags: ['Mail', 'Groceries'] as Tag[], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
 
     const upper = (
         <ContentPadding>
@@ -38,16 +43,14 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
     )
 
     const lower = (
-        <View style={styles.cont}>
+        <ScrollView style={styles.cont}>
             <ContentPadding>
                 <View style={styles.userCont}>
-                    <UserInfo type='name' user={testUser}/>
-                    <UserInfo type='phone' user={testUser}/>
+                    <UserInfo type='name' user={testHelper}/>
+                    <UserInfo type='phone' user={testHelper}/>
                 </View>
                 <View style={styles.taskCont}>
-                    <Center>
-                        <Text>Task details placeholder</Text>
-                    </Center>
+                    <TaskDetails detailsHeader user={testUser.user} task={testUser.task}/>
                 </View>
                 <View style={styles.bottomCont}>
                     <Center>
@@ -55,10 +58,10 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
                     </Center>
                 </View>
             </ContentPadding>
-        </View>
+        </ScrollView>
     )
 
     return (
-        <DividedView reverse upper={upper} lower={lower}/>
+        <DividedView reverse noBottomPadding upper={upper} lower={lower}/>
     );
 }
