@@ -45,6 +45,7 @@ export default function Register({navigation, route}:RoutePropsHelper<'Register'
     const checkPhoneNumber = () => {              //placeholder for actual function when using phone number to identify user
         if (numberInput.length === 10) {
             setPhoneNumber(numberInput)
+            navigation.navigate('Home');
         }
         setError(numberInput.length !== 10)
     }
