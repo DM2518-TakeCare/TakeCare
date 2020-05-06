@@ -4,6 +4,7 @@ import { RoutePropsHelper } from '../router';
 import { Center } from '../components/center';
 import { ContentPadding } from '../components/content-padding';
 import { Button, Divider } from 'react-native-paper';
+import * as TaskModel from '../model/task-model';
 
 export default function PlaygroundPage({ navigation, route }: RoutePropsHelper<'Playground'>) {
     return (
