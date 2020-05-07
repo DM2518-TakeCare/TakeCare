@@ -43,7 +43,7 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
 
     const getItemIndexFromScrollPos = (scrollPos: number) => {
         for (let i = 0; i < props.scrollItems.length; i++) {
-            if (getItemScrollPos(i) === scrollPos) {
+            if (getItemScrollPos(i) === Math.round(scrollPos / 10) * 10) {
                 return i;
             }
         }
@@ -103,6 +103,7 @@ export const SnappingScroll: React.FC<SnappingScrollProps> = (props) => {
                     const lastItemIndex = props.scrollItems.length - 1;
                     if (currentScroll > getItemScrollPos(props.scrollItems.length - 1)) {
                         scrollToItem(lastItemIndex, true);
+                        props.onScrollItemSnap(lastItemIndex);
                     }
                 }}
                 >

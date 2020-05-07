@@ -1,6 +1,6 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
-import { NavigationContainer, } from '@react-navigation/native';
+import { NavigationContainer, NavigationState, NavigationContainerRef, StackActions, } from '@react-navigation/native';
 import { RootStack } from './src/router';
 import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
@@ -20,6 +20,7 @@ import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
 import { addUserData, removeUserData, updateUserData } from './src/model/redux/userState';
 
+import { useNavigation } from '@react-navigation/native';
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
@@ -27,15 +28,8 @@ store.subscribe(() => {
     console.groupEnd();
 });
 
-const userObj = {
-    name: 'Annica Olofsson', 
-    phone: '0738189621', 
-    address: 'Testgatan 3',
-    extraInfo: 'Portkod'
-}
-store.dispatch(addUserData(userObj))
-
 export default function App() {
+
     return (
         <PaperProvider theme={paperTheme}>
             <NavigationContainer>
@@ -57,7 +51,10 @@ export default function App() {
                             options={{
                                 title: "",
                                 header: (headerProps) => (
-                                    <AppBar disableBackAction color={paperTheme.colors.background} headerProps={headerProps} />
+                                    <AppBar 
+                                        headerProps={headerProps}
+                                        disableBackAction
+                                        backgroundColor={AppBarBackgroundColor.CANVAS} />
                                 ),
                             }}
                             component={Register} />
@@ -70,7 +67,8 @@ export default function App() {
                                         disableBackAction
                                         backgroundColor={AppBarBackgroundColor.CANVAS}
                                         headerProps={headerProps}
-                                        actionIcon={'settings'} />
+                                        actionIcon={'settings'}
+                                        onActionClick={(navigation) => { navigation?.navigate('Settings') }} />
                                 ),
                             }}
                             component={HomePage} />
@@ -80,6 +78,7 @@ export default function App() {
                         <RootStack.Screen
                             name='Playground'
                             options={{
+                                title: 'Find Task',
                                 header: (headerProps) => (
                                     <AppBar headerProps={headerProps} actionIcon={'hospital'} />
                                 ),
@@ -90,7 +89,14 @@ export default function App() {
                             options={{
                                 title: 'Receive Help',
                                 header: (headerProps) => (
-                                    <AppBar headerProps={headerProps} actionIcon={'send'} onActionClick={() => { } /*TODO*/} />
+                                    <AppBar 
+                                        headerProps={headerProps} 
+                                        actionIcon={'send'} 
+                                        onActionClick={
+                                        (navigation) => { 
+                                            navigation?.dispatch(StackActions.pop(1))
+                                            navigation?.navigate('TaskCreated')
+                                        }} />
                                 ),
                             }}
                             component={CreateTask} />
@@ -117,7 +123,13 @@ export default function App() {
                             options={{
                                 title: '',
                                 header: (headerProps) => (
-                                    <AppBar disableBackAction headerProps={headerProps} actionIcon={'window-close'} onActionClick={() => { } /*TODO*/} />
+                                    <AppBar 
+                                        disableBackAction 
+                                        headerProps={headerProps} 
+                                        actionIcon={'window-close'} 
+                                        onActionClick={(navigation) => { 
+                                            navigation?.navigate('Home')
+                                        }} />
                                 ),
                             }}
                             component={TaskCompleted} />
