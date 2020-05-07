@@ -1,4 +1,4 @@
-import { tags, ShoppingItem, Task } from './shared/task-interface';
+import { Tag, ShoppingItem, Task } from './shared/task-interface';
 import { LatLng } from 'react-native-maps';
 import firestore, { geoFirestore } from './firebase';
 import * as firebase from 'firebase';
@@ -14,7 +14,7 @@ export const taskCollections = {
 /** Add new task */
 export async function addNewTask(
     ownerID: string, 
-    tags: tags[], 
+    tags: Tag[], 
     description: string, 
     coordinates: LatLng, 
     shoppingList?: ShoppingItem[]
@@ -93,7 +93,7 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
 /** Update task data */
 export async function updateTaskData(
     taskID: string,
-    tags: tags[], 
+    tags: Tag[], 
     description: string, 
     coordinates: LatLng, 
     shoppingList?: ShoppingItem[],
