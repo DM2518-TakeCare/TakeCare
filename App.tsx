@@ -18,12 +18,22 @@ import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
+import { addUserData, removeUserData, updateUserData } from './src/model/redux/userState';
+
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
     console.log(store.getState());
     console.groupEnd();
 });
+
+const userObj = {
+    name: 'Annica Olofsson', 
+    phone: '0738189621', 
+    address: 'Testgatan 3',
+    extraInfo: 'Portkod'
+}
+store.dispatch(addUserData(userObj))
 
 export default function App() {
     return (
