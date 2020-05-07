@@ -1,7 +1,7 @@
 import { LatLng } from 'react-native-maps';
 import { User } from './user-interface';
 
-export type tags = 'Groceries' | 'Mail' | 'Medicine'
+export type Tag = 'Groceries' | 'Mail' | 'Medicine'
 
 export interface ShoppingItem {
     productName: string,
@@ -17,7 +17,7 @@ export interface Task {
     owner: User
     helper?: User
     coordinates: LatLng,
-    tags: tags[]
+    tags: Tag[]
     desc: string
     shoppingList?: ShoppingItem[],
     dateAdded?: Date
