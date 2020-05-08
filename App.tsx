@@ -18,7 +18,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
-import { addUserData, removeUserData, updateUserData } from './src/model/redux/userState';
 
 import { useNavigation } from '@react-navigation/native';
 

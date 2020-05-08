@@ -2,6 +2,7 @@ import { AppActions, AppState } from './store';
 import { Dispatch } from 'react';
 import { User } from '../shared/user-interface';
 import * as UserModel from '../user-model';
+import { batch } from 'react-redux'
 
 /*The interface for the state; how the state is supposed to look at all times.*/
 export interface UserState {
@@ -14,7 +15,8 @@ export enum UserActionTypes {
     ADD_USER_DATA = 'ADD_USER_DATA',
     REMOVE_USER_DATA = 'REMOVE_USER_DATA',
     UPDATE_USER_DATA = 'UPDATE_USER_DATA',
-    UPDATE_USER_LOADING = 'UPDATE_USER_LOADING'
+    UPDATE_USER_LOADING = 'UPDATE_USER_LOADING',
+    GET_USER_DATA = 'GET_USER_DATA'
 }
 
 const initUser: User = {
@@ -29,7 +31,7 @@ const initUserState: UserState = {
 }
 
 export interface UserDataAction {
-    type: UserActionTypes.ADD_USER_DATA | UserActionTypes.UPDATE_USER_DATA,
+    type: UserActionTypes.ADD_USER_DATA | UserActionTypes.UPDATE_USER_DATA | UserActionTypes.GET_USER_DATA,
     payload: User
 }
 
@@ -49,14 +51,16 @@ export function addUserData(user: User) {
             payload: true
         });
         const newUser = await UserModel.addUser(user)
-        dispatch({
-            type: UserActionTypes.ADD_USER_DATA,
-            payload: newUser
-        });
-        dispatch({
-            type: UserActionTypes.UPDATE_USER_LOADING,
-            payload: false
-        });
+        batch(() => {
+            dispatch({
+                type: UserActionTypes.ADD_USER_DATA,
+                payload: newUser
+            });
+            dispatch({
+                type: UserActionTypes.UPDATE_USER_LOADING,
+                payload: false
+            });
+        })
     } 
 }
 
@@ -77,16 +81,39 @@ export function updateUserData(user: User) {
             payload: true
         });
         const updateUser = await UserModel.updateUser(user);
-        dispatch({
-            type: UserActionTypes.UPDATE_USER_DATA,
-            payload: updateUser
-        });
-        dispatch({
-            type: UserActionTypes.UPDATE_USER_LOADING,
-            payload: false
-        });
+        batch(() => {
+            dispatch({
+                type: UserActionTypes.UPDATE_USER_DATA,
+                payload: updateUser
+            });
+            dispatch({
+                type: UserActionTypes.UPDATE_USER_LOADING,
+                payload: false
+            });
+        })
     }
 }
+
+export function getUserData(id: string) {
+    return async (dispatch: Dispatch<AppActions>) => {
+        dispatch({
+            type: UserActionTypes.UPDATE_USER_LOADING,
+            payload: true
+        });
+        const user = await UserModel.getUser(id);
+        batch(() => {
+            dispatch({
+                type: UserActionTypes.GET_USER_DATA,
+                payload: user
+            });
+            dispatch({
+                type: UserActionTypes.UPDATE_USER_LOADING,
+                payload: false
+            });
+        })
+    }
+}
+
 
 export type UserActions = UserDataAction | UpdateUserLoadingAction | RemoveUserAction
 
@@ -121,6 +148,11 @@ export const userReducer = (
             return {
                 ...state,
                 loading: action.payload
+            };
+        case UserActionTypes.GET_USER_DATA:
+            return {
+                ...state,
+                user: action.payload
             };
         default:
             return state;
