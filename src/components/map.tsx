@@ -18,7 +18,7 @@ export interface TakeCareMapMarker {
 }
 
 interface TakeCareMapProps {
-    initialMapRegion: Region
+    initialMapRegion?: Region
     followUser?: boolean
     markers?: TakeCareMapMarker[],
     activeMarkerIndex?: number | null,
@@ -28,13 +28,13 @@ interface TakeCareMapProps {
         coordinates: LatLng
     },
     onPanDrag?: () => void,
+    onRegionChange?:(region: Region) => void,
     onUserLocationChange?: (currentLocation: LatLng) => void
     onMarkerPressed?: (markerIndex: number) => void
 }
 
 export interface TakeCareMapHandles {
     goToMarker: (markerIndex: number) => void;
-    goToChosenTask: (coordinates: LatLng) => void;
 }
 
 const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> = (props, ref) => {
@@ -57,21 +57,16 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
         goToMarker: (markerIndex: number) => {
             if (props.markers && props.markers.length > markerIndex) {
                 let marker = props.markers[markerIndex];
-                mapRef.current?.animateCamera({
-                    center: marker.coordinates
-                }, {
-                    duration: 250
-                });
+                mapRef.current?.getCamera().then((camera) => {
+                    mapRef.current?.animateCamera({
+                        center: marker.coordinates,
+                        zoom: Math.max(12, camera.zoom),
+                    }, {
+                        duration: 250
+                    });
+                })
             }
-        },
-        goToChosenTask: (coordinates: LatLng) => {
-            mapRef.current?.animateToRegion({
-                    latitude: coordinates.latitude,
-                    longitude: coordinates.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,   
-            }, 250);
-        },
+        }
     }));
     
     const generateMarkerID = (markerIndex: number) => {
@@ -88,8 +83,13 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
             mapPadding={props.mapPadding}
             showsUserLocation={true}
             initialRegion={currentRegion}
-            onRegionChangeComplete={(region) => setCurrentRegion(region)}
-            onPanDrag={() => {
+            onRegionChangeComplete={(region) => {
+                if (props.onRegionChange) {
+                    props.onRegionChange(region);
+                }
+                setCurrentRegion(region);
+            }}
+            onPanDrag={(event) => {
                 if (props.onPanDrag) {
                     props.onPanDrag();
                 }
@@ -103,7 +103,8 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
                         center: {
                             latitude: event.nativeEvent.coordinate.latitude,
                             longitude: event.nativeEvent.coordinate.longitude
-                        }
+                        },
+                        zoom: 12
                     });
                 }
 

@@ -20,4 +20,5 @@ const store = createStore(
     applyMiddleware(thunk as ThunkMiddleware<AppState, AppActions>)
 );
 
+export type Dispatch = typeof store.dispatch
 export default store;
