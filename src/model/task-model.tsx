@@ -11,36 +11,50 @@ export const taskCollections = {
     tasks: 'Tasks',
 }
 
-/** Add new task */
-export async function addNewTask(
-    ownerID: string, 
+export interface AddNewTaskParam {
+    owner: User, 
     tags: Tag[], 
     description: string, 
     coordinates: LatLng, 
     shoppingList?: ShoppingItem[]
-) {
-    const geoCollection: GeoCollectionReference = geoFirestore.collection(taskCollections.tasks);
-    return await geoCollection.add({
-        ownerID: ownerID,
-        helperID: null,
-        tags: tags,
-        description: description,
-        coordinates: new firebase.firestore.GeoPoint(
-            coordinates.latitude,
-            coordinates.longitude),
-        shoppingList: shoppingList ?? null,
-        completed: false,
-        dateAdded: new Date(),
-        dateCompleted: null
-    });
 }
 
+/** Add new task */
+export async function addNewTask(data: AddNewTaskParam): Promise<Task | null> {
+    const geoCollection: GeoCollectionReference = geoFirestore.collection(taskCollections.tasks);
+    const dateAdded = new Date();
+    const doc = await geoCollection.add({
+        ownerID: data.owner.id,
+        helperID: null,
+        tags: data.tags,
+        description: data.description,
+        coordinates: new firebase.firestore.GeoPoint(
+            data.coordinates.latitude,
+            data.coordinates.longitude),
+        shoppingList: data.shoppingList ?? null,
+        completed: false,
+        dateAdded: dateAdded,
+        dateCompleted: null
+    });
+
+    return await getTaskByID(doc.id);
+}
+
+/** Get all tasks that is owned by a user */
+export async function getTaskByID(taskID: string): Promise<Task | null> {
+    const taskQuery = await geoFirestore.native.doc(taskID).get();
+    const taskData = taskQuery.data();
+    if (taskData) {
+        return await completeTaskQuery(taskQuery.id, taskData['d']);
+    }
+    return null;
+}
 
 /** Get all tasks that is owned by a user */
 export async function getOwnedTasks(ownerID: string): Promise<Task[]> {
     const taskQuery = await firestore.collection(taskCollections.tasks).where('d.ownerID', '==', ownerID).get();
-    const tasks = await completeTaskQuery(
-        taskQuery.docs.map(doc => ({
+    const tasks = await completeTaskQueries(
+        taskQuery.docs.map((doc: any) => ({
             docID: doc.id, 
             docData: doc.data()['d']
         }))
@@ -52,7 +66,7 @@ export async function getOwnedTasks(ownerID: string): Promise<Task[]> {
 /** Get all task that were the user is a helper */
 export async function getHelperTasks(helperID: string): Promise<Task[]> {
     const taskQuery = await firestore.collection(taskCollections.tasks).where('helperID', '==', helperID).get();
-    const tasks = await completeTaskQuery(
+    const tasks = await completeTaskQueries(
         taskQuery.docs.map(doc => ({
             docID: doc.id, 
             docData: doc.data()['d']
@@ -80,7 +94,7 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
     const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null);
 
     // Parse the result
-    const tasks = await completeTaskQuery(
+    const tasks = await completeTaskQueries(
         filteredDocs.map(doc => ({
             docID: doc.id, 
             docData: doc.data()
@@ -90,21 +104,23 @@ export async function getNearbyTasks(coordinates: LatLng, radius: number) {
 }
 
 
-/** Update task data */
-export async function updateTaskData(
+export interface UpdateTaskParam {
     taskID: string,
     tags: Tag[], 
     description: string, 
     coordinates: LatLng, 
     shoppingList?: ShoppingItem[],
-) {
-    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
-        tags: tags,
-        description: description,
+}
+
+/** Update task data */
+export async function updateTaskData(data: UpdateTaskParam) {
+    await geoFirestore.collection(taskCollections.tasks).doc(data.taskID).update({
+        tags: data.tags,
+        description: data.description,
         coordinates: new firebase.firestore.GeoPoint(
-            coordinates.latitude,
-            coordinates.longitude),
-        shoppingList: shoppingList
+            data.coordinates.latitude,
+            data.coordinates.longitude),
+        shoppingList: data.shoppingList
     });
 }
 
@@ -133,52 +149,56 @@ export async function completeTask(taskID: string) {
     });
 }
 
-/** A helper function that completes a task query by getting users data */
-async function completeTaskQuery(data: {docID: string, docData: any}[]): Promise<Task[]> {
+async function completeTaskQueries(data: {docID: string, docData: any}[]): Promise<Task[]>{
     const tasks: Task[] = [];
-    for (let docIndex = 0; docIndex < data.length; docIndex ++) {
-        const taskDoc = data[docIndex];
-        const taskData = taskDoc.docData;
-        const coordinates = taskData['coordinates'];
+    for (let i = 0; i < data.length; i++) {
+        const taskParam = data[i];
+        const task = await completeTaskQuery(taskParam.docID, taskParam.docData);
+        tasks.push(task);
+    }
+    return tasks;
+}
 
-        // Getting the shopping list
-        let shoppingList: ShoppingItem[] = [];
-        const shoppingListDocData = taskData['shoppingList'];
-        if (shoppingListDocData) {
-            shoppingListDocData.forEach((shoppingItemData: any) => {
-                shoppingList.push({
-                    productName: shoppingItemData['productName'],
-                    amount: shoppingItemData['amount'],
-                })
-            });
-        }
+/** A helper function that completes a task query by getting users data */
+async function completeTaskQuery(docID: string, docData: any): Promise<Task> {
+    const taskData = docData;
+    const coordinates = taskData['coordinates'];
 
-        // Getting the owner of the task
-        const ownerID = taskData['ownerID'];
-        const owner = await userModel.getUser(ownerID);
-
-        // Getting the helper of the task
-        const helperID = taskData['helperID'];
-        let helper;
-        if (helperID) {
-            helper = await userModel.getUser(helperID); 
-        }
-
-        tasks.push({
-            id: taskDoc.docID,
-            completed: taskData['completed'],
-            coordinates: {
-                latitude: coordinates.latitude, 
-                longitude: coordinates.longitude
-            },
-            desc: taskData['description'],
-            tags: taskData['tags'],
-            shoppingList: shoppingList,
-            owner: owner,
-            helper: helper,
-            dateAdded: taskData['dateAdded']
+    // Getting the shopping list
+    let shoppingList: ShoppingItem[] = [];
+    const shoppingListDocData = taskData['shoppingList'];
+    if (shoppingListDocData) {
+        shoppingListDocData.forEach((shoppingItemData: any) => {
+            shoppingList.push({
+                productName: shoppingItemData['productName'],
+                amount: shoppingItemData['amount'],
+            })
         });
     }
 
-    return tasks;
+    // Getting the owner of the task
+    const ownerID = taskData['ownerID'];
+    const owner = await userModel.getUser(ownerID);
+
+    // Getting the helper of the task
+    const helperID = taskData['helperID'];
+    let helper;
+    if (helperID) {
+        helper = await userModel.getUser(helperID); 
+    }
+
+    return {
+        id: docID,
+        completed: taskData['completed'],
+        coordinates: {
+            latitude: coordinates.latitude, 
+            longitude: coordinates.longitude
+        },
+        desc: taskData['description'],
+        tags: taskData['tags'],
+        shoppingList: shoppingList,
+        owner: owner,
+        helper: helper,
+        dateAdded: taskData['dateAdded']
+    };
 }

@@ -1,7 +1,7 @@
 export interface User {
-    id?: string
-    name: string
-    address: string
-    phone: string
-    extraInfo?: string
+    id?: string 
+    name: string | null
+    address: string | null
+    phone: string | null
+    extraInfo?: string 
 }
