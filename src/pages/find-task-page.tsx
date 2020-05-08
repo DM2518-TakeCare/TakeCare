@@ -247,13 +247,6 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
     );
 }
 
-
-// const mapStateToProps = (state: AppState) => ({
-//     estimationData: state.estimationState.estimationData,
-//     activeView: state.viewState.activeView,
-//     crowdDataSlideState: state.crowdDataSlideState
-// });
-
 export default connect(
     (state: AppState, router: RoutePropsHelper<'FindTask'> ): FindTaskPageProps => ({
         route: router,

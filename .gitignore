@@ -4,6 +4,7 @@
 
 # Credentails
 credentials.json
+/gradle.properties
 
 # Xcode
 #
