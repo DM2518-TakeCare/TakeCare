@@ -12,6 +12,14 @@
     ],
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.fikapaus.takecare",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.fikapaus.takecare",
+      "versionCode": 1
+    }
   }
 }

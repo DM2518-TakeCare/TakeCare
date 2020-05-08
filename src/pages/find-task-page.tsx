@@ -120,7 +120,6 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
             ) / 1000);
         }
         
-        console.log(distanceFromLastSearch);
         if (distanceFromLastSearch < distanceForNewSearch) {
             return;
         }
@@ -247,13 +246,6 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
         </View>
     );
 }
-
-
-// const mapStateToProps = (state: AppState) => ({
-//     estimationData: state.estimationState.estimationData,
-//     activeView: state.viewState.activeView,
-//     crowdDataSlideState: state.crowdDataSlideState
-// });
 
 export default connect(
     (state: AppState, router: RoutePropsHelper<'FindTask'> ): FindTaskPageProps => ({
