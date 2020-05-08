@@ -42,7 +42,7 @@ export async function addNewTask(data: AddNewTaskParam): Promise<Task | null> {
 
 /** Get all tasks that is owned by a user */
 export async function getTaskByID(taskID: string): Promise<Task | null> {
-    const taskQuery = await geoFirestore.native.doc(taskID).get();
+    const taskQuery = await firestore.collection(taskCollections.tasks).doc(taskID).get();
     const taskData = taskQuery.data();
     if (taskData) {
         return await completeTaskQuery(taskQuery.id, taskData['d']);
@@ -50,30 +50,56 @@ export async function getTaskByID(taskID: string): Promise<Task | null> {
     return null;
 }
 
-/** Get all tasks that is owned by a user */
-export async function getOwnedTasks(ownerID: string): Promise<Task[]> {
-    const taskQuery = await firestore.collection(taskCollections.tasks).where('d.ownerID', '==', ownerID).get();
-    const tasks = await completeTaskQueries(
-        taskQuery.docs.map((doc: any) => ({
-            docID: doc.id, 
-            docData: doc.data()['d']
-        }))
-    );
-    return tasks;
+/** 
+ * Subscribe to all the owned tasks 
+ * @return A unsubscribe function
+ */
+export function subscribeToOwnedTasks(ownerID: string, onSnapshot: (tasks: Task[]) => void) {
+    return firestore.collection(taskCollections.tasks).where('d.ownerID', '==', ownerID).onSnapshot(async (snapshot) => {
+        // TODO, this code fetch the owner every time, improvement needed
+        const tasks = await completeTaskQueries(
+            snapshot.docs.map((doc: any) => ({
+                docID: doc.id, 
+                docData: doc.data()['d']
+            }))
+        );
+        onSnapshot(tasks);
+    });
 }
 
 
-/** Get all task that were the user is a helper */
-export async function getHelperTasks(helperID: string): Promise<Task[]> {
-    const taskQuery = await firestore.collection(taskCollections.tasks).where('helperID', '==', helperID).get();
-    const tasks = await completeTaskQueries(
-        taskQuery.docs.map(doc => ({
-            docID: doc.id, 
-            docData: doc.data()['d']
-        }))
-    );
-    return tasks;
+/** 
+ * Subscribe to all the tasks were the user is a helper
+ * @return A unsubscribe function
+ */
+export function subscribeToHelperTasks(helperID: string, onSnapshot: (tasks: Task[]) => void) {
+    return firestore.collection(taskCollections.tasks).where('d.helperID', '==', helperID).onSnapshot(async (snapshot) => {
+        // TODO, this code fetch the owner every time, improvement needed
+        const tasks = await completeTaskQueries(
+            snapshot.docs.map((doc: any) => ({
+                docID: doc.id, 
+                docData: doc.data()['d']
+            }))
+        );
+        onSnapshot(tasks);
+    });
 }
+
+
+/** 
+ * Subscribe to a specific task
+ * @return A unsubscribe function
+ */
+export function subscribeToTask(taskID: string, onSnapshot: (tasks: Task) => void) {
+    return firestore.collection(taskCollections.tasks).doc(taskID).onSnapshot(async (snapshot) => {
+        const taskData = snapshot.data();
+        if (taskData) {
+            const task = await completeTaskQuery(snapshot.id, taskData['d']);
+            onSnapshot(task);
+        }
+    });
+}
+
 
 /**
  * Get all nearby tasks that do not have an helper
