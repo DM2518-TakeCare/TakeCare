@@ -120,7 +120,6 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
             ) / 1000);
         }
         
-        console.log(distanceFromLastSearch);
         if (distanceFromLastSearch < distanceForNewSearch) {
             return;
         }
