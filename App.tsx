@@ -18,6 +18,7 @@ import { Provider as ReduxProvider, Provider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
+
 import { useNavigation } from '@react-navigation/native';
 
 store.subscribe(() => {
