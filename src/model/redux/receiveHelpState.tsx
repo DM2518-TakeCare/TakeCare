@@ -1,45 +1,129 @@
-import { AppActions } from './store';
 import { Dispatch } from 'react';
 import { Task } from '../shared/task-interface'
+import { AddNewTaskParam, UpdateTaskParam } from '../task-model';
+import { batch } from 'react-redux'
+import * as TaskModel from '../task-model'
 
-/*The interface for the state; how the state is supposed to look at all times.*/
 export interface ReceiveHelpState {
-    activeTasks: Task[],
-    completedTasks: Task[]
+    activeTaskView: Task | null,
+    taskLoading: boolean,
+    completeTaskLoading: boolean,
 }
 
-/*Available actions to for example change the state*/
-export const ReceiveHelpActionTypes = {
-    ADD_ACTIVE_TASK: 'ADD_ACTIVE_TASK',
+export enum ReceiveHelpActionTypes {
+    CREATE_TASK = 'CREATE_TASK',
+    CREATE_TASK_DONE = 'CREATE_TASK_DONE',
+
+    COMPLETE_TASK = 'COMPLETE_TASK',
+    COMPLETE_TASK_DONE = 'COMPLETE_TASK_DONE',
+
+    SET_ACTIVE_VIEW_TASK = 'SET_ACTIVE_VIEW_TASK',
 }
 
-/*Create functions for the different action types, for example adding, updating or removing things*/
-/*Different actions may require different payloads (parameters), the type, however, is always a string*/
-export interface AddTaskAction {
-    type: string,
-    payload: Task
+export interface AddTaskStartAction {
+    type: ReceiveHelpActionTypes.CREATE_TASK,
 }
-export function addActiveTask(task: any) {
-    return (dispatch: Dispatch<AppActions>) => {
+export interface AddTaskDoneAction {
+    type: ReceiveHelpActionTypes.CREATE_TASK_DONE,
+}
+export function createNewTask(taskData: AddNewTaskParam) {
+    return async (dispatch: Dispatch<ReceiveHelpActions>) => {
+        dispatch({type: ReceiveHelpActionTypes.CREATE_TASK});
+        const newTask = await TaskModel.addNewTask(taskData);
+        batch(() => {
+            dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
+            dispatch({
+                type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK,
+                payload: newTask
+            });
+        })
+    }
+}
+
+
+export function updateTask(taskData: UpdateTaskParam) {
+    return async (dispatch: Dispatch<ReceiveHelpActions>) => {
+        dispatch({type: ReceiveHelpActionTypes.CREATE_TASK});
+        const newTask = await TaskModel.updateTaskData(taskData);
+        dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
+    }
+}
+
+
+export interface SetActiveViewTaskAction {
+    type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK,
+    payload: Task | null
+}
+export function setActiveViewTask(task: Task) {
+    return (dispatch: Dispatch<ReceiveHelpActions>) => {
         dispatch({
-            type: ReceiveHelpActionTypes.ADD_ACTIVE_TASK,
+            type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK,
             payload: task
         });
     }
 }
 
-/*Add all action interfaces to ReceiveHelpActions*/
-export type ReceiveHelpActions = AddTaskAction;
+export interface CompleteTaskAction {
+    type: ReceiveHelpActionTypes.COMPLETE_TASK,
+}
+export interface CompleteTaskDoneAction {
+    type: ReceiveHelpActionTypes.COMPLETE_TASK_DONE,
+}
+export function CompleteTaskAction(taskID: string) {
+    return async (dispatch: Dispatch<ReceiveHelpActions>) => {
+        dispatch({
+            type: ReceiveHelpActionTypes.COMPLETE_TASK,
+        });
+        await TaskModel.completeTask(taskID);
+        dispatch({
+            type: ReceiveHelpActionTypes.COMPLETE_TASK_DONE
+        });
+    }
+}
 
-/*In the reducer you decide what each action does with the state. The returned value is the new state.*/
+
+export type ReceiveHelpActions = 
+    AddTaskStartAction | 
+    AddTaskDoneAction | 
+    SetActiveViewTaskAction | 
+    CompleteTaskAction | 
+    CompleteTaskDoneAction;
+
 export const receiveHelpReducer = (
-    state: ReceiveHelpState = { activeTasks: [], completedTasks: [] }, /*The inital state*/
+    state: ReceiveHelpState = { activeTaskView: null, taskLoading: false, completeTaskLoading: false, }, /*The inital state*/
     action: ReceiveHelpActions
 ): ReceiveHelpState => {
     switch (action.type) {
-        case ReceiveHelpActionTypes.ADD_ACTIVE_TASK:
-            /*This example adds a new element to the activeTasks array in the state*/
-            return {...state, activeTasks: [...state.activeTasks, action.payload]};
+        case ReceiveHelpActionTypes.CREATE_TASK:
+            return {
+                ...state,
+                taskLoading: true
+            }
+        case ReceiveHelpActionTypes.CREATE_TASK_DONE:
+            return {
+                ...state,
+                taskLoading: false
+            }        
+        case ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK:
+            return {
+                ...state,
+                activeTaskView: action.payload
+            }
+        case ReceiveHelpActionTypes.COMPLETE_TASK:
+            return {
+                ...state,
+                completeTaskLoading: true
+            }        
+        case ReceiveHelpActionTypes.COMPLETE_TASK_DONE:
+            const updateTask: Task | null = state.activeTaskView ? {
+                ...state.activeTaskView,
+                completed: true
+            } : null
+            return {
+                ...state,
+                activeTaskView: updateTask,
+                completeTaskLoading: false
+            }        
         default:
             return state;
     }
