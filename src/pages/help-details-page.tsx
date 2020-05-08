@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, FC } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Text, Headline} from 'react-native-paper';
@@ -11,6 +11,11 @@ import { paperTheme } from '../theme/paper-theme';
 import Table from '../components/table';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
+import { connect } from 'react-redux';
+import { AppState, Dispatch } from '../model/redux/store';
+import { Task, ShoppingItem } from '../model/shared/task-interface';
+import { User } from '../model/shared/user-interface';
+import { acceptTask } from '../model/redux/giveHelpState';
 
 
 const styles = StyleSheet.create({
@@ -42,25 +47,32 @@ const styles = StyleSheet.create({
     descStyle: {
         fontWeight: 'bold',
         fontSize: 16,
+        paddingTop: 10,
         paddingBottom: 10
     }
 });
 
-export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDetails'>) {
+interface HelpDetailsProps {
+    route: RoutePropsHelper<'HelpDetails'>,
+    viewedTask: Task | undefined,
+    user: User
+}
 
-    const taskDetails = {
-        user: { id: 'sdjfhsjh', name: 'Stefan Karlsson', phone: '0733456172', address: 'Testgatan 3'},
-        task: { desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340}, shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1'],['Butter', '1']]}
-    
-    }
-    const tableTitles = [{data: 'Item'}, {data: 'Quantity'}]
+interface HelpDetailsActions {
+    acceptTask: (task: Task, helper: User) => void,
+}
+
+const HelpDetails: FC<HelpDetailsProps & HelpDetailsActions> = (props) => {
+    const tableTitles = [{data: 'Item'}, {data: 'Amount'}]
 
     const mapRef = useRef<TakeCareMapHandles>(null);
 
     const [goToTask, setGoToTask] = useState(true)
 
+    const shoppingList: ShoppingItem[] = props.viewedTask?.shoppingList ?? []
+
     const goBacktoTask = () => {
-        mapRef.current?.goToChosenTask(taskDetails.task.coordinates)
+        mapRef.current?.goToMarker(0)
         setGoToTask(true)
     }
 
@@ -71,12 +83,12 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                     <TakeCareMap
                         ref={mapRef}
                         initialMapRegion={{
-                            latitude: taskDetails.task.coordinates.latitude,
-                            longitude:taskDetails.task.coordinates.longitude,
+                            latitude: props.viewedTask?.coordinates.latitude!,
+                            longitude: props.viewedTask?.coordinates.longitude!,
                             latitudeDelta: 0.01,
                             longitudeDelta: 0.01,
                         }}
-                        markers={[{coordinates: taskDetails.task.coordinates}]}
+                        markers={[{coordinates: props.viewedTask?.coordinates!}]}
                         onPanDrag={() => {
                             setGoToTask(false);
                             }}
@@ -84,9 +96,9 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                 </View>
                 <LinearGradient colors={['rgba(255,255,255,0)', paperTheme.colors.background,paperTheme.colors.background, paperTheme.colors.background]} style={styles.mapContent}>
                     <View style={styles.tagCont}>
-                        {taskDetails.task.tags.map((tag, i) =>
-                        taskDetails.task.tags.length - 1 === i ? <Headline key={tag + i} style={styles.tagStyle}>{tag}</Headline> : 
-                        <Headline key={tag + i} style={styles.tagStyle}>{tag + ', '}</Headline> 
+                        {props.viewedTask?.tags.map((tag, i) =>
+                            props.viewedTask?.tags.length! - 1 === i ? <Headline key={tag + i} style={styles.tagStyle}>{tag}</Headline> : 
+                            <Headline key={tag + i} style={styles.tagStyle}>{tag + ', '}</Headline> 
                         )}
                         <View style={styles.returnButtonCont}>
                             <View>
@@ -101,26 +113,28 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
                         </View>
                     </View>
                     <View style={styles.userCont}>
-                        <UserInfo type='name' user={taskDetails.user}/>
-                        <UserInfo type='address' user={taskDetails.user}/>
+                        <UserInfo type='name' user={props.viewedTask?.owner!}/>
+                        <UserInfo type='address' user={props.viewedTask?.owner!}/>
                     </View>
-                    
-                    <Text style={styles.descStyle}>{taskDetails.task.desc}</Text>
+                    <Text style={styles.descStyle}>{props.viewedTask?.desc}</Text>
                 </LinearGradient>
             </View>
             <View style={{flex: 1}}>
                 <ContentPadding>    
                     <ScrollView>
-                            <View>
-                                <Table tableTitles={tableTitles} tableData={taskDetails.task.shoppingList}/>
-                            </View>
+                            { shoppingList.length > 0 ? 
+                                <View>
+                                    <Table tableTitles={tableTitles} tableData={shoppingList.map(item =>[item.productName, item.amount])}/>
+                                </View>
+                            : <></> }
                     </ScrollView>
                     <View style={{ justifyContent: 'flex-end'}}>
                         <Button 
                             size='big' 
                             onPress={() => {
-                                navigation.dispatch(StackActions.pop(1))
-                                navigation.navigate('Tasks')
+                                props.route.navigation.dispatch(StackActions.pop(1))
+                                props.viewedTask ? props.acceptTask(props.viewedTask, props.user) : null
+                                props.route.navigation.navigate('Tasks')
                             }}>Accept Task</Button>      
                     </View>
                 </ContentPadding>
@@ -130,3 +144,14 @@ export default function HelpDetails({navigation, route}:RoutePropsHelper<'HelpDe
     );
 
 }
+
+export default connect(
+    (state: AppState, router: RoutePropsHelper<'HelpDetails'> ): HelpDetailsProps => ({
+        route: router,
+        viewedTask: state.giveHelpState.viewedTask,
+        user: state.userState.user
+    }),
+    (dispatch: Dispatch): HelpDetailsActions => ({
+        acceptTask: (task, helper) => dispatch(acceptTask(task, helper))
+    })
+)(HelpDetails);

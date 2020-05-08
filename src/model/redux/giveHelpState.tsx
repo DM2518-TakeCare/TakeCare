@@ -1,45 +1,114 @@
 import { AppActions } from './store';
 import { Dispatch } from 'react';
 import { Task } from '../shared/task-interface'
+import * as TaskModel from '../task-model'
+import { User } from '../shared/user-interface';
 
-/*The interface for the state; how the state is supposed to look at all times.*/
 export interface GiveHelpState {
     activeTasks: Task[],
-    completedTasks: Task[]
+    completedTasks: Task[],
+    viewedTask: Task | undefined,
+    loading: boolean
 }
 
-/*Available actions to for example change the state*/
-export const GiveHelpActionTypes = {
-    ADD_ACTIVE_TASK: 'ADD_ACTIVE_TASK',
+export enum GiveHelpActionTypes {
+    SET_LOADING = 'SET_LOADING',
+    ACCEPT_TASK = 'ACCEPT_TASK',
+    COMPLETE_TASK = 'COMPLETE_TASK',
+    UPDATE_VIEWED_TASK = 'UPDATE_VIEWED_TASK',
+    SET_ACTIVE_TASKS = 'SET_ACTIVE_TASKS',
+    SET_COMPLETED_TASKS = 'SET_COMPLETED_TASKS'
 }
 
-/*Create functions for the different action types, for example adding, updating or removing things*/
-/*Different actions may require different payloads (parameters), the type, however, is always a string*/
-export interface AddTaskAction {
-    type: string,
+export interface SetLoading {
+    type: GiveHelpActionTypes.SET_LOADING,
+    payload: boolean
+}
+
+export interface AcceptTask {
+    type: GiveHelpActionTypes.ACCEPT_TASK,
+}
+export function acceptTask(task: Task, helper: User) {
+    return async (dispatch: Dispatch<AppActions>) => {
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: true});
+        await TaskModel.addHelper(task.id!, helper.id!);
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: false});
+    }
+}
+
+export interface CompleteTask {
+    type: GiveHelpActionTypes.COMPLETE_TASK,
+}
+export function completeTask(task: Task) {
+    return async (dispatch: Dispatch<AppActions>) => {
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: true});
+        await TaskModel.completeTask(task.id!);
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: false});
+    }
+}
+
+export interface UpdateViewedTask {
+    type: GiveHelpActionTypes.UPDATE_VIEWED_TASK,
     payload: Task
 }
-export function addActiveTask(task: any) {
+export function updateViewedTask(task: Task) {
     return (dispatch: Dispatch<AppActions>) => {
         dispatch({
-            type: GiveHelpActionTypes.ADD_ACTIVE_TASK,
+            type: GiveHelpActionTypes.UPDATE_VIEWED_TASK,
             payload: task
         });
     }
 }
 
-/*Add all action interfaces to GiveHelpActions*/
-export type GiveHelpActions = AddTaskAction;
+export interface SetActiveTasks {
+    type: GiveHelpActionTypes.SET_ACTIVE_TASKS,
+    payload: Task[]
+}
+export function setActiveTasks(tasks: Task[]) {
+    return (dispatch: Dispatch<AppActions>) => {
+        dispatch({
+            type: GiveHelpActionTypes.SET_ACTIVE_TASKS,
+            payload: tasks
+        });
+    }
+}
 
-/*In the reducer you decide what each action does with the state. The returned value is the new state.*/
+export interface SetCompletedTasks {
+    type: GiveHelpActionTypes.SET_COMPLETED_TASKS,
+    payload: Task[]
+}
+export function setCompletedTasks(tasks: Task[]) {
+    return (dispatch: Dispatch<AppActions>) => {
+        dispatch({
+            type: GiveHelpActionTypes.SET_ACTIVE_TASKS,
+            payload: tasks
+        });
+    }
+}
+
+export function listenToOwnedTasks(owner: User, onSnapshot: (tasks: Task[]) => void) {
+    return async (dispatch: Dispatch<AppActions>) => {
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: true});
+        await TaskModel.subscribeToOwnedTasks(owner.id!, onSnapshot);
+        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: false});
+    }
+}
+
+export type GiveHelpActions = SetLoading | AcceptTask | CompleteTask | UpdateViewedTask | SetActiveTasks | SetCompletedTasks;
+
 export const giveHelpReducer = (
-    state: GiveHelpState = { activeTasks: [], completedTasks: [] }, /*The inital state*/
+    state: GiveHelpState = { activeTasks: [], completedTasks: [], viewedTask: undefined, loading: false },
     action: GiveHelpActions
 ): GiveHelpState => {
     switch (action.type) {
-        case GiveHelpActionTypes.ADD_ACTIVE_TASK:
-            /*This example adds a new element to the activeTasks array in the state*/
-            return {...state, activeTasks: [...state.activeTasks, action.payload]};
+        case GiveHelpActionTypes.SET_LOADING:
+            return {...state, loading: action.payload};
+        case GiveHelpActionTypes.UPDATE_VIEWED_TASK:
+            return {...state, viewedTask: action.payload};
+        case GiveHelpActionTypes.SET_ACTIVE_TASKS:
+            return {...state, activeTasks: action.payload};
+        case GiveHelpActionTypes.SET_COMPLETED_TASKS:
+            return {...state, completedTasks: action.payload};
         default:
             return state;
     }
