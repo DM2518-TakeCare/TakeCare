@@ -6,7 +6,7 @@ import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { paperTheme } from './src/theme/paper-theme';
-import { AppBar, AppBarBackgroundColor } from './src/components/app-bar';
+import AppBar, { AppBarBackgroundColor } from './src/components/app-bar';
 import FindTaskPage from './src/pages/find-task-page';
 import Settings from './src/pages/settings';
 import CreateTask from './src/pages/create-task';
@@ -21,11 +21,13 @@ import TaskCreated from './src/pages/task-created';
 
 import { useNavigation } from '@react-navigation/native';
 
+/*
 store.subscribe(() => {
     console.groupCollapsed("State change");
     console.log(store.getState());
     console.groupEnd();
 });
+*/
 
 export default function App() {
 
@@ -67,8 +69,7 @@ export default function App() {
                                             disableBackAction
                                             backgroundColor={AppBarBackgroundColor.CANVAS}
                                             headerProps={headerProps}
-                                            actionIcon={'settings'}
-                                            onActionClick={(navigation) => { navigation?.navigate('Settings') }} />
+                                            actionIcon={'settings'}/>
                                     ),
                                 }}
                                 component={HomePage} />
@@ -91,12 +92,7 @@ export default function App() {
                                     header: (headerProps) => (
                                         <AppBar
                                             headerProps={headerProps}
-                                            actionIcon={'send'}
-                                            onActionClick={
-                                                (navigation) => {
-                                                    navigation?.dispatch(StackActions.pop(1))
-                                                    navigation?.navigate('TaskCreated')
-                                                }} />
+                                            actionIcon={'send'}/>
                                     ),
                                 }}
                                 component={CreateTask} />

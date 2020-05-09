@@ -238,7 +238,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                                 }}
                                                 owner={task.owner.name}
                                                 iconName={getLogoFromTag(task.tags[0])}
-                                                tag={task.tags.join(',')}
+                                                tag={task.tags.join(', ')}
                                                 distance={calculateDistance(task.coordinates)}
                                             />
                                         })

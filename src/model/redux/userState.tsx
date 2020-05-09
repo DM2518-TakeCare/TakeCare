@@ -20,6 +20,7 @@ export enum UserActionTypes {
 }
 
 const initUser: User = {
+    id: 'vF9hUuMbF5rOGQnz1HXM',
     name: null, 
     address: null, 
     phone: null,

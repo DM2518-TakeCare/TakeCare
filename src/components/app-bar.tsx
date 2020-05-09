@@ -4,6 +4,9 @@ import { Appbar as PaperAppbar} from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
 import { StackHeaderProps, StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../router';
+import { AppState, Dispatch } from '../model/redux/store';
+import { connect } from 'react-redux';
+import { setCallAppBarAction } from '../model/redux/appBarState';
 
 const { StatusBarManager } = NativeModules;
 
@@ -41,12 +44,15 @@ interface AppBarProps {
     /** See available icons here https://materialdesignicons.com/ */
     backgroundColor?: AppBarBackgroundColor,
     actionIcon?: string,
-    onActionClick?: (navigation?: any) => void,
     disableBackAction?: boolean,
     color?: string
 }
 
-export const AppBar: FC<AppBarProps> = (props) => {
+interface AppBarConnectedProps {
+    appBarAction: any
+}
+
+const AppBar: FC<AppBarProps & AppBarConnectedProps> = (props) => {
     const title = props.headerProps.scene.descriptor.options.headerTitle !== undefined
       ? props.headerProps.scene.descriptor.options.headerTitle
       : props.headerProps.scene.descriptor.options.title !== undefined
@@ -56,8 +62,6 @@ export const AppBar: FC<AppBarProps> = (props) => {
     const appBarHeight = 100;
 
     const navigationProgress = props.headerProps.scene.progress;
-
-    const onActionClick = props.onActionClick ?? (() => {})
 
     useEffect(() => {
         props.headerProps.navigation.addListener('focus', () => {
@@ -156,7 +160,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
                                 <PaperAppbar.Action
                                     color={foregroundColor()}
                                     icon={props.actionIcon ?? {}} 
-                                    onPress={() => onActionClick(props.headerProps.navigation)}/>
+                                    onPress={props.appBarAction}/>
                         }
                     </View>
                 </View>
@@ -164,3 +168,9 @@ export const AppBar: FC<AppBarProps> = (props) => {
         </View>
     );
 }
+
+export default connect(
+    (state: AppState, ownProps: any): AppBarConnectedProps => ({
+        appBarAction: state.appBarState.action
+    }),null
+)(AppBar);
