@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactElement, useState } from 'react';
+import React, { ReactNode, ReactElement, useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Button, Animated, Easing, LayoutChangeEvent } from 'react-native';
 import { Card, Divider } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -33,7 +33,8 @@ interface DropDownCardProps {
     title: string,
     subtitle?: string,
     /** The content must be static, after rendered */
-    dropDownContent: ReactElement
+    dropDownContent: ReactElement,
+    initOpen?: boolean,
 }
 
 export const DropDownCard: React.FC<DropDownCardProps> = (props) => {
@@ -42,7 +43,13 @@ export const DropDownCard: React.FC<DropDownCardProps> = (props) => {
     const [dropDownHeightAnimation] = useState(new Animated.Value(0));
     const [contentOpacityAnimation] = useState(new Animated.Value(0));
     const [dropDownHeight, setDropDownHeight] = useState<number | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(props.initOpen ?? false);
+
+    useEffect(() => {
+        if (dropDownHeight) {
+            startAnimations(isOpen);
+        }
+    }, [dropDownHeight]);
 
     const toggleExpanded = () => {
         startAnimations(!isOpen);
