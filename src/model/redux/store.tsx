@@ -3,6 +3,7 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { giveHelpReducer, GiveHelpActions } from './giveHelpState';
 import { UserActions, userReducer } from './userState';
 import { SearchTaskActions, searchTaskReducer } from './searchTaskState';
+import { ReceiveHelpActions, receiveHelpReducer } from './receiveHelpState';
 import { appBarReducer, AppBarActions } from './appBarState';
 
 /*Add your states with the reducers here*/
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
     giveHelpState: giveHelpReducer,
     userState: userReducer,
     searchTaskState: searchTaskReducer,
+    receiveHelpState: receiveHelpReducer,
     appBarState: appBarReducer,
 });
 
@@ -18,6 +20,7 @@ export type AppActions =
     GiveHelpActions | 
     UserActions |
     SearchTaskActions |
+    ReceiveHelpActions |
     AppBarActions;
 
 export type AppState = ReturnType<typeof rootReducer>
