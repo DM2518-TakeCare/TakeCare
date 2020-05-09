@@ -20,7 +20,8 @@ export enum GiveHelpActionTypes {
     UPDATE_VIEWED_TASK = 'UPDATE_VIEWED_TASK',
     SET_ACTIVE_TASKS = 'SET_ACTIVE_TASKS',
     SET_COMPLETED_TASKS = 'SET_COMPLETED_TASKS',
-    SET_UNSUBSCRIBE_FUNCTION = 'SET_UNSUBSCRIBE_FUNCTION'
+    SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION = 'SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION',
+    UNSUBSCRIBE_FROM_HELPER_TASKS = 'UNSUBSCRIBE_FROM_HELPER_TASKS'
 }
 
 export interface SetLoading {
@@ -89,15 +90,25 @@ export function setCompletedTasks(tasks: Task[]) {
     }
 }
 
-export interface SetUnsubscribeFunction {
-    type: GiveHelpActionTypes.SET_UNSUBSCRIBE_FUNCTION,
+export interface SetUnsubscribeFunctionAction {
+    type: GiveHelpActionTypes.SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION,
     payload: () => void,
 }
-export function setUnsubscribeFunction(unsubscribeFunction: () => void) {
+export function setHelperTasksUnsubscribeFunction(unsubscribeFunction: () => void) {
     return (dispatch: Dispatch<AppActions>) => {
         dispatch({
-            type: GiveHelpActionTypes.SET_UNSUBSCRIBE_FUNCTION,
+            type: GiveHelpActionTypes.SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION,
             payload: unsubscribeFunction
+        });
+    }
+}
+export interface UnsubscribeFromHelperTasksAction {
+    type: GiveHelpActionTypes.UNSUBSCRIBE_FROM_HELPER_TASKS,
+}
+export function unsubscribeFromHelperTasks(unsubscribeFunction: () => void) {
+    return (dispatch: Dispatch<AppActions>) => {
+        dispatch({
+            type: GiveHelpActionTypes.UNSUBSCRIBE_FROM_HELPER_TASKS,
         });
     }
 }
@@ -120,13 +131,21 @@ export function listenToHelperTasks(helperID: string) {
             });
         });
         dispatch({
-            type: GiveHelpActionTypes.SET_UNSUBSCRIBE_FUNCTION,
+            type: GiveHelpActionTypes.SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION,
             payload: unsubscribeFunction
         });
     }
 }
 
-export type GiveHelpActions = SetLoading | AcceptTask | CompleteTask | UpdateViewedTask | SetActiveTasks | SetCompletedTasks | SetUnsubscribeFunction;
+export type GiveHelpActions = 
+    SetLoading | 
+    AcceptTask | 
+    CompleteTask | 
+    UpdateViewedTask | 
+    SetActiveTasks | 
+    SetCompletedTasks | 
+    SetUnsubscribeFunctionAction | 
+    UnsubscribeFromHelperTasksAction;
 
 export const giveHelpReducer = (
     state: GiveHelpState = { activeTasks: [], completedTasks: [], viewedTask: undefined, loading: false, unsubscribeOwnedTasks: null},
@@ -141,8 +160,10 @@ export const giveHelpReducer = (
             return {...state, activeTasks: action.payload};
         case GiveHelpActionTypes.SET_COMPLETED_TASKS:
             return {...state, completedTasks: action.payload};
-        case GiveHelpActionTypes.SET_UNSUBSCRIBE_FUNCTION:
+        case GiveHelpActionTypes.SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION:
             return {...state, unsubscribeOwnedTasks: action.payload};
+        case GiveHelpActionTypes.SET_HELPER_TASK_UNSUBSCRIBE_FUNCTION:
+            return {...state, unsubscribeOwnedTasks: null};
         default:
             return state;
     }
