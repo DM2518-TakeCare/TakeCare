@@ -5,9 +5,9 @@ import { DropDownCard } from './drop-down-card';
 import { paperTheme } from '../theme/paper-theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from './button';
-import { ContentPadding } from './content-padding';
 import { User } from '../model/shared/user-interface';
 import { Task } from '../model/shared/task-interface';
+import { Spinner } from './loading-spinner';
 
 const styles = StyleSheet.create({
     row: {
@@ -24,77 +24,112 @@ const styles = StyleSheet.create({
 type TaskDetailsProps = {
     user: User,
     task: Task,
-    canComplete?: boolean,
     onComplete?: (() => void),
-    hideUserInfo?: boolean,
-    detailsHeader?: boolean
+    hideUserAndActionInfo?: boolean,
+    detailsHeader?: boolean,
+    completeLoading: boolean,
+    initOpen?: boolean
 }
 
 export const TaskDetails: FC<TaskDetailsProps> = ({
     user, 
     task, 
-    canComplete = false, 
+    completeLoading,
     onComplete = () => {}, 
-    hideUserInfo = false,
-    detailsHeader = false}) => {
-
-    const taskContent = [
-        { key: 'desc', title: 'Description', obj: task },
-        { key: 'shoppingList', title: 'Shopping list', obj: task },
-        { key: 'tags', title: 'Tags', obj: task }
-    ]
-
-    const userContent = [
-        { key: 'address', title: 'Address', obj: user },
-        { key: 'phone', title: 'Phone number', obj: user },
-        { key: 'extraInfo', title: 'Extra information', obj: user },
-    ]
-
-    const detailsContent = hideUserInfo ? taskContent : [...taskContent, ...userContent]
+    hideUserAndActionInfo = false,
+    detailsHeader = false,
+    initOpen}) => {
 
     const tagContent = (
         <View style={styles.row}>
             {task.tags.map((tag: string) =>
                 <Chip key={tag} style={styles.chip} mode='outlined'>{tag}</Chip>
             )}
-        </View>);
+        </View>
+    );
+
+    const renderInfoLine = (title: string, description: string | null) => {
+        return <View style={styles.section}>
+            <Caption>{title}</Caption>
+            <Paragraph>{description ?? 'Unknown'}</Paragraph>
+        </View>
+    }
     
-        const dropDownContent = (<>
-            {detailsContent.map((cont: any) => 
-                <View key={cont.key}>
-                    {
-                        cont.obj[cont.key] 
-                        ? 
-                            <View style={styles.section}>
-                                <Caption>{cont.title}</Caption>
-                                {
-                                    cont.key !== 'tags' 
-                                    ? 
-                                        <Paragraph>{cont.obj[cont.key]}</Paragraph>
-                                    : 
-                                        tagContent
-                                }
-                            </View>
-                        : 
-                            <></> 
-                    }
-                </View>
-            )}
-            { 
-                canComplete 
-                ? 
-                    <ContentPadding> 
-                        <Button expandHorizontal onPress={onComplete}>Task completed</Button>
-                    </ContentPadding> 
-                : 
+    const dropDownContent = () => {
+        return <View style={{flex: 1}}>
+            {renderInfoLine('Description', task.desc)}
+            
+            {
+                task.shoppingList && task.shoppingList.length !== 0
+                ?
+                    renderInfoLine(
+                        'Shopping List',
+                        task.shoppingList?.map(item => {
+                        return `${item.productName} - ${item.amount}`
+                        }).join('\n'),
+                    )
+                :
                     <></>
             }
-        </>);
+  
+            <View style={styles.section}>
+                <Caption>Tags</Caption>
+                {tagContent}
+            </View>
+
+            {
+                hideUserAndActionInfo
+                ?
+                    null
+                :
+                    <View>
+                        {renderInfoLine('Address', task.owner.address)}
+                        {renderInfoLine('Phone number', task.owner.phone)}
+                        {
+                            task.owner.extraInfo
+                            ?
+                                renderInfoLine('Extra information', task.owner.extraInfo ?? '')
+                            :
+                                <></>
+                        }
+
+                        {
+                            task.completed
+                            ?
+                                <></>
+                            :
+                                completeLoading
+                                ?
+                                    <Spinner isLoading={true}/>
+                                :
+                                    <View style={{marginTop: 10}}>
+                                        <Button expandHorizontal onPress={onComplete}>
+                                            Task completed
+                                        </Button>
+                                    </View>
+                        }
+                    </View>
+            }
+        </View>
+    }
+
+    const renderTitle = () => {
+        if (detailsHeader || user.name === null) {
+            return 'Task details';
+        }
+        return user.name
+    }
 
     return (
-        <DropDownCard 
-            leading={<Ionicons name={detailsHeader ? 'md-document' : 'md-person'} size={25} color={paperTheme.colors.accent}/>} 
-            title={detailsHeader ? 'Task details' : user.name} 
-            dropDownContent={dropDownContent}/>
+        <DropDownCard
+            initOpen={initOpen}
+            leading={
+                <Ionicons 
+                name={detailsHeader ? 'md-document' : 'md-person'} 
+                size={25} 
+                color={paperTheme.colors.accent}/>} 
+            title={renderTitle()}
+            subtitle={task.desc.length > 25 ? (task.desc.substring(0, 25) + '...') : task.desc} 
+            dropDownContent={dropDownContent()}/>
     );
 }

@@ -20,12 +20,16 @@ import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
 
 import { useNavigation } from '@react-navigation/native';
+import { addUserData, getUserData } from './src/model/redux/userState';
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
     console.log(store.getState());
     console.groupEnd();
 });
+
+// TODO: Replace this when authentication is done
+store.dispatch(getUserData('07W9Zmacyix2ZS2VM2aZ'));
 
 export default function App() {
 
