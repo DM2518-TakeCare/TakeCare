@@ -86,14 +86,6 @@ export function setCompletedTasks(tasks: Task[]) {
     }
 }
 
-export function listenToOwnedTasks(owner: User, onSnapshot: (tasks: Task[]) => void) {
-    return async (dispatch: Dispatch<AppActions>) => {
-        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: true});
-        await TaskModel.subscribeToOwnedTasks(owner.id!, onSnapshot);
-        dispatch({type: GiveHelpActionTypes.SET_LOADING, payload: false});
-    }
-}
-
 export type GiveHelpActions = SetLoading | AcceptTask | CompleteTask | UpdateViewedTask | SetActiveTasks | SetCompletedTasks;
 
 export const giveHelpReducer = (
