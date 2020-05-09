@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RoutePropsHelper } from '../router';
-import { Subheading, Text } from 'react-native-paper';
+import { Subheading, Text, Caption } from 'react-native-paper';
 import { ContentPadding } from '../components/content-padding';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TaskDetails } from '../components/task-details';
@@ -46,7 +46,7 @@ const TasksPage: FC<TasksPageActions & TasksPageProps> = (props) => {
         }, [])
     )
 
-    const renderTasks = (tasks: Task[], noTaskText: string) => {
+    const renderTasks = (tasks: Task[], noTaskText: string, hideUserAndActionInfo?: boolean) => {
         return (
             tasks.length > 0 
             ?   
@@ -58,11 +58,12 @@ const TasksPage: FC<TasksPageActions & TasksPageProps> = (props) => {
                             onComplete={() => props.completeTask(task)}
                             user={task.owner}
                             task={task}
+                            hideUserAndActionInfo={hideUserAndActionInfo}
                         />     
                     </View>
                 )
             : 
-                <Text>{noTaskText}</Text>
+                <Caption>{noTaskText}</Caption>
         );
     }
 
@@ -79,9 +80,9 @@ const TasksPage: FC<TasksPageActions & TasksPageProps> = (props) => {
                     :
                         <>
                             <Subheading>Accepted Tasks</Subheading>
-                            {renderTasks(props.activeTasks, 'You do not have any active tasks yet.')}
+                            {renderTasks(props.activeTasks, 'You do not have any active tasks.')}
                             <Subheading>Completed Tasks</Subheading>
-                            {renderTasks(props.completedTasks, 'You have not completed any tasks yet.')}
+                            {renderTasks(props.completedTasks, 'You have not completed any tasks yet.', true)}
                         </>
                 }
             </ContentPadding>
