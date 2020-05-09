@@ -23,6 +23,7 @@ import { SearchTaskQuery, searchTaskAction } from '../model/redux/searchTaskStat
 import { getLogoFromTag } from '../helper/task-tag-logo';
 import { Spinner } from '../components/loading-spinner';
 import { Center } from '../components/center';
+import { updateViewedTask } from '../model/redux/giveHelpState';
 
 const findTaskStyle = StyleSheet.create({
     mapContainer: {
@@ -49,6 +50,7 @@ interface FindTaskPageProps {
 
 interface FindTaskActions {
     searchForNearbyTasks: (query: SearchTaskQuery) => void,
+    updateViewedTask: (task: Task) => void,
 }
 
 const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
@@ -230,7 +232,10 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                     scrollItems={
                                         props.tasks.map(task => {
                                             return <TaskCard
-                                                onPress={() => props.route.navigation.navigate('HelpDetails')}
+                                                onPress={() => {
+                                                    props.updateViewedTask(task)
+                                                    props.route.navigation.navigate('HelpDetails')
+                                                }}
                                                 owner={task.owner.name}
                                                 iconName={getLogoFromTag(task.tags[0])}
                                                 tag={task.tags.join(',')}
@@ -255,6 +260,7 @@ export default connect(
         lastSearchQuery: state.searchTaskState.lastSearchQuery
     }),
     (dispatch: Dispatch): FindTaskActions => ({
-        searchForNearbyTasks: query => dispatch(searchTaskAction(query))
+        searchForNearbyTasks: query => dispatch(searchTaskAction(query)),
+        updateViewedTask: task => dispatch(updateViewedTask(task))
     })
 )(FindTaskPage);
