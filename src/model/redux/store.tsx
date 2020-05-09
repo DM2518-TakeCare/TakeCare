@@ -3,19 +3,22 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { giveHelpReducer, GiveHelpActions } from './giveHelpState';
 import { UserActions, userReducer } from './userState';
 import { SearchTaskActions, searchTaskReducer } from './searchTaskState';
+import { ReceiveHelpActions, receiveHelpReducer } from './receiveHelpState';
 
 /*Add your states with the reducers here*/
 const rootReducer = combineReducers({
     giveHelpState: giveHelpReducer,
     userState: userReducer,
-    searchTaskState: searchTaskReducer
+    searchTaskState: searchTaskReducer,
+    receiveHelpState: receiveHelpReducer,
 });
 
 /*Import your actions here, add a new one with |*/
 export type AppActions = 
     GiveHelpActions | 
     UserActions |
-    SearchTaskActions;
+    SearchTaskActions |
+    ReceiveHelpActions;
 
 export type AppState = ReturnType<typeof rootReducer>
 const store = createStore(
