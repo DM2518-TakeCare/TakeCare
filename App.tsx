@@ -21,11 +21,11 @@ import TaskCreated from './src/pages/task-created';
 
 import { useNavigation } from '@react-navigation/native';
 
-store.subscribe(() => {
-    console.groupCollapsed("State change");
-    console.log(store.getState());
-    console.groupEnd();
-});
+// store.subscribe(() => {
+//     console.groupCollapsed("State change");
+//     console.log(store.getState());
+//     console.groupEnd();
+// });
 
 export default function App() {
 
