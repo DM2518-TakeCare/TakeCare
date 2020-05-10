@@ -163,7 +163,7 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
             authID: userAuthID,
             address: null,
             name: null,
-            phone: null,
+            phone: phoneNumber,
         }
 
         // We go directly to the setting page as this is a new user
