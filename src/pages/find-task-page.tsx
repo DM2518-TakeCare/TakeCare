@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, FC } from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, InteractionManager } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { LatLng, Region } from 'react-native-maps';
 import TakeCareMap, { TakeCareMapMarker, TakeCareMapHandles } from '../components/map';
@@ -24,6 +24,7 @@ import { getLogoFromTag } from '../helper/task-tag-logo';
 import { Spinner } from '../components/loading-spinner';
 import { Center } from '../components/center';
 import { updateViewedTask } from '../model/redux/giveHelpState';
+import { useFocusEffect } from '@react-navigation/native';
 
 const findTaskStyle = StyleSheet.create({
     mapContainer: {
@@ -45,7 +46,7 @@ interface FindTaskPageProps {
     route: RoutePropsHelper<'FindTask'>,
     tasks: Task[],
     tasksLoading: boolean,
-    lastSearchQuery: SearchTaskQuery | null
+    lastSearchQuery: SearchTaskQuery | null
 }
 
 interface FindTaskActions {
@@ -64,7 +65,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
     const distanceForNewSearch = 500;
     /** Kilometers */
     const searchDistance = 1000;
-    
+
     // Map
     const mapRef = useRef<TakeCareMapHandles>(null);
     const [userLocation, setUserLocation] = useState<LatLng | null>(null)
@@ -75,17 +76,31 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
         latitudeDelta: 5,
         longitudeDelta: 5,
     }
-    
+
     // Bottom sheet
     const bottomSheetRef = useRef<BottomSheet>(null);
     const bottomBarPos = useRef(new Animated.Value(0));
     const [bottomSheetIsOpen, setBottomSheetIsOpen] = useState(true);
-    
+
     // Layout
     const insets = useSafeArea();
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetMaxHeight = windowHeight * 0.5;
     const bottomSheetMinHeight = 50 + insets.bottom;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const task = InteractionManager.runAfterInteractions(() => {
+                if (userLocation) {
+                    props.searchForNearbyTasks({
+                        coordinate: { latitude: userLocation.latitude, longitude: userLocation.longitude },
+                        radius: searchDistance
+                    });
+                }
+            });
+            return () => task.cancel();
+        }, [])
+    );
 
     useEffect(() => {
         getLocationPermission().then(
@@ -96,13 +111,13 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
     }, []);
 
     const checkSearchNeeded = (region: Region) => {
-        
+
         // Check that we are zoomed in enough
         if (region.latitudeDelta > minLatDeltaForSearch) {
             setOverSearchZoom(true);
             return;
         }
-        
+
         setOverSearchZoom(false);
 
         // Check that we are not already loading
@@ -115,37 +130,40 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
         let distanceFromLastSearch = distanceForNewSearch;
         if (props.lastSearchQuery) {
             distanceFromLastSearch = Math.round(distance(
-                props.lastSearchQuery?.coordinate.latitude, 
-                props.lastSearchQuery?.coordinate.longitude, 
-                region.latitude, 
+                props.lastSearchQuery?.coordinate.latitude,
+                props.lastSearchQuery?.coordinate.longitude,
+                region.latitude,
                 region.longitude
             ) / 1000);
         }
-        
+
         if (distanceFromLastSearch < distanceForNewSearch) {
             return;
         }
 
         props.searchForNearbyTasks({
-            coordinate: {latitude: region.latitude, longitude: region.longitude},
+            coordinate: { latitude: region.latitude, longitude: region.longitude },
             radius: searchDistance
         });
     }
 
     const generateMarkers = (): TakeCareMapMarker[] => {
+        if (overSearchZoom) {
+            return [];
+        }
         return props.tasks.map(task => {
             return {
                 coordinates: task.coordinates
             }
-        })
+        });
     }
-    
+
     const calculateDistance = (taskCoordinate: LatLng) => {
         if (userLocation) {
             return Math.round(distance(
-                userLocation?.latitude, 
-                userLocation?.longitude, 
-                taskCoordinate.latitude, 
+                userLocation?.latitude,
+                userLocation?.longitude,
+                taskCoordinate.latitude,
                 taskCoordinate.longitude
             ));
         }
@@ -153,14 +171,14 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
     }
 
     return (
-        <View style={{flex: 1}}>
-            <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <TakeCareMap
                     ref={mapRef}
                     // TODO: This should be changed to an overview of Sweden / The Earth
                     // until we get the users geolocation. Is currently KTH for testing
                     initialMapRegion={overviewRegion}
-                    mapPadding={{left: 0, right: 0, top: 0, bottom: bottomSheetIsOpen ? bottomSheetMaxHeight -  bottomSheetMinHeight : 0}}
+                    mapPadding={{ left: 0, right: 0, top: 0, bottom: bottomSheetIsOpen ? bottomSheetMaxHeight - bottomSheetMinHeight : 0 }}
                     activeMarkerIndex={activeTaskIndex}
                     markers={generateMarkers()}
                     followUser={followUserLocation}
@@ -180,14 +198,14 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                         setActiveTaskIndex(taskIndex);
                     }}
                 />
-                <Animated.View  style={{...findTaskStyle.mapControls, transform: [{translateY: Animated.add(-bottomSheetMaxHeight, bottomBarPos.current)}]}}>
+                <Animated.View style={{ ...findTaskStyle.mapControls, transform: [{ translateY: Animated.add(-bottomSheetMaxHeight, bottomBarPos.current) }] }}>
                     <ContentPadding>
                         <Button
                             forceForegroundStyle='light'
-                            expandHorizontal={false} 
-                            toggleOff={!followUserLocation} 
+                            expandHorizontal={false}
+                            toggleOff={!followUserLocation}
                             onPress={() => setFollowUserLocation(!followUserLocation)}>
-                            <MaterialIcons size={25} name='my-location'/>
+                            <MaterialIcons size={25} name='my-location' />
                         </Button>
                     </ContentPadding>
                 </Animated.View>
@@ -198,27 +216,31 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                 ref={bottomSheetRef}
                 onOpenEnd={() => setBottomSheetIsOpen(true)}
                 onCloseEnd={() => setBottomSheetIsOpen(false)}
-                headerPosition={bottomBarPos.current} 
-                snapPoints={[bottomSheetMaxHeight, bottomSheetMinHeight]} 
+                headerPosition={bottomBarPos.current}
+                snapPoints={[bottomSheetMaxHeight, bottomSheetMinHeight]}
                 enabledContentGestureInteraction={false}
-                renderHeader={() => <HeaderBottomSheet/>} 
+                renderHeader={() => <HeaderBottomSheet />}
                 renderContent={() =>
-                    <View style={{backgroundColor: paperTheme.colors.surface}}>
+                    <View style={{ backgroundColor: paperTheme.colors.surface }}>
                         {
-                        props.tasksLoading || overSearchZoom
-                            ?
-                                <View style={{height: '100%', paddingBottom: 75}}>
+                            props.tasksLoading || overSearchZoom || props.tasks.length == 0
+                                ?
+                                <View style={{ height: '100%', paddingBottom: 75 }}>
                                     <Center>
                                         {
-                                            props.tasksLoading 
-                                            ?
-                                                <Spinner isLoading={true}/>
-                                            :
-                                                <Text>Zoom in to a region to see tasks</Text>
+                                            props.tasksLoading
+                                                ?
+                                                <Spinner isLoading={true} />
+                                                :
+                                                props.tasks.length == 0
+                                                    ?
+                                                    <Text>No nearby task exist, try other region</Text>
+                                                    :
+                                                    <Text>Zoom in to a region to see tasks</Text>
                                         }
                                     </Center>
                                 </View>
-                            :
+                                :
                                 <SnappingScroll
                                     activeScrollItem={activeTaskIndex}
                                     onScrollItemSnap={index => {
@@ -246,14 +268,14 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                 />
                         }
                     </View>
-                } 
+                }
             />
         </View>
     );
 }
 
 export default connect(
-    (state: AppState, router: RoutePropsHelper<'FindTask'> ): FindTaskPageProps => ({
+    (state: AppState, router: RoutePropsHelper<'FindTask'>): FindTaskPageProps => ({
         route: router,
         tasks: state.searchTaskState.searchResults,
         tasksLoading: state.searchTaskState.loading,
