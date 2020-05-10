@@ -1,6 +1,6 @@
 import React from 'react';
-import { KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
-import { NavigationContainer, NavigationState, NavigationContainerRef, StackActions, } from '@react-navigation/native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { RootStack } from './src/router';
 import HomePage from './src/pages/home-page';
 import PlaygroundPage from './src/pages/playground-page';
@@ -18,10 +18,6 @@ import { Provider as ReduxProvider, Provider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
-
-import { useNavigation } from '@react-navigation/native';
-import { addUserData, getUserData } from './src/model/redux/userState';
-
 /*
 store.subscribe(() => {
     console.groupCollapsed("State change");
@@ -29,10 +25,6 @@ store.subscribe(() => {
     console.groupEnd();
 });
 */
-
-// TODO: Replace this when authentication is done
-store.dispatch(getUserData('07W9Zmacyix2ZS2VM2aZ'));
-
 export default function App() {
 
     return (
