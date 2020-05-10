@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { Spinner } from '../components/loading-spinner';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { Center } from '../components/center';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const styles = StyleSheet.create({
     upperCont: {
@@ -30,7 +31,8 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     buttonContainer: {
-        paddingTop: 10
+        paddingTop: 10,
+        flexDirection: 'row',
     },
     bottomCont: {
         flex: 1,
@@ -103,6 +105,7 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
         setPhoneNumber(inputValue)
         if (inputValue.length === numberLength) {
             sendVerificationCode(inputValue);
+            setError(false);
         }
         else {
             setError(true);
@@ -141,7 +144,6 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
                 setAuthenticationError(false);
             }
         } catch (err) {
-            console.log(err);
             setAuthenticationError(true);
         }
         setLoginLoading(false);
@@ -151,7 +153,6 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
 
         // First we need to check if this user exist
         const user = await UserModel.getUserByAuth(userAuthID);
-        console.log(user);
         if (user) {
             props.setUserData(user);
             props.router.navigation.replace('Home');
@@ -171,7 +172,19 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
         props.router.navigation.replace('Settings');
     }
 
-    const renderForm = (placeholder: string, errorText: string, errorActive: boolean, buttonText: string, onButtonClick: () => void, maxLength?: number,) => {
+    const goBackToPhoneNumberInput = () => {
+        setVerificationID(null);
+    }
+
+    const renderForm = (
+        placeholder: string, 
+        errorText: string, 
+        errorActive: boolean, 
+        buttonText: string, 
+        onButtonClick: () => void, 
+        canGoBack: boolean,
+        onBackPressed: () => void, 
+        maxLength?: number) => {
         return <>
             <TextInput
                 theme={inputTheme}
@@ -191,7 +204,19 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
                     <></>
             }
             <View style={styles.buttonContainer}>
-                <Button 
+                {
+                    canGoBack
+                    ?
+                        <View style={{marginRight: 10}}>
+                            <Button color={paperTheme.colors.onPrimary} onPress={onBackPressed}>
+                                <MaterialCommunityIcons  name='chevron-left' size={35} />
+                            </Button>
+                        </View>
+                    :
+                        <></>
+                }
+                <Button
+                    expandHorizontal={true}
                     size='big' 
                     onPress={onButtonClick} 
                     color={paperTheme.colors.onPrimary}>{buttonText}</Button>
@@ -223,10 +248,12 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
                                 ?
                                     renderForm(
                                         'Enter the code sent to you',
-                                        'The code is wrong',
+                                        'An error occurred, try again',
                                         authenticationError,
                                         'Login',
                                         () => requestCredentials(inputValue, verificationID),
+                                        true,
+                                        () => goBackToPhoneNumberInput(),
                                         numberLength
                                     )
                                 :
@@ -236,6 +263,8 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
                                         showError,
                                         'Send registration code',
                                         () => checkPhoneNumber(),
+                                        false,
+                                        () => {},
                                         numberLength
                                     )
                             }
