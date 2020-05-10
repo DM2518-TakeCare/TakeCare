@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import StatusHeader from '../components/status-header';
@@ -8,12 +8,14 @@ import { Button } from '../components/button';
 import { paperTheme } from '../theme/paper-theme';
 import { Table } from '../components/table'
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SafeAreaView, View, StyleSheet, PickerIOSComponent } from 'react-native';
 import { Task } from '../model/shared/task-interface';
 import { useFocusEffect } from '@react-navigation/native';
 import { AppState, Dispatch } from '../model/redux/store';
 import { subscribeActiveViewTask, unsubscribeActiveViewTask } from '../model/redux/receiveHelpState';
 import { connect } from 'react-redux';
+import { Spinner } from '../components/loading-spinner';
+import { Center } from '../components/center';
 
 const styles = StyleSheet.create({
     cont: {
@@ -53,7 +55,7 @@ interface TaskCreatedActions {
 }
 
 interface TaskCreatedProps {
-    route: RoutePropsHelper<'Tasks'>,
+    route: RoutePropsHelper<'TaskCreated'>,
     task: Task | null,
     taskLoading: boolean,
 }
@@ -61,63 +63,78 @@ interface TaskCreatedProps {
 const TaskCreated: FC<TaskCreatedActions & TaskCreatedProps> = (props) => {
     useFocusEffect(
         useCallback(() => {
-            props.subscribe(props.task!.id!);
+            if(props.task) {
+                props.subscribe(props.task!.id!);
+
             return () => {
                 props.unsubscribe();
             }
-        }, [])
+            }
+        }, [props.task])
     )
+    
     useEffect(() => {
-            if(props.task!.helper) {
+        if(props.task) {
+            if(props.task!.helper && !props.task!.completed) {
                 props.route.navigation.navigate('TaskAccepted')
             }
-    }, [props.task!.helper]);
+        }
+    }, [props.task]);
 
     return (
         <SafeAreaView style={styles.cont}>
             <ContentPadding>
                 <StatusHeader type='sent' />
+                {
+                    props.task
+                    ?
+                    <>
+                    <View style={styles.taskCont}>
 
-                <View style={styles.taskCont}>
-
-                    <Text style={styles.taskTitle} >
-                        {
-                            props.task!.tags.join(', ')
-                        }
-                    </Text>
-
-                    <View style={styles.userCont}>
-                        <UserInfo type='name' user={props.task!.owner} />
-                        <UserInfo type='address' user={props.task!.owner} />
-                        <UserInfo type='phone' user={props.task!.owner} />
-                    </View>
-
-                    <View style={styles.taskDetails}>
-                        <Text>
-                            {props.task!.desc}
+                        <Text style={styles.taskTitle} >
+                            {
+                                props.task!.tags.join(', ')
+                            }
                         </Text>
-                        <View style={styles.shoppingListContainer}>
-                            <ScrollView>
-                                <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={props.task!.shoppingList} />
-                            </ScrollView>
+
+                        <View style={styles.userCont}>
+                            <UserInfo type='name' user={props.task!.owner} />
+                            <UserInfo type='address' user={props.task!.owner} />
+                            <UserInfo type='phone' user={props.task!.owner} />
                         </View>
 
-                    </View>
+                        <View style={styles.taskDetails}>
+                            <Text>
+                                {props.task!.desc}
+                            </Text>
+                            <View style={styles.shoppingListContainer}>
+                                <ScrollView>
+                                    <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={props.task!.shoppingList!.map(item =>[item.productName, item.amount])} />
+                                </ScrollView>
+                            </View>
 
-                    <View>
-                        <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => { }}>
-                            EDIT TASK
-                        </Button>
-                    </View>
-                </View>
+                        </View>
 
+                        <View>
+                            <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => { }}>
+                                EDIT TASK
+                            </Button>
+                        </View>
+                    </View>
+                </>
+                    :
+                    <Center>
+                        <Spinner isLoading={true} />
+                    </Center>
+                       
+                }
             </ContentPadding>
         </SafeAreaView>
     )
 }
 
 export default connect(
-    (state: AppState, router: RoutePropsHelper<'Tasks'> ): TaskCreatedProps => ({
+    (state: AppState, router: RoutePropsHelper<'TaskCreated'> ): TaskCreatedProps => ({
         route: router,
         task: state.receiveHelpState.activeTaskView,
         taskLoading: state.receiveHelpState.taskLoading,
