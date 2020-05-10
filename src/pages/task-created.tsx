@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import StatusHeader from '../components/status-header';
@@ -9,6 +9,11 @@ import { paperTheme } from '../theme/paper-theme';
 import { Table } from '../components/table'
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { Task } from '../model/shared/task-interface';
+import { useFocusEffect } from '@react-navigation/native';
+import { AppState, Dispatch } from '../model/redux/store';
+import { subscribeActiveViewTask, unsubscribeActiveViewTask } from '../model/redux/receiveHelpState';
+import { connect } from 'react-redux';
 
 const styles = StyleSheet.create({
     cont: {
@@ -42,12 +47,31 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function TaskCreated({ navigation, route }: RoutePropsHelper<'TaskCreated'>) {
+interface TaskCreatedActions {
+    subscribe: (id: string) => void,
+    unsubscribe: () => void,
+}
 
-    const taskDetails = {
-        user: { id: 'skdlfjlskdf', name: 'Annica Olofsson', address: 'Götgatan 78', phone: '0738189621'},
-        task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', tags: ['Mail', 'Groceries'], coordinates: {latitude: 59.347647, longitude: 18.072340}, shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }
-    }
+interface TaskCreatedProps {
+    route: RoutePropsHelper<'Tasks'>,
+    task: Task | null,
+    taskLoading: boolean,
+}
+
+const TaskCreated: FC<TaskCreatedActions & TaskCreatedProps> = (props) => {
+    useFocusEffect(
+        useCallback(() => {
+            props.subscribe(props.task!.id!);
+            return () => {
+                props.unsubscribe();
+            }
+        }, [])
+    )
+    useEffect(() => {
+            if(props.task!.helper) {
+                props.route.navigation.navigate('TaskAccepted')
+            }
+    }, [props.task!.helper]);
 
     return (
         <SafeAreaView style={styles.cont}>
@@ -58,23 +82,23 @@ export default function TaskCreated({ navigation, route }: RoutePropsHelper<'Tas
 
                     <Text style={styles.taskTitle} >
                         {
-                            taskDetails.task.tags.join(', ')
+                            props.task!.tags.join(', ')
                         }
                     </Text>
 
                     <View style={styles.userCont}>
-                        <UserInfo type='name' user={taskDetails.user} />
-                        <UserInfo type='address' user={taskDetails.user} />
-                        <UserInfo type='phone' user={taskDetails.user} />
+                        <UserInfo type='name' user={props.task!.owner} />
+                        <UserInfo type='address' user={props.task!.owner} />
+                        <UserInfo type='phone' user={props.task!.owner} />
                     </View>
 
                     <View style={styles.taskDetails}>
                         <Text>
-                            {taskDetails.task.desc}
+                            {props.task!.desc}
                         </Text>
                         <View style={styles.shoppingListContainer}>
                             <ScrollView>
-                                <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={taskDetails.task.shoppingList} />
+                                <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={props.task!.shoppingList} />
                             </ScrollView>
                         </View>
 
@@ -91,3 +115,15 @@ export default function TaskCreated({ navigation, route }: RoutePropsHelper<'Tas
         </SafeAreaView>
     )
 }
+
+export default connect(
+    (state: AppState, router: RoutePropsHelper<'Tasks'> ): TaskCreatedProps => ({
+        route: router,
+        task: state.receiveHelpState.activeTaskView,
+        taskLoading: state.receiveHelpState.taskLoading,
+    }),
+    (dispatch: Dispatch): TaskCreatedActions => ({
+        subscribe: (id: string ) => dispatch(subscribeActiveViewTask(id)),
+        unsubscribe: () => dispatch(unsubscribeActiveViewTask()),
+    })
+)(TaskCreated);
