@@ -77,7 +77,7 @@ export default function App() {
                                 options={{
                                     title: 'Find Task',
                                     header: (headerProps) => (
-                                        <AppBar headerProps={headerProps} actionIcon={'hospital'} />
+                                        <AppBar headerProps={headerProps}  actionIcon={'hospital'} />
                                     ),
                                 }}
                                 component={PlaygroundPage} />
@@ -119,9 +119,11 @@ export default function App() {
                                             disableBackAction
                                             headerProps={headerProps}
                                             actionIcon={'window-close'}
-                                            onActionClick={(navigation) => {
-                                                navigation?.navigate('Home')
-                                            }} />
+                                            // TODO, need to fix this
+                                            // onActionClick={(navigation) => {
+                                            //     navigation?.navigate('Home')
+                                            // }} 
+                                            />
                                     ),
                                 }}
                                 component={TaskCompleted} />

@@ -37,7 +37,7 @@ export interface UpdateUserLoadingAction {
     payload: boolean
 }
 
-export function addUserData(user: User) {
+export function addUserData(user: User, onDone?: () => void) {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch({
             type: UserActionTypes.UPDATE_USER_LOADING,
@@ -54,6 +54,9 @@ export function addUserData(user: User) {
                 payload: false
             });
         })
+        if (onDone) {
+            onDone();
+        }
     } 
 }
 
