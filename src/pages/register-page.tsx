@@ -137,7 +137,7 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
             // Saving the user and continue to login
             if (userID) {
                 await AsyncStorage.setItem(userAuthIDAsyncStorageName, userID);
-                await startLogin(userAuthIDAsyncStorageName);
+                await startLogin(userID);
                 setAuthenticationError(false);
             }
         } catch (err) {
