@@ -29,7 +29,8 @@ interface ButtonProps {
 const buttonStyle = StyleSheet.create({
     button: {
         // Big value to insure that the button do not have any edge
-        borderRadius: 100
+        borderRadius: 100,
+        justifyContent: 'center',
     },
 });
 
@@ -47,7 +48,7 @@ export const Button: FC<ButtonProps> = ({
         <PaperButton
             style={{
                 ...buttonStyle.button,
-                width: expandHorizontal ? '100%' : 'auto',
+                flex: expandHorizontal ? 1 : undefined,
                 opacity: toggleOff ? 0.5 : 1
             }}
             labelStyle={{

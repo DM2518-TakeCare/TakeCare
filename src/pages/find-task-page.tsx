@@ -236,7 +236,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                                     props.updateViewedTask(task)
                                                     props.route.navigation.navigate('HelpDetails')
                                                 }}
-                                                owner={task.owner.name}
+                                                owner={task.owner.name ?? 'Unknown name'}
                                                 iconName={getLogoFromTag(task.tags[0])}
                                                 tag={task.tags.join(', ')}
                                                 distance={calculateDistance(task.coordinates)}

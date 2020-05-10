@@ -5,19 +5,34 @@ import { User } from './shared/user-interface';
 
 const userCollection = 'Users';
 
-const parseUserDoc = (id: string, doc?: firebase.firestore.DocumentData): User => {
+const parseUserDoc = (id: string, doc?: firebase.firestore.DocumentData): User | null => {
+    if (!doc) {
+        return null;
+    }
     return {
+        authID: doc.authID,
         id: id,
-        name: doc?.name,
-        address: doc?.address,
-        phone: doc?.phone,
-        extraInfo: doc?.extraInfo ?? null
+        name: doc.name,
+        address: doc.address,
+        phone: doc.phone,
+        extraInfo: doc.extraInfo ?? null
     }
 }
 
-export async function getUser(id: string): Promise<User> {
+export async function getUser(id: string): Promise<User | null> {
     const userDoc = await firestore.collection(userCollection).doc(id).get()
-    return parseUserDoc(id, userDoc.data())
+    return parseUserDoc(id, userDoc.data());
+}
+
+export async function getUserByAuth(authID: string): Promise<User | null> {
+    const userDoc = await firestore.collection(userCollection).where('authID', '==', authID).get();
+    // We only expect one result
+    const doc = userDoc.docs[0];
+
+    if (doc) {
+        return parseUserDoc(doc.id, doc.data());
+    }
+    return null;
 }
 
 export async function addUser(user: User): Promise<User> {
