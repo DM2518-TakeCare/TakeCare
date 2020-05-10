@@ -4,6 +4,7 @@ import { giveHelpReducer, GiveHelpActions } from './giveHelpState';
 import { UserActions, userReducer } from './userState';
 import { SearchTaskActions, searchTaskReducer } from './searchTaskState';
 import { ReceiveHelpActions, receiveHelpReducer } from './receiveHelpState';
+import { appBarReducer, AppBarActions } from './appBarState';
 
 /*Add your states with the reducers here*/
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     userState: userReducer,
     searchTaskState: searchTaskReducer,
     receiveHelpState: receiveHelpReducer,
+    appBarState: appBarReducer,
 });
 
 /*Import your actions here, add a new one with |*/
@@ -18,7 +20,8 @@ export type AppActions =
     GiveHelpActions | 
     UserActions |
     SearchTaskActions |
-    ReceiveHelpActions;
+    ReceiveHelpActions |
+    AppBarActions;
 
 export type AppState = ReturnType<typeof rootReducer>
 const store = createStore(

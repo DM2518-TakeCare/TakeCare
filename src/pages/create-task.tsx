@@ -1,10 +1,21 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView, ScrollView } from 'react-native';
+import React, { useState, useRef, FC, useEffect } from 'react';
+import { StyleSheet, View, TextInput, SafeAreaView, ScrollView, Text } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Divider, Switch, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
 import Table from '../components/table';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Task, Tag, ShoppingItem } from '../model/shared/task-interface';
+import { User } from '../model/shared/user-interface';
+import { createNewTask } from '../model/redux/receiveHelpState';
+import { connect } from 'react-redux';
+import { AppState, Dispatch } from '../model/redux/store';
+import { AddNewTaskParam } from '../model/task-model';
+import { setAppBarAction } from '../model/redux/appBarState';
+import { StackActions } from '@react-navigation/native';
+import _ from 'lodash';
+import * as Location from 'expo-location';
+import { LatLng } from 'react-native-maps';
 
 const styles = StyleSheet.create({
     scrollContainer: {
@@ -28,7 +39,18 @@ const styles = StyleSheet.create({
     }
 });
 
-export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateTask'>) {
+interface CreateTaskProps {
+    route: RoutePropsHelper<'CreateTask'>,
+    viewedTask: Task | undefined,
+    user: User
+}
+
+interface CreateTaskActions {
+    createNewTask: (task: AddNewTaskParam) => void,
+    setAppBarAction: (action: Function) => void
+}
+
+const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     
     const tags = ['Groceries', 'Medicine', 'Mail']
     let initialTagState: Record<string, boolean> = {}
@@ -37,15 +59,53 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
     }
     const [tagSelect, setTagSelect] = useState(initialTagState);
     const [useShoppingList, setUseShoppingList] = useState(false);
-    const [input, setInput] = useState('');
+    const [description, setDescription] = useState('');
     const [shoppingInput, setShoppingInput] = useState('');
     const [shoppingQtyInput, setShoppingQtyInput] = useState('');
     const [tableData, setTableData]: any = useState([]);
-    const shoppingListItemInputRef = useRef<TextInput>(null)
+    const [errorMsg, setErrorMsg] = useState('');
+    const shoppingListItemInputRef = useRef<TextInput>(null);
 
     const toggleShoppingList = () => {
         setUseShoppingList(!useShoppingList);
     };
+
+    const createNewTask = async (desc: string, tags: Tag[], shoppingList: Array<any>, useList: boolean) => {
+        // TODO, handel when location can not be accessed
+        let shopping: ShoppingItem[] = [];
+        for (const item of shoppingList){
+            shopping = [...shopping, {productName: item[0], amount: item[1]}]
+        }
+        let { status } = await Location.requestPermissionsAsync();
+        let currentPos = await Location.getCurrentPositionAsync({});
+        props.createNewTask({
+            owner: props.user,
+            tags,
+            description: desc,
+            coordinates: {latitude: currentPos?.coords.latitude ?? 0, longitude: currentPos?.coords.longitude ?? 0},
+            shoppingList: useList ? (shopping as ShoppingItem[]) : undefined
+        })
+    }
+    
+    useEffect(() => {
+        let tags: Tag[] = [];
+        for (const tag in _.pickBy(tagSelect)){
+            tags = [...tags, (tag as Tag)]
+        }
+        props.setAppBarAction(() => {
+            if(description === '') {
+                setErrorMsg('You have to write a description.')
+                return
+            }
+            if(tags.length === 0) {
+                setErrorMsg('You have to select at least one tag.')
+                return
+            }
+            props.route.navigation.dispatch(StackActions.pop(1))
+            props.route.navigation.navigate('TaskCreated')
+            createNewTask(description, tags, tableData, useShoppingList)
+        })
+    }, [props.route, description, tags, tableData, useShoppingList])
 
     const addShoppingItem = () => {
         if(shoppingInput !== '') {
@@ -62,7 +122,7 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                     return
                 }
             }
-            setTableData([...tableData, [shoppingInput, qty]])
+            setTableData([...tableData, [shoppingInput, qty.toString()]])
             setShoppingInput('')
             setShoppingQtyInput('')
         }
@@ -73,7 +133,6 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
         setTableData(tableData.filter((item: any, index: number) => index !== i))
     }
 
-    
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <SafeAreaView style={{flex: 1}} >
@@ -81,8 +140,8 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                     <TextInput 
                         autoFocus={true}
                         multiline={true} 
-                        value={input} 
-                        onChangeText={text => setInput(text)}
+                        value={description} 
+                        onChangeText={text => setDescription(text)}
                         placeholder='What do you need help with?'/>
                 </View>
                 <Divider/>
@@ -109,7 +168,7 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                 </View>
                 <View>
                     {useShoppingList ? <Table 
-                        tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Qty', alignment: 'left'}, {data: '', alignment: 'right'}]} 
+                        tableTitles={[{data: 'Item', alignment: 'left'}, {data: 'Amount', alignment: 'left'}, {data: '', alignment: 'right'}]} 
                         tableData={tableData} 
                         rowEnd={<MaterialIcons name='close'/>}
                         rowEndAction={removeShoppingItem}
@@ -134,7 +193,25 @@ export default function CreateTask({navigation, route}:RoutePropsHelper<'CreateT
                             </>}
                         /> : <></> }  
                 </View>
+                <Divider/>
+                { errorMsg ? 
+                    <View style={styles.row}>
+                        <Text style={{color: paperTheme.colors.error}}>{errorMsg}</Text>
+                    </View> 
+                : <></> }
             </SafeAreaView>
         </ScrollView>
     );
 }
+
+export default connect(
+    (state: AppState, router: RoutePropsHelper<'CreateTask'> ): CreateTaskProps => ({
+        route: router,
+        viewedTask: state.giveHelpState.viewedTask,
+        user: state.userState.user
+    }),
+    (dispatch: Dispatch): CreateTaskActions => ({
+        createNewTask: (task) => dispatch(createNewTask(task)),
+        setAppBarAction: (action: Function) => dispatch(setAppBarAction(action))
+    })
+)(CreateTask);
