@@ -25,7 +25,7 @@ import { addUserData, getUserData } from './src/model/redux/userState';
 
 store.subscribe(() => {
     console.groupCollapsed("State change");
-    console.log(store.getState().receiveHelpState.unsubscribeFunction);
+    console.log(store.getState());
     console.groupEnd();
 });
 

@@ -8,7 +8,7 @@ import { Button } from '../components/button';
 import { paperTheme } from '../theme/paper-theme';
 import { Table } from '../components/table'
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView, View, StyleSheet, PickerIOSComponent } from 'react-native';
+import { SafeAreaView, View, StyleSheet, PickerIOSComponent, InteractionManager } from 'react-native';
 import { Task } from '../model/shared/task-interface';
 import { useFocusEffect } from '@react-navigation/native';
 import { AppState, Dispatch } from '../model/redux/store';
@@ -62,24 +62,27 @@ interface TaskCreatedProps {
 
 const TaskCreated: FC<TaskCreatedActions & TaskCreatedProps> = (props) => {
     useFocusEffect(
-        useCallback(() => {
-            if(props.task) {
-                props.subscribe(props.task!.id!);
-
+        React.useCallback(() => {
+            const task = InteractionManager.runAfterInteractions(() => {
+                if(props.task) {
+                    props.subscribe(props.task.id!);
+                }
+            });
             return () => {
+                task.cancel();
                 props.unsubscribe();
             }
-            }
-        }, [props.task])
-    )
+        }, [])
+    );
     
     useEffect(() => {
         if(props.task) {
-            if(props.task!.helper && !props.task!.completed) {
-                props.route.navigation.navigate('TaskAccepted')
+            if(props.task!.helper) {
+                props.route.navigation.replace('TaskAccepted')
             }
         }
     }, [props.task]);
+
 
     return (
         <SafeAreaView style={styles.cont}>

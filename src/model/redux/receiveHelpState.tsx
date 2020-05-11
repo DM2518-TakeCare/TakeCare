@@ -30,7 +30,7 @@ export interface AddTaskStartAction {
 export interface AddTaskDoneAction {
     type: ReceiveHelpActionTypes.CREATE_TASK_DONE,
 }
-export function createNewTask(taskData: AddNewTaskParam) {
+export function createNewTask(taskData: AddNewTaskParam, onDone: () => void) {
     return async (dispatch: Dispatch<ReceiveHelpActions>) => {
         dispatch({type: ReceiveHelpActionTypes.CREATE_TASK});
         const newTask = await TaskModel.addNewTask(taskData);
@@ -38,6 +38,7 @@ export function createNewTask(taskData: AddNewTaskParam) {
             dispatch({type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK, payload: newTask})
             dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
         })
+        onDone();
     }
 }
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, FC, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, InteractionManager } from 'react-native';
 import { Text, Caption } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
 import StatusHeader from '../components/status-header';
@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
 
 interface TaskAcceptedActions {
     completeTaskAction: (id: string) => void,
+    subscribe: (id: string) => void,
+    unsubscribe: () => void,
 }
 
 interface TaskAcceptedProps {
@@ -47,10 +49,24 @@ interface TaskAcceptedProps {
 
 const TaskAccepted: FC<TaskAcceptedActions & TaskAcceptedProps> = (props) => {
 
+    useFocusEffect(
+        React.useCallback(() => {
+            const task = InteractionManager.runAfterInteractions(() => {
+                if(props.task) {
+                    props.subscribe(props.task.id!);
+                }
+            });
+            return () => {
+                task.cancel();
+                props.unsubscribe();
+            }
+        }, [])
+    );
+
     useEffect(() => {
         if(props.task) {
             if(props.task!.completed) {
-                props.route.navigation.navigate('TaskCompleted')
+                props.route.navigation.replace('TaskCompleted')
             }
         }
     }, [props.task]);
@@ -100,6 +116,8 @@ export default connect(
         taskLoading: state.receiveHelpState.taskLoading,
     }),
     (dispatch: Dispatch): TaskAcceptedActions => ({
+        subscribe: (id: string ) => dispatch(subscribeActiveViewTask(id)),
+        unsubscribe: () => dispatch(unsubscribeActiveViewTask()),
         completeTaskAction: (id: string) => dispatch(completeTaskAction(id))
     })
 )(TaskAccepted);
