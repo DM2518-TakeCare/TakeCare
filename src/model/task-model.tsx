@@ -106,27 +106,25 @@ export function subscribeToTask(taskID: string, onSnapshot: (tasks: Task) => voi
  * @param coordinates The center of which the search should take place
  * @param radius The radius in kilometers
  */
-export async function getNearbyTasks(coordinates: LatLng, radius: number) {
+export async function subscribeToNearbyTasks(coordinates: LatLng, radius: number, onSnapshot: (tasks: Task[]) => void) {
     const geoFirestore: GeoFirestore = new GeoFirestore(firestore);
     const geoCollection = geoFirestore.collection(taskCollections.tasks);
-    const query: GeoQuery = geoCollection.near({ 
+    return geoCollection.near({ 
         center: new firebase.firestore.GeoPoint(coordinates.latitude, coordinates.longitude), 
         radius: radius 
+    }).onSnapshot(async (queryResult) => {
+        // Need to manually filter out task that already have an helper
+        const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null);
+
+        // Parse the result
+        const tasks = await completeTaskQueries(
+            filteredDocs.map(doc => ({
+                docID: doc.id, 
+                docData: doc.data()
+            }))
+        );
+        onSnapshot(tasks);
     });
-
-    const queryResult = await query.get();
-
-    // Need to manually filter out task that already have an helper
-    const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null);
-
-    // Parse the result
-    const tasks = await completeTaskQueries(
-        filteredDocs.map(doc => ({
-            docID: doc.id, 
-            docData: doc.data()
-        }))
-    );
-    return tasks;
 }
 
 
@@ -152,9 +150,24 @@ export async function updateTaskData(data: UpdateTaskParam) {
 
 
 /** Add an helper to a task */
-export async function addHelper(taskID: string, helperID: string) {
-    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
-        helperID: helperID
+export async function addHelper(taskID: string, helperID: string, onSuccess: () => void, onFail: () => void) {
+    const taskDoc = firestore.collection(taskCollections.tasks).doc(taskID);
+    await firestore.runTransaction((t) => {
+        return t.get(taskDoc).then(taskDData => {
+            const tmpTaskData = taskDData.data();
+            if (tmpTaskData) {
+                const taskData = tmpTaskData['d'];
+                if (taskData['helperID'] !== null) {
+                    onFail();
+                    return Promise.resolve();
+                }
+                else {
+                    t.update(taskDoc, {'d': {...taskData, helperID: helperID}});
+                    onSuccess();
+                    return Promise.resolve();
+                }
+            }
+        })
     });
 }
 
@@ -213,6 +226,7 @@ async function completeTaskQuery(docID: string, docData: any): Promise<Task> {
         helper = await userModel.getUser(helperID); 
     }
 
+
     return {
         id: docID,
         completed: taskData['completed'],
@@ -223,7 +237,7 @@ async function completeTaskQuery(docID: string, docData: any): Promise<Task> {
         desc: taskData['description'],
         tags: taskData['tags'],
         shoppingList: shoppingList,
-        owner: owner,
+        owner: owner!,
         helper: helper,
         dateAdded: taskData['dateAdded']
     };

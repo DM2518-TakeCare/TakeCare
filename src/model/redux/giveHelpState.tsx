@@ -34,10 +34,10 @@ interface SetLoading {
 interface AcceptTask {
     type: GiveHelpActionTypes.ACCEPT_TASK,
 }
-export function acceptTask(task: Task, helper: User) {
+export function acceptTask(task: Task, helper: User, onSuccess: () => void, onFail: () => void) {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch({type: GiveHelpActionTypes.SET_TASK_LOADING, payload: task});
-        await TaskModel.addHelper(task.id!, helper.id!);
+        await TaskModel.addHelper(task.id!, helper.id!, onSuccess, onFail);
         dispatch({type: GiveHelpActionTypes.SET_TASK_LOADING, payload: task});
     }
 }
@@ -123,7 +123,7 @@ export function unsubscribeFromHelperTasks() {
 export function listenToHelperTasks() {
     return (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
         const state = getState();
-        const unsubscribeFunction = TaskModel.subscribeToHelperTasks(state.userState.user.id!, tasks => {
+        const unsubscribeFunction = TaskModel.subscribeToHelperTasks(state.userState.user!.id!, tasks => {
             const activeTasks = tasks.filter(task => {return !task.completed});
             const completedTasks = tasks.filter(task => {return task.completed});
             batch(() => {
