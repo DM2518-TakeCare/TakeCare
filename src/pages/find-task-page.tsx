@@ -203,7 +203,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                         <Button
                             forceForegroundStyle='light'
                             expandHorizontal={false}
-                            toggleOff={!followUserLocation}
+                            toggleOff={followUserLocation}
                             onPress={() => setFollowUserLocation(!followUserLocation)}>
                             <MaterialIcons size={25} name='my-location' />
                         </Button>
