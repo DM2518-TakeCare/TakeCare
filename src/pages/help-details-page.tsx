@@ -59,7 +59,7 @@ interface HelpDetailsProps {
 }
 
 interface HelpDetailsActions {
-    acceptTask: (task: Task, helper: User) => void,
+    acceptTask: (task: Task, helper: User, onSuccess: () => void, onFail: () => void) => void,
 }
 
 const HelpDetails: FC<HelpDetailsProps & HelpDetailsActions> = (props) => {
@@ -132,9 +132,12 @@ const HelpDetails: FC<HelpDetailsProps & HelpDetailsActions> = (props) => {
                         <Button 
                             size='big' 
                             onPress={() => {
-                                props.route.navigation.dispatch(StackActions.pop(1))
-                                props.viewedTask ? props.acceptTask(props.viewedTask, props.user) : null
-                                props.route.navigation.navigate('Tasks')
+                                props.viewedTask ? props.acceptTask(props.viewedTask, props.user, () => {
+                                    props.route.navigation.replace('Tasks')
+                                }, () => {
+                                    alert('Someone else have accepted this task');
+                                    props.route.navigation.pop();
+                                }) : null
                             }}>Accept Task</Button>      
                     </View>
                 </ContentPadding>
@@ -149,9 +152,9 @@ export default connect(
     (state: AppState, router: RoutePropsHelper<'HelpDetails'> ): HelpDetailsProps => ({
         route: router,
         viewedTask: state.giveHelpState.viewedTask,
-        user: state.userState.user
+        user: state.userState.user!
     }),
     (dispatch: Dispatch): HelpDetailsActions => ({
-        acceptTask: (task, helper) => dispatch(acceptTask(task, helper))
+        acceptTask: (task, helper, onSuccess, onFail) => dispatch(acceptTask(task, helper, onSuccess, onFail))
     })
 )(HelpDetails);

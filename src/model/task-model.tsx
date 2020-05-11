@@ -150,9 +150,25 @@ export async function updateTaskData(data: UpdateTaskParam) {
 
 
 /** Add an helper to a task */
-export async function addHelper(taskID: string, helperID: string) {
-    await geoFirestore.collection(taskCollections.tasks).doc(taskID).update({
-        helperID: helperID
+export async function addHelper(taskID: string, helperID: string, onSuccess: () => void, onFail: () => void) {
+    const taskDoc = firestore.collection(taskCollections.tasks).doc(taskID);
+    await firestore.runTransaction((t) => {
+        return t.get(taskDoc).then(taskDData => {
+            const tmpTaskData = taskDData.data();
+            console.log(tmpTaskData);
+            if (tmpTaskData) {
+                const taskData = tmpTaskData['d'];
+                if (taskData['helperID'] !== null) {
+                    onFail();
+                    return Promise.resolve();
+                }
+                else {
+                    t.update(taskDoc, {'d': {...taskData, helperID: helperID}});
+                    onSuccess();
+                    return Promise.resolve();
+                }
+            }
+        })
     });
 }
 

@@ -6,7 +6,6 @@ import { StackHeaderProps, StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../router';
 import { AppState, Dispatch } from '../model/redux/store';
 import { connect } from 'react-redux';
-import { setCallAppBarAction } from '../model/redux/appBarState';
 
 const { StatusBarManager } = NativeModules;
 
