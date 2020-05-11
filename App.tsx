@@ -37,7 +37,7 @@ export default function App() {
                     >
                         {/* If you want to add a new page, you must first add the page name in router.tsx */}
                         <RootStack.Navigator
-                            initialRouteName='Playground'
+                            initialRouteName='Register'
                             headerMode='screen'
                             screenOptions={{
                                 header: (headerProps) => (
