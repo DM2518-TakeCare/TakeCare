@@ -8,6 +8,7 @@ import { AppState, Dispatch } from '../model/redux/store';
 import { connect } from 'react-redux';
 import { updateUserData } from '../model/redux/userState';
 import { User } from '../model/shared/user-interface';
+import { paperTheme } from '../theme/paper-theme';
 
 const styles = StyleSheet.create({
     input: {
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     errorText: {
-        color: 'red'
+        color: paperTheme.colors.error
     },
 });
 
@@ -48,10 +49,10 @@ const SettingsPage: FC<SettingsPageProps & SettingsPageActions> = (props) => {
     const requestSave = () => {
         if (name === '' || address === '') {
             if (name === '') {
-                setErrorText('Please insert your name')
+                setErrorText('Please insert your name.')
             }
             if (address === '') {
-                setErrorText('Please insert your address')
+                setErrorText('Please insert your address.')
             }
             return;
         }

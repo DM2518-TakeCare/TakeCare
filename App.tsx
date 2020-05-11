@@ -141,7 +141,7 @@ export default function App() {
                                 options={{
                                     title: 'Settings',
                                     header: (headerProps) => (
-                                        <AppBar headerProps={headerProps} />
+                                        <AppBar disableBackAction headerProps={headerProps} />
                                     ),
                                 }}
                                 component={Settings} />
