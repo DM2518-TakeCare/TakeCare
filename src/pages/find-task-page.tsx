@@ -99,7 +99,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                 }
             });
             return () => task.cancel();
-        }, [])
+        }, [(userLocation === null)])
     );
 
     useEffect(() => {
