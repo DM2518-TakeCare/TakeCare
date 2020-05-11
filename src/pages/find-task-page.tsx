@@ -19,7 +19,7 @@ import { distance } from '../model/math/geolocation';
 import TaskCard from '../components/task-card';
 import { AppState, AppActions, Dispatch } from '../model/redux/store';
 import { connect } from 'react-redux';
-import { SearchTaskQuery, searchTaskAction } from '../model/redux/searchTaskState';
+import { SearchTaskQuery, searchTaskAction, unsubscribeSearchTaskAction } from '../model/redux/searchTaskState';
 import { getLogoFromTag } from '../helper/task-tag-logo';
 import { Spinner } from '../components/loading-spinner';
 import { Center } from '../components/center';
@@ -52,6 +52,7 @@ interface FindTaskPageProps {
 interface FindTaskActions {
     searchForNearbyTasks: (query: SearchTaskQuery) => void,
     updateViewedTask: (task: Task) => void,
+    unsubscribe: () => void,
 }
 
 const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
@@ -98,7 +99,10 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                     });
                 }
             });
-            return () => task.cancel();
+            return () => {
+                task.cancel();
+                props.unsubscribe();
+            }
         }, [(userLocation === null)])
     );
 
@@ -283,6 +287,7 @@ export default connect(
     }),
     (dispatch: Dispatch): FindTaskActions => ({
         searchForNearbyTasks: query => dispatch(searchTaskAction(query)),
-        updateViewedTask: task => dispatch(updateViewedTask(task))
+        updateViewedTask: task => dispatch(updateViewedTask(task)),
+        unsubscribe: () => dispatch(unsubscribeSearchTaskAction())
     })
 )(FindTaskPage);

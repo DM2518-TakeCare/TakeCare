@@ -118,12 +118,7 @@ export default function App() {
                                         <AppBar
                                             disableBackAction
                                             headerProps={headerProps}
-                                            actionIcon={'window-close'}
-                                            // TODO, need to fix this
-                                            // onActionClick={(navigation) => {
-                                            //     navigation?.navigate('Home')
-                                            // }} 
-                                            />
+                                            actionIcon={'window-close'}/>
                                     ),
                                 }}
                                 component={TaskCompleted} />

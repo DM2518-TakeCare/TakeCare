@@ -15,7 +15,7 @@ export interface Task {
     id?: string
     completed: boolean,
     owner: User
-    helper?: User
+    helper?: User | null
     coordinates: LatLng,
     tags: Tag[]
     desc: string
