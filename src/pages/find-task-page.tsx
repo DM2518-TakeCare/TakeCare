@@ -238,9 +238,9 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                                 :
                                                 props.tasks.length == 0
                                                     ?
-                                                    <Text>No nearby task exist, try other region</Text>
+                                                    <Text>No nearby tasks exist, try another region.</Text>
                                                     :
-                                                    <Text>Zoom in to a region to see tasks</Text>
+                                                    <Text>Zoom in on a region to see available tasks.</Text>
                                         }
                                     </Center>
                                 </View>

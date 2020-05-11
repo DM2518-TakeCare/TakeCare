@@ -45,9 +45,9 @@ export default function App() {
                                 ),
                             }}>
                             <RootStack.Screen
-                                name="Register"
+                                name='Register'
                                 options={{
-                                    title: "",
+                                    title: '',
                                     header: (headerProps) => (
                                         <AppBar
                                             headerProps={headerProps}
@@ -71,11 +71,14 @@ export default function App() {
                                 component={HomePage} />
                             <RootStack.Screen
                                 name='FindTask'
-                                component={FindTaskPage} />
+                                component={FindTaskPage}
+                                options={{
+                                    title: 'Find Task',
+                                }}
+                                 />
                             <RootStack.Screen
                                 name='Playground'
                                 options={{
-                                    title: 'Find Task',
                                     header: (headerProps) => (
                                         <AppBar headerProps={headerProps}  actionIcon={'hospital'} />
                                     ),

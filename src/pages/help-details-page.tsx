@@ -135,7 +135,7 @@ const HelpDetails: FC<HelpDetailsProps & HelpDetailsActions> = (props) => {
                                 props.viewedTask ? props.acceptTask(props.viewedTask, props.user, () => {
                                     props.route.navigation.replace('Tasks')
                                 }, () => {
-                                    alert('Someone else have accepted this task');
+                                    alert('Someone else has already accepted this task!');
                                     props.route.navigation.pop();
                                 }) : null
                             }}>Accept Task</Button>      

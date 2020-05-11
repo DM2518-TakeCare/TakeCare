@@ -155,7 +155,6 @@ export async function addHelper(taskID: string, helperID: string, onSuccess: () 
     await firestore.runTransaction((t) => {
         return t.get(taskDoc).then(taskDData => {
             const tmpTaskData = taskDData.data();
-            console.log(tmpTaskData);
             if (tmpTaskData) {
                 const taskData = tmpTaskData['d'];
                 if (taskData['helperID'] !== null) {
