@@ -74,6 +74,11 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     };
 
     const createNewTask = async (desc: string, tags: Tag[], shoppingList: Array<any>, useList: boolean) => {
+
+        if (props.taskLoading) {
+            return;
+        }
+
         // TODO, handel when location can not be accessed
         let shopping: ShoppingItem[] = [];
         for (const item of shoppingList){
