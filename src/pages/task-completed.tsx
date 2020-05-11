@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { RoutePropsHelper } from '../router';
@@ -9,7 +9,11 @@ import { ContentPadding } from '../components/content-padding';
 import SvgIcon from '../components/svg-icon';
 import { Center } from '../components/center';
 import { TaskDetails } from '../components/task-details';
-import { Tag } from '../model/shared/task-interface';
+import { Tag, Task } from '../model/shared/task-interface';
+import { connect } from 'react-redux';
+import { AppState, Dispatch } from '../model/redux/store';
+import { unsubscribeActiveViewTask, subscribeActiveViewTask } from '../model/redux/receiveHelpState';
+import { setAppBarAction } from '../model/redux/appBarState';
 
 const styles = StyleSheet.create({
     cont: {
@@ -29,12 +33,25 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function TaskCompleted({navigation, route}:RoutePropsHelper<'CreateTask'>) {
+interface TaskCompletedActions {
+    unsubscribe: () => void,
+    setAppBarAction: (action: Function) => void,
+}
 
-    const testHelper = {id: '', name: 'Annica Olofsson', phone: '0738189621', address: 'Testgatan 3', coordinates: {latitude: 59.347647, longitude: 18.072340}, extraInfo: 'Portkod'}
+interface TaskCompletedProps {
+    route: RoutePropsHelper<'TaskCompleted'>,
+    task: Task | null,
+    taskLoading: boolean,
+}
 
-    const testUser = {user: { id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'},
-    task: { id: '', owner: {id: '', name: 'Stefan Karlsson', phone: '0731234567', address: 'Testgatan 3'}, desc: 'I need help getting my mail and some groceries', coordinates: {latitude: 59.347647, longitude: 18.072340}, tags: ['Mail', 'Groceries'] as Tag[], shoppingList: [['Milk', '2'], ['Pasta', '500g'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'], ['Butter', '1'],] }}
+const TaskCompleted: FC<TaskCompletedActions & TaskCompletedProps> = (props) => {
+
+    useEffect(() => {
+        props.setAppBarAction(() => {
+            props.unsubscribe()
+            props.route.navigation.navigate('Home')
+        })
+    }, [props.route])
 
     const upper = (
         <ContentPadding>
@@ -46,12 +63,16 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
         <ScrollView style={styles.cont}>
             <ContentPadding>
                 <View style={styles.userCont}>
-                    <UserInfo type='name' user={testHelper}/>
-                    <UserInfo type='phone' user={testHelper}/>
+                    <UserInfo type='name' user={props.task!.helper!}/>
+                    <UserInfo type='phone' user={props.task!.helper!}/>
                 </View>
                 <View style={styles.taskCont}>
-                    <TaskDetails detailsHeader user={testUser.user} task={testUser.task}/>
-                </View>
+                    <TaskDetails 
+                        detailsHeader
+                        completeLoading={props.taskLoading}
+                        user={props.task!.owner} 
+                        task={props.task!}/>
+                    </View>
                 <View style={styles.bottomCont}>
                     <Center>
                         <SvgIcon name='take-care'/>
@@ -65,3 +86,15 @@ export default function TaskCompleted({navigation, route}:RoutePropsHelper<'Crea
         <DividedView reverse noBottomPadding upper={upper} lower={lower}/>
     );
 }
+
+export default connect(
+    (state: AppState, router: RoutePropsHelper<'TaskCompleted'> ): TaskCompletedProps => ({
+        route: router,
+        task: state.receiveHelpState.activeTaskView,
+        taskLoading: state.receiveHelpState.taskLoading,
+    }),
+    (dispatch: Dispatch): TaskCompletedActions => ({
+        unsubscribe: () => dispatch(unsubscribeActiveViewTask()),
+        setAppBarAction: (action: Function) => dispatch(setAppBarAction(action))
+    })
+)(TaskCompleted);

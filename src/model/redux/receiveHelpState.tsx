@@ -30,11 +30,15 @@ export interface AddTaskStartAction {
 export interface AddTaskDoneAction {
     type: ReceiveHelpActionTypes.CREATE_TASK_DONE,
 }
-export function createNewTask(taskData: AddNewTaskParam) {
+export function createNewTask(taskData: AddNewTaskParam, onDone: () => void) {
     return async (dispatch: Dispatch<ReceiveHelpActions>) => {
         dispatch({type: ReceiveHelpActionTypes.CREATE_TASK});
         const newTask = await TaskModel.addNewTask(taskData);
-        dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
+        batch(() => {
+            dispatch({type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK, payload: newTask})
+            dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
+        })
+        onDone();
     }
 }
 
@@ -102,7 +106,7 @@ export interface CompleteTaskAction {
 export interface CompleteTaskDoneAction {
     type: ReceiveHelpActionTypes.COMPLETE_TASK_DONE,
 }
-export function CompleteTaskAction(taskID: string) {
+export function completeTaskAction(taskID: string) {
     return async (dispatch: Dispatch<ReceiveHelpActions>) => {
         dispatch({
             type: ReceiveHelpActionTypes.COMPLETE_TASK,
@@ -158,7 +162,7 @@ export const receiveHelpReducer = (
             return {
                 ...state,
                 unsubscribeFunction: null
-            }        
+            }    
         case ReceiveHelpActionTypes.COMPLETE_TASK_DONE:
             const updateTask: Task | null = state.activeTaskView ? {
                 ...state.activeTaskView,

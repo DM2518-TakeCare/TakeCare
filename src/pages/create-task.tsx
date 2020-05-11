@@ -16,6 +16,8 @@ import { StackActions } from '@react-navigation/native';
 import _ from 'lodash';
 import * as Location from 'expo-location';
 import { LatLng } from 'react-native-maps';
+import { Center } from '../components/center';
+import { Spinner } from '../components/loading-spinner';
 
 const styles = StyleSheet.create({
     scrollContainer: {
@@ -42,11 +44,12 @@ const styles = StyleSheet.create({
 interface CreateTaskProps {
     route: RoutePropsHelper<'CreateTask'>,
     viewedTask: Task | undefined,
+    taskLoading: boolean,
     user: User
 }
 
 interface CreateTaskActions {
-    createNewTask: (task: AddNewTaskParam) => void,
+    createNewTask: (task: AddNewTaskParam, onDone: () => void) => void,
     setAppBarAction: (action: Function) => void
 }
 
@@ -84,6 +87,8 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
             description: desc,
             coordinates: {latitude: currentPos?.coords.latitude ?? 0, longitude: currentPos?.coords.longitude ?? 0},
             shoppingList: useList ? (shopping as ShoppingItem[]) : undefined
+        }, () => {
+            props.route.navigation.replace('TaskCreated')
         })
     }
     
@@ -101,8 +106,6 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
                 setErrorMsg('You have to select at least one tag.')
                 return
             }
-            props.route.navigation.dispatch(StackActions.pop(1))
-            props.route.navigation.navigate('TaskCreated')
             createNewTask(description, tags, tableData, useShoppingList)
         })
     }, [props.route, description, tags, tableData, useShoppingList])
@@ -131,6 +134,12 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
 
     const removeShoppingItem = (i: number) => {
         setTableData(tableData.filter((item: any, index: number) => index !== i))
+    }
+
+    if (props.taskLoading) {
+        return <Center>
+            <Spinner isLoading={true}/>
+        </Center>
     }
 
     return (
@@ -208,10 +217,11 @@ export default connect(
     (state: AppState, router: RoutePropsHelper<'CreateTask'> ): CreateTaskProps => ({
         route: router,
         viewedTask: state.giveHelpState.viewedTask,
-        user: state.userState.user
+        user: state.userState.user,
+        taskLoading: state.receiveHelpState.taskLoading
     }),
     (dispatch: Dispatch): CreateTaskActions => ({
-        createNewTask: (task) => dispatch(createNewTask(task)),
+        createNewTask: (task, onDone) => dispatch(createNewTask(task, onDone)),
         setAppBarAction: (action: Function) => dispatch(setAppBarAction(action))
     })
 )(CreateTask);
