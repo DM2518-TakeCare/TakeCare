@@ -57,14 +57,16 @@ const TakeCareMap: RefForwardingComponent<TakeCareMapHandles, TakeCareMapProps> 
         goToMarker: (markerIndex: number) => {
             if (props.markers && props.markers.length > markerIndex) {
                 let marker = props.markers[markerIndex];
-                mapRef.current?.getCamera().then((camera) => {
-                    mapRef.current?.animateCamera({
-                        center: marker.coordinates,
-                        zoom: Math.max(12, camera.zoom),
-                    }, {
-                        duration: 250
-                    });
-                })
+                if (marker) {
+                    mapRef.current?.getCamera().then((camera) => {
+                        mapRef.current?.animateCamera({
+                            center: marker.coordinates,
+                            zoom: Math.max(12, camera.zoom),
+                        }, {
+                            duration: 250
+                        });
+                    })
+                }
             }
         }
     }));

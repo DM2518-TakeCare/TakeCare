@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import { GeoFirestore } from "geofirestore";
 
 // Initialize Firebase
-const firebaseApp = firebase.initializeApp(credentials.firebase);
+export const firebaseApp = firebase.initializeApp(credentials.firebase);
 
 const db = firebaseApp.firestore();
 export const geoFirestore: GeoFirestore = new GeoFirestore(db);

@@ -6,7 +6,7 @@ import { batch } from 'react-redux'
 
 /*The interface for the state; how the state is supposed to look at all times.*/
 export interface UserState {
-    user: User
+    user: User | null
     loading: boolean
 }
 
@@ -16,22 +16,15 @@ export enum UserActionTypes {
     REMOVE_USER_DATA = 'REMOVE_USER_DATA',
     UPDATE_USER_DATA = 'UPDATE_USER_DATA',
     UPDATE_USER_LOADING = 'UPDATE_USER_LOADING',
-    GET_USER_DATA = 'GET_USER_DATA'
-}
-
-const initUser: User = {
-    name: null, 
-    address: null, 
-    phone: null,
 }
 
 const initUserState: UserState = {
-    user: initUser, 
+    user: null, 
     loading: false
 }
 
 export interface UserDataAction {
-    type: UserActionTypes.ADD_USER_DATA | UserActionTypes.UPDATE_USER_DATA | UserActionTypes.GET_USER_DATA,
+    type: UserActionTypes.ADD_USER_DATA | UserActionTypes.UPDATE_USER_DATA,
     payload: User
 }
 
@@ -44,7 +37,7 @@ export interface UpdateUserLoadingAction {
     payload: boolean
 }
 
-export function addUserData(user: User) {
+export function addUserData(user: User, onDone?: () => void) {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch({
             type: UserActionTypes.UPDATE_USER_LOADING,
@@ -61,6 +54,9 @@ export function addUserData(user: User) {
                 payload: false
             });
         })
+        if (onDone) {
+            onDone();
+        }
     } 
 }
 
@@ -94,23 +90,12 @@ export function updateUserData(user: User) {
     }
 }
 
-export function getUserData(id: string) {
+export function setUserData(user: User) {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch({
-            type: UserActionTypes.UPDATE_USER_LOADING,
-            payload: true
+            type: UserActionTypes.ADD_USER_DATA,
+            payload: user
         });
-        const user = await UserModel.getUser(id);
-        batch(() => {
-            dispatch({
-                type: UserActionTypes.GET_USER_DATA,
-                payload: user
-            });
-            dispatch({
-                type: UserActionTypes.UPDATE_USER_LOADING,
-                payload: false
-            });
-        })
     }
 }
 
@@ -126,18 +111,12 @@ export const userReducer = (
         case UserActionTypes.ADD_USER_DATA:
             return {
                 ...state,
-                user: {
-                    id: action.payload.id,
-                    name: action.payload.name,
-                    address: action.payload.address,
-                    phone: action.payload.phone,
-                    extraInfo: action.payload.extraInfo,
-                }
+                user: action.payload
             };
         case UserActionTypes.REMOVE_USER_DATA:
             return {
                 ...state,
-                user: initUser
+                user: null
             };
         case UserActionTypes.UPDATE_USER_DATA:
             return {
@@ -148,11 +127,6 @@ export const userReducer = (
             return {
                 ...state,
                 loading: action.payload
-            };
-        case UserActionTypes.GET_USER_DATA:
-            return {
-                ...state,
-                user: action.payload
             };
         default:
             return state;

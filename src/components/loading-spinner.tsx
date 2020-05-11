@@ -9,13 +9,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export const Spinner: React.FC<{isLoading: boolean}> = (props) => {
+export const Spinner: React.FC<{isLoading: boolean, onPrimary?: boolean}> = (props) => {
   return (<>
     {
       props.isLoading
       ?
         <View style={styles.container}>
-          <ActivityIndicator size="large" color={paperTheme.colors.primary} />
+          <ActivityIndicator size="large" color={props.onPrimary ? paperTheme.colors.onPrimary : paperTheme.colors.primary} />
         </View>
       :
         props.children
