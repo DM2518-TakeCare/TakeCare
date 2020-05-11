@@ -155,7 +155,7 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
         const user = await UserModel.getUserByAuth(userAuthID);
         if (user) {
             props.setUserData(user);
-            props.router.navigation.replace('Settings');
+            props.router.navigation.replace('Home');
             return;
         }
 
