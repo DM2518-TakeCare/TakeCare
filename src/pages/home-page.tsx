@@ -72,34 +72,34 @@ const HomePage: FC<HomePageProps & HomePageActions> = (props) => {
 
     return (
         taskLoading ? 
-        <Center>
-            <Spinner isLoading={true} />
-        </Center> 
+            <Center>
+                <Spinner isLoading={true} />
+            </Center> 
         :
-        <DividedView
-            onPressUpper={goToCorrectStatusPage} 
-            upper={
-                <SafeAreaView style={{flex: 1}}>
-                    <Center>
-                        <StatusHeader type='receive-help' hideStatusText={false}/>
-                        <Text style={{...helpStyle.title, ...helpStyle.receiveHelpTitle}}>
-                            Receive Help
-                        </Text>
-                    </Center>
-                </SafeAreaView>
-            }
-            onPressLower={() => props.route.navigation.navigate('FindTask')}
-            lower={
-                <SafeAreaView style={{flex: 1}}>
-                    <Center>
-                        <StatusHeader type='give-help' hideStatusText={false} onPrimary/>
-                        <Text style={{...helpStyle.title, ...helpStyle.giveHelpTitle}}>
-                            Give Help
-                        </Text>
-                    </Center>
-                </SafeAreaView>
-            }
-        />
+            <DividedView
+                onPressUpper={goToCorrectStatusPage} 
+                upper={
+                    <SafeAreaView style={{flex: 1}}>
+                        <Center>
+                            <StatusHeader type='receive-help' hideStatusText={false}/>
+                            <Text style={{...helpStyle.title, ...helpStyle.receiveHelpTitle}}>
+                                Receive Help
+                            </Text>
+                        </Center>
+                    </SafeAreaView>
+                }
+                onPressLower={() => props.route.navigation.navigate('FindTask')}
+                lower={
+                    <SafeAreaView style={{flex: 1}}>
+                        <Center>
+                            <StatusHeader type='give-help' hideStatusText={false} onPrimary/>
+                            <Text style={{...helpStyle.title, ...helpStyle.giveHelpTitle}}>
+                                Give Help
+                            </Text>
+                        </Center>
+                    </SafeAreaView>
+                }
+            />
     );
 }
 
