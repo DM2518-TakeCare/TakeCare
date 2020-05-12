@@ -18,6 +18,8 @@ import { Provider as ReduxProvider, Provider } from 'react-redux';
 import store from './src/model/redux/store';
 import TaskAccepted from './src/pages/task-accepted';
 import TaskCreated from './src/pages/task-created';
+
+console.disableYellowBox = true;
 /*
 store.subscribe(() => {
     console.groupCollapsed("State change");
