@@ -68,6 +68,7 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     const [tableData, setTableData]: any = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     const shoppingListItemInputRef = useRef<TextInput>(null);
+    const shoppingListItemAmountInputRef = useRef<TextInput>(null);
 
     const toggleShoppingList = () => {
         setUseShoppingList(!useShoppingList);
@@ -116,25 +117,23 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     }, [props.route, description, tags, tableData, useShoppingList])
 
     const addShoppingItem = () => {
+        let qty = shoppingQtyInput === '' ? 1 : shoppingQtyInput;
         if(shoppingInput !== '') {
-            let qty = 1;
-            if(shoppingQtyInput !== '' && shoppingQtyInput.match(/^[0-9]*$/)) {
-                qty = parseInt(shoppingQtyInput)
-            }
             for (let i in tableData) {
                 if((tableData[i].includes(shoppingInput))) {
-                    tableData[i][1] += qty;
+                    tableData[i][1] = qty
                     setTableData([...tableData])
                     setShoppingInput('')
                     setShoppingQtyInput('')
+                    shoppingListItemInputRef.current?.focus()
                     return
                 }
             }
-            setTableData([...tableData, [shoppingInput, qty.toString()]])
+            setTableData([...tableData, [shoppingInput, qty]])
             setShoppingInput('')
             setShoppingQtyInput('')
+            shoppingListItemInputRef.current?.focus()
         }
-        shoppingListItemInputRef.current?.focus();
     }
 
     const removeShoppingItem = (i: number) => {
@@ -148,7 +147,7 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps='always'>
             <SafeAreaView style={{flex: 1}} >
                 <View style={styles.input}>
                     <TextInput 
@@ -191,17 +190,23 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
                                     ref={shoppingListItemInputRef}
                                     style={styles.shoppingInput} 
                                     placeholder={'Item'} 
+                                    returnKeyType='next'
+                                    onSubmitEditing={() => shoppingListItemAmountInputRef.current?.focus()}
+                                    blurOnSubmit={false}
                                     onChangeText={(text) => setShoppingInput(text)}>
                                     {shoppingInput}
                                 </TextInput>
                                 <TextInput 
                                     style={styles.shoppingInput} 
+                                    ref={shoppingListItemAmountInputRef}
                                     placeholder={'1'} 
+                                    returnKeyType='go'
+                                    onSubmitEditing={addShoppingItem}
+                                    blurOnSubmit={false}
                                     onChangeText={(text) => setShoppingQtyInput(text)}>
                                     {shoppingQtyInput}
                                 </TextInput>
-                                <DataTable.Cell style={styles.addShopping} onPress={addShoppingItem}>
-                                    <MaterialIcons name='add'/>
+                                <DataTable.Cell>
                                 </DataTable.Cell>
                             </>}
                         /> : <></> }  
