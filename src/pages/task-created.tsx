@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
     shoppingListContainer: {
         flex: 1, 
         marginVertical: 10, 
-        borderBottomWidth: 2, 
-        borderTopWidth: 2, 
-        borderColor: "#aaa"
+        borderBottomWidth: 1, 
+        borderTopWidth: 1, 
+        borderColor: "#ccc"
     },
     userCont: {
         flexDirection: 'column',
@@ -110,12 +110,18 @@ const TaskCreated: FC<TaskCreatedActions & TaskCreatedProps> = (props) => {
                             <Text>
                                 {props.task!.desc}
                             </Text>
-                            <View style={styles.shoppingListContainer}>
-                                <ScrollView>
-                                    <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={props.task!.shoppingList!.map(item =>[item.productName, item.amount])} />
-                                </ScrollView>
-                            </View>
-
+                            {
+                                props.task.shoppingList === undefined || props.task.shoppingList.length === 0
+                                ? 
+                                    <></> 
+                                :
+                                    <View style={styles.shoppingListContainer}>
+                                        <ScrollView>
+                                            <Table tableTitles={[{ data: 'Item' }, { data: 'Amount' }]} tableData={props.task.shoppingList!.map(item =>[item.productName, item.amount])} />
+                                        </ScrollView>
+                                    </View>
+                            }
+                            
                         </View>
 
                         <View>
