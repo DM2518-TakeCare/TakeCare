@@ -1,5 +1,5 @@
 import React, { useState, useRef, FC, useEffect } from 'react';
-import { StyleSheet, View, TextInput, SafeAreaView, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, TextInput, SafeAreaView, ScrollView, Text, Platform } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import { Divider, Switch, Chip, DataTable, Caption } from 'react-native-paper';
 import { paperTheme } from '../theme/paper-theme';
@@ -174,9 +174,8 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
                 </View>
                 <Divider/>
                 <View style={styles.row}>
-                    <Caption>Add shopping list</Caption>
+                    <Caption style={{paddingRight: Platform.OS === 'ios' ? 10 : 5}}>Add shopping list</Caption>
                     <Switch 
-                        style={{paddingLeft: 5}}
                         value={useShoppingList} 
                         onValueChange={toggleShoppingList}/>
                 </View>
