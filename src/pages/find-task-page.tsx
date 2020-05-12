@@ -25,6 +25,8 @@ import { Spinner } from '../components/loading-spinner';
 import { Center } from '../components/center';
 import { updateViewedTask } from '../model/redux/giveHelpState';
 import { useFocusEffect } from '@react-navigation/native';
+import { setAppBarAction } from '../model/redux/appBarState';
+import { User } from '../model/shared/user-interface';
 
 const findTaskStyle = StyleSheet.create({
     mapContainer: {
@@ -46,13 +48,15 @@ interface FindTaskPageProps {
     route: RoutePropsHelper<'FindTask'>,
     tasks: Task[],
     tasksLoading: boolean,
-    lastSearchQuery: SearchTaskQuery | null
+    lastSearchQuery: SearchTaskQuery | null,
+    user: User | null
 }
 
 interface FindTaskActions {
     searchForNearbyTasks: (query: SearchTaskQuery) => void,
-    updateViewedTask: (task: Task) => void,
+    updateViewedTask: (task: Task | null) => void,
     unsubscribe: () => void,
+    setAppBarAction: (action: Function) => void,
 }
 
 const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
@@ -95,7 +99,8 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                 if (userLocation) {
                     props.searchForNearbyTasks({
                         coordinate: { latitude: userLocation.latitude, longitude: userLocation.longitude },
-                        radius: searchDistance
+                        radius: searchDistance,
+                        user: props.user!
                     });
                 }
             });
@@ -112,6 +117,10 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                 setFollowUserLocation(permission)
             }
         );
+        props.setAppBarAction(() => {
+            props.updateViewedTask(null);
+            props.route.navigation.navigate('Tasks');
+        });
     }, []);
 
     const checkSearchNeeded = (region: Region) => {
@@ -283,11 +292,13 @@ export default connect(
         route: router,
         tasks: state.searchTaskState.searchResults,
         tasksLoading: state.searchTaskState.loading,
-        lastSearchQuery: state.searchTaskState.lastSearchQuery
+        lastSearchQuery: state.searchTaskState.lastSearchQuery,
+        user: state.userState.user
     }),
     (dispatch: Dispatch): FindTaskActions => ({
-        searchForNearbyTasks: query => dispatch(searchTaskAction(query)),
+        searchForNearbyTasks: (query) => dispatch(searchTaskAction(query)),
         updateViewedTask: task => dispatch(updateViewedTask(task)),
-        unsubscribe: () => dispatch(unsubscribeSearchTaskAction())
+        unsubscribe: () => dispatch(unsubscribeSearchTaskAction()),
+        setAppBarAction: (action: Function) => dispatch(setAppBarAction(action))
     })
 )(FindTaskPage);

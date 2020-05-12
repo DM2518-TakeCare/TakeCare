@@ -106,7 +106,7 @@ export function subscribeToTask(taskID: string, onSnapshot: (tasks: Task) => voi
  * @param coordinates The center of which the search should take place
  * @param radius The radius in kilometers
  */
-export async function subscribeToNearbyTasks(coordinates: LatLng, radius: number, onSnapshot: (tasks: Task[]) => void) {
+export async function subscribeToNearbyTasks(coordinates: LatLng, radius: number, onSnapshot: (tasks: Task[]) => void, userId: string) {
     const geoFirestore: GeoFirestore = new GeoFirestore(firestore);
     const geoCollection = geoFirestore.collection(taskCollections.tasks);
     return geoCollection.near({ 
@@ -114,7 +114,7 @@ export async function subscribeToNearbyTasks(coordinates: LatLng, radius: number
         radius: radius 
     }).onSnapshot(async (queryResult) => {
         // Need to manually filter out task that already have an helper
-        const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null);
+        const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null).filter(doc => doc.data()['ownerID'] !== userId);
 
         // Parse the result
         const tasks = await completeTaskQueries(

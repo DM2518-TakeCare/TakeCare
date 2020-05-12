@@ -260,7 +260,7 @@ export const Register: FC<RegisterActions & RegisterProps> = (props) => {
                                     :
                                     renderForm(
                                         'Enter Your Phone Number (+46)',
-                                        `You need to enter ${numberLength} digits.`,
+                                        `You need to enter ${numberLength} digits. (starting with +46)`,
                                         showError,
                                         'Send registration code',
                                         () => checkPhoneNumber(),
