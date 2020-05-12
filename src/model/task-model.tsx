@@ -40,7 +40,7 @@ export async function addNewTask(data: AddNewTaskParam): Promise<Task | null> {
     return await getTaskByID(doc.id);
 }
 
-/** Get all tasks that is owned by a user */
+/** Get all tasks that is owned by a user */ 
 export async function getTaskByID(taskID: string): Promise<Task | null> {
     const taskQuery = await firestore.collection(taskCollections.tasks).doc(taskID).get();
     const taskData = taskQuery.data();
@@ -48,6 +48,20 @@ export async function getTaskByID(taskID: string): Promise<Task | null> {
         return await completeTaskQuery(taskQuery.id, taskData['d']);
     }
     return null;
+}
+
+export async function getOwnedTask(ownerID: string): Promise<Task | null> {
+    try { 
+        const taskQuery = await firestore.collection(taskCollections.tasks).where('d.ownerID', '==', ownerID).where('d.completed', '==', false).limit(1).get();
+        const taskData = taskQuery.docs.map(doc => ({
+            docID: doc.id, 
+            docData: doc.data()['d']}))
+        const task = await completeTaskQuery(taskData[0].docID, taskData[0].docData)
+        return task;
+    }
+    catch {
+        return null   
+    }   
 }
 
 /** 
