@@ -8,7 +8,7 @@ import { batch } from 'react-redux';
 export interface GiveHelpState {
     activeTasks: Task[],
     completedTasks: Task[],
-    viewedTask: Task | undefined,
+    viewedTask: Task | null,
     taskLoading: Task | null,
     initialSubscribeLoading: boolean,
     unsubscribeOwnedTasks: (() => void) | null
@@ -55,9 +55,9 @@ export function completeTask(task: Task) {
 
 interface UpdateViewedTask {
     type: GiveHelpActionTypes.UPDATE_VIEWED_TASK,
-    payload: Task
+    payload: Task | null
 }
-export function updateViewedTask(task: Task) {
+export function updateViewedTask(task: Task | null) {
     return (dispatch: Dispatch<AppActions>) => {
         dispatch({
             type: GiveHelpActionTypes.UPDATE_VIEWED_TASK,

@@ -3,10 +3,12 @@ import { Dispatch } from 'react';
 import { Task } from '../shared/task-interface'
 import { LatLng } from 'react-native-maps';
 import * as TaskModel from '../task-model';
+import { User } from '../shared/user-interface';
 
 export interface SearchTaskQuery {
     coordinate: LatLng,
-    radius: number
+    radius: number,
+    user: User
 }
 
 export interface SearchTaskState {
@@ -39,7 +41,8 @@ export function searchTaskAction(query: SearchTaskQuery) {
                     type: SearchTaskActionTypes.SEARCH_NEARBY_TASKS_DONE,
                     payload: tasks
                 });
-            }
+            },
+            query.user.id!
         );
         dispatch({
             type: SearchTaskActionTypes.SEARCH_NEARBY_TASKS,

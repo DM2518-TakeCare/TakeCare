@@ -76,13 +76,16 @@ export default function App() {
                                 component={FindTaskPage}
                                 options={{
                                     title: 'Find Task',
+                                    header: (headerProps) => (
+                                        <AppBar headerProps={headerProps} actionIcon={'folder'} />
+                                    ),
                                 }}
                                  />
                             <RootStack.Screen
                                 name='Playground'
                                 options={{
                                     header: (headerProps) => (
-                                        <AppBar headerProps={headerProps}  actionIcon={'hospital'} />
+                                        <AppBar headerProps={headerProps} actionIcon={'hospital'} />
                                     ),
                                 }}
                                 component={PlaygroundPage} />
