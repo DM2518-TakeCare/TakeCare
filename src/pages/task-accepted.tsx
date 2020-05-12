@@ -44,7 +44,7 @@ interface TaskAcceptedActions {
 interface TaskAcceptedProps {
     route: RoutePropsHelper<'TaskAccepted'>,
     task: Task | null,
-    taskLoading: boolean,
+    completeTaskLoading: boolean,
 }
 
 const TaskAccepted: FC<TaskAcceptedActions & TaskAcceptedProps> = (props) => {
@@ -74,7 +74,12 @@ const TaskAccepted: FC<TaskAcceptedActions & TaskAcceptedProps> = (props) => {
     const onTaskCompleted = () => {
         props.completeTaskAction(props.task!.id!)
     }
-    return (    
+    return ( 
+        props.completeTaskLoading ?
+        <Center>
+            <Spinner isLoading={true} />
+        </Center> 
+        :   
         <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
             <ContentPadding>
                 <ContentPadding>
@@ -113,7 +118,7 @@ export default connect(
     (state: AppState, router: RoutePropsHelper<'TaskAccepted'> ): TaskAcceptedProps => ({
         route: router,
         task: state.receiveHelpState.activeTaskView,
-        taskLoading: state.receiveHelpState.taskLoading,
+        completeTaskLoading: state.receiveHelpState.completeTaskLoading,
     }),
     (dispatch: Dispatch): TaskAcceptedActions => ({
         subscribe: (id: string ) => dispatch(subscribeActiveViewTask(id)),
