@@ -114,7 +114,7 @@ export async function subscribeToNearbyTasks(coordinates: LatLng, radius: number
         radius: radius 
     }).onSnapshot(async (queryResult) => {
         // Need to manually filter out task that already have an helper
-        const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null).filter(doc => doc.data()['ownerID'] !== userId);
+        const filteredDocs = queryResult.docs.filter(doc => doc.data()['helperID'] === null && doc.data()['ownerID'] !== userId);
 
         // Parse the result
         const tasks = await completeTaskQueries(
