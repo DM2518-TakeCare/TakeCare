@@ -16,6 +16,7 @@ import { subscribeActiveViewTask, unsubscribeActiveViewTask } from '../model/red
 import { connect } from 'react-redux';
 import { Spinner } from '../components/loading-spinner';
 import { Center } from '../components/center';
+import * as TaskModel from '../model/task-model';
 
 const styles = StyleSheet.create({
     cont: {
@@ -125,8 +126,13 @@ const TaskCreated: FC<TaskCreatedActions & TaskCreatedProps> = (props) => {
                         </View>
 
                         <View>
-                            <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => { }}>
-                                EDIT TASK
+                            <Button size='small' forceForegroundStyle='light' color={paperTheme.colors.important} onPress={() => {
+                                if (props.task?.id) {
+                                    TaskModel.deleteTask(props.task.id);
+                                    props.route.navigation.replace('Home');
+                                }
+                            }}>
+                                Delete task
                             </Button>
                         </View>
                     </View>

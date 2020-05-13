@@ -185,6 +185,11 @@ export async function addHelper(taskID: string, helperID: string, onSuccess: () 
     });
 }
 
+/** Delete a task */
+export async function deleteTask(taskID: string) {
+    await firestore.collection(taskCollections.tasks).doc(taskID).delete();
+}
+
 
 /** Remove an helper from a task */
 export async function removeHelper(taskID: string) {
