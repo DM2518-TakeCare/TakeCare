@@ -4,6 +4,12 @@
   "expo": {
     "name": "TakeCare",
     "slug": "TakeCare",
+    "icon": "./src/assets/icon.png",
+    "splash": {
+      "image": "./src/assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff"
+    },
     "version": "1.0.0",
     "platforms": [
       "ios",
