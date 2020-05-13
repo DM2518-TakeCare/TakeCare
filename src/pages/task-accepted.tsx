@@ -69,7 +69,7 @@ const TaskAccepted: FC<TaskAcceptedActions & TaskAcceptedProps> = (props) => {
                 props.route.navigation.replace('TaskCompleted')
             }
         }
-    }, [props.task]);
+    }, [props.task?.completed === true]);
 
     const onTaskCompleted = () => {
         props.completeTaskAction(props.task!.id!)

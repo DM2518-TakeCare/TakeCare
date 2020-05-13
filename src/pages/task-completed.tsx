@@ -1,5 +1,5 @@
 import React, { useState, FC, useEffect } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, InteractionManager } from 'react-native';
 import { RoutePropsHelper } from '../router';
 import DividedView from '../components/divided-view/divided-view';
 import StatusHeader from '../components/status-header';
@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { AppState, Dispatch } from '../model/redux/store';
 import { unsubscribeActiveViewTask, subscribeActiveViewTask } from '../model/redux/receiveHelpState';
 import { setAppBarAction } from '../model/redux/appBarState';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
     cont: {
@@ -46,12 +46,22 @@ interface TaskCompletedProps {
 
 const TaskCompleted: FC<TaskCompletedActions & TaskCompletedProps> = (props) => {
 
-    useEffect(() => {
-        props.setAppBarAction(() => {
-            props.unsubscribe()
-            props.route.navigation.dispatch(StackActions.replace('Home'))
-        })
-    }, [props.route])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const task = InteractionManager.runAfterInteractions(() => {
+                if (props.route.navigation.isFocused()) {
+                    props.setAppBarAction(() => {
+                        props.unsubscribe()
+                        props.route.navigation.replace('Home');
+                    })
+                }
+            });
+            return () => {
+                task.cancel();
+            }
+        }, [props.route, props.unsubscribe])
+    );
 
     const upper = (
         <ContentPadding>

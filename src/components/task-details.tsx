@@ -114,7 +114,7 @@ export const TaskDetails: FC<TaskDetailsProps> = ({
     }
 
     const renderTitle = () => {
-        if (detailsHeader || user.name === null) {
+        if (detailsHeader || user === null ||  user.name === null) {
             return 'Task details';
         }
         return user.name

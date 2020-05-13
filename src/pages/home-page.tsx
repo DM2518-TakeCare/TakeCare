@@ -39,7 +39,7 @@ interface HomePageActions {
 }
 
 const HomePage: FC<HomePageProps & HomePageActions> = (props) => {
-    useEffect(() => {
+    useFocusEffect(() => {
         props.setAppBarAction(() => {
             props.route.navigation.navigate('Settings');
         });

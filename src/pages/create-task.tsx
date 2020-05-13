@@ -67,6 +67,7 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     const [shoppingQtyInput, setShoppingQtyInput] = useState('');
     const [tableData, setTableData]: any = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
+    const [createTaskLoading, setCreateTaskLoading] = useState(false);
     const shoppingListItemInputRef = useRef<TextInput>(null);
     const shoppingListItemAmountInputRef = useRef<TextInput>(null);
 
@@ -75,10 +76,11 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
     };
 
     const createNewTask = async (desc: string, tags: Tag[], shoppingList: Array<any>, useList: boolean) => {
-
-        if (props.taskLoading) {
+        
+        if (createTaskLoading) {
             return;
         }
+        setCreateTaskLoading(true);
 
         // TODO, handel when location can not be accessed
         let shopping: ShoppingItem[] = [];
@@ -96,6 +98,7 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
         }, () => {
             props.route.navigation.replace('TaskCreated')
         })
+        setCreateTaskLoading(false);
     }
     
     useEffect(() => {
@@ -140,7 +143,7 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
         setTableData(tableData.filter((item: any, index: number) => index !== i))
     }
 
-    if (props.taskLoading) {
+    if (props.taskLoading || createTaskLoading) {
         return <Center>
             <Spinner isLoading={true}/>
         </Center>
@@ -225,8 +228,8 @@ const CreateTask: FC<CreateTaskProps & CreateTaskActions> = (props) => {
 export default connect(
     (state: AppState, router: RoutePropsHelper<'CreateTask'> ): CreateTaskProps => ({
         route: router,
-        viewedTask: state.giveHelpState.viewedTask,
-        user: state.userState.user,
+        viewedTask: state.giveHelpState.viewedTask!,
+        user: state.userState.user!,
         taskLoading: state.receiveHelpState.taskLoading
     }),
     (dispatch: Dispatch): CreateTaskActions => ({

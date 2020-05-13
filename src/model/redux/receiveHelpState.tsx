@@ -38,7 +38,9 @@ export function createNewTask(taskData: AddNewTaskParam, onDone: () => void) {
             dispatch({type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK, payload: newTask})
             dispatch({type: ReceiveHelpActionTypes.CREATE_TASK_DONE});
         })
-        onDone();
+        setTimeout(() => {
+            onDone();
+        }, 100);
     }
 }
 
@@ -73,7 +75,11 @@ export interface SubscribeActiveViewTaskAction {
     payload: () => void
 }
 export function subscribeActiveViewTask(taskID: string) {
-    return (dispatch: Dispatch<ReceiveHelpActions>) => {
+    return (dispatch: Dispatch<ReceiveHelpActions>, getState: () => AppState) => {
+        const state = getState();
+        if (state.receiveHelpState.unsubscribeFunction) {
+            state.receiveHelpState.unsubscribeFunction();
+        }
         const unsubscribeFunction = TaskModel.subscribeToTask(taskID, task => {
             dispatch({
                 type: ReceiveHelpActionTypes.SET_ACTIVE_VIEW_TASK,

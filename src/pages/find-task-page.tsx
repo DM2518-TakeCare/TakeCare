@@ -154,10 +154,13 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
             return;
         }
 
-        props.searchForNearbyTasks({
-            coordinate: { latitude: region.latitude, longitude: region.longitude },
-            radius: searchDistance
-        });
+        if (props.user) {
+            props.searchForNearbyTasks({
+                coordinate: { latitude: region.latitude, longitude: region.longitude },
+                radius: searchDistance,
+                user: props.user
+            });
+        }
     }
 
     const generateMarkers = (): TakeCareMapMarker[] => {
@@ -265,7 +268,7 @@ const FindTaskPage: FC<FindTaskPageProps & FindTaskActions> = (props) => {
                                     }}
                                     scrollItemsHeight={90}
                                     scrollItems={
-                                        props.tasks.map(task => {
+                                        props.tasks.sort((a, b) => ((calculateDistance(a.coordinates) ?? 0) - (calculateDistance(b.coordinates) ?? 0))).map(task => {
                                             return <TaskCard
                                                 onPress={() => {
                                                     props.updateViewedTask(task)
